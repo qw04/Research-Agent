@@ -1,0 +1,454 @@
+{
+  "papers": {
+    "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.": {
+      "techniques": [
+        "Extreme Learning Machine",
+        "Gravitational Search Algorithm"
+      ],
+      "novelty": "This paper introduces an improved state of charge (SOC) estimation model for lithium-ion batteries that combines Extreme Learning Machine (ELM) with Gravitational Search Algorithm (GSA) to optimize the number of hidden layer neurons, enhancing accuracy without requiring internal battery knowledge.",
+      "baselines": [
+        "BPNN",
+        "RBFNN"
+      ],
+      "key_result": "The ELM-GSA model demonstrates high accuracy and a lower SOC error rate compared to BPNN-GSA and RBFNN-GSA models."
+    },
+    "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles": {
+      "techniques": [
+        "LSTM",
+        "Multiple Linear Regression"
+      ],
+      "novelty": "This paper introduces a novel machine-learning-enabled method for real-time multi-forward-step state of charge (SOC) prediction using LSTM neural networks combined with multiple linear regression, addressing the inefficiencies of existing model-based techniques under complex real-world conditions.",
+      "baselines": [
+        "BP",
+        "SVM"
+      ],
+      "key_result": "The LSTM-based model demonstrates fast and accurate multi-forward-step prediction for battery SOC, achieving a root mean square error (RMSE) as small as 2%."
+    },
+    "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm": {
+      "techniques": [
+        "Random Forest",
+        "Differential Search Algorithm"
+      ],
+      "novelty": "This paper introduces an optimized Random Forest Regression (RFR) algorithm using a Differential Search Algorithm (DSA) to enhance state of charge estimation of lithium-ion batteries without requiring detailed battery chemistry knowledge.",
+      "baselines": [
+        "Kalman Filter",
+        "Particle Filter",
+        "Radial Basis Function Neural Networks",
+        "Extreme Learning Machine",
+        "Gaussian Process Regression",
+        "Support Vector Machine"
+      ],
+      "key_result": "The DSA optimized RFR algorithm achieves an RMSE of 0.382% in the HPPC test and an MAE of 0.193% and 0.346% in DST and FUDS cycles, respectively, at 25\u00b0C."
+    },
+    "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture": {
+      "techniques": [
+        "CNN",
+        "U-Net"
+      ],
+      "novelty": "This paper introduces a SOC estimation method using a U-Net architecture that can handle variable-length input data and accurately estimate SOC values at the starting point, addressing limitations of traditional data-driven methods.",
+      "baselines": [
+        "Random Forest",
+        "SVM",
+        "BPNN"
+      ],
+      "key_result": "The proposed method achieves a mean absolute error (MAE) within 1.1% and a root-mean-square error (RMSE) within 1.4% at constant temperatures."
+    },
+    "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine": {
+      "techniques": [
+        "Barnacle Mating Optimizer",
+        "Support Vector Machine"
+      ],
+      "novelty": "The paper introduces an improved barnacle mating optimizer (IBMO) that enhances the performance of the support vector machine (SVM) for state of charge (SOC) estimation in lithium-ion batteries, achieving high accuracy and reliability.",
+      "baselines": [
+        "Kalman Filter",
+        "Least-Squares Support Vector Machine",
+        "Gaussian Process Regression",
+        "Convolutional Neural Network"
+      ],
+      "key_result": "The proposed model achieves a root mean squared error (RMSE) of 0.0042, a mean absolute percentage error (MAPE) of 0.61%, and an R-square (R2) of 0.9994, outperforming four comparison models."
+    },
+    "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning": {
+      "techniques": [
+        "Temporal Convolutional Network",
+        "Transfer Learning"
+      ],
+      "novelty": "This paper introduces a method for estimating the state of charge (SOC) of lithium-ion batteries using a Temporal Convolutional Network (TCN) that can adapt to different battery types through transfer learning with minimal data.",
+      "baselines": [
+        "Kalman Filter",
+        "Particle Filter",
+        "Gated Recurrent Unit (GRU)",
+        "LSTM"
+      ],
+      "key_result": "The proposed method achieves an average MAE of 0.67% for SOC estimation across various ambient temperature conditions."
+    },
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF": {
+      "techniques": [
+        "LSTM",
+        "UKF"
+      ],
+      "novelty": "This paper introduces a method that combines long short-term memory (LSTM) networks with an unscented Kalman filter (UKF) to improve state-of-charge (SOC) estimation of lithium-ion batteries under varying temperatures, addressing limitations of traditional methods.",
+      "baselines": [
+        "Coulomb Counting",
+        "OCV",
+        "EKF",
+        "PF"
+      ],
+      "key_result": "The proposed method achieves root mean square errors less than 1.1% and mean average errors less than 1% in SOC estimation."
+    },
+    "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks": {
+      "techniques": [
+        "LSTM",
+        "NARX"
+      ],
+      "novelty": "This paper presents a novel hybrid model that combines NARX neural networks with LSTM to address the issues of gradient explosion and vanishing gradients, improving the accuracy of state of charge estimation for lithium-ion batteries.",
+      "baselines": [
+        "BPNN-PSO",
+        "LS-SVM",
+        "LSTM"
+      ],
+      "key_result": "The proposed hybrid NARX-LSTM model achieves an RMSE of less than 1%, which is approximately 60% better than the standard LSTM."
+    },
+    "Support Vector Machines Used to Estimate the Battery State of Charge": {
+      "techniques": [
+        "SVM"
+      ],
+      "novelty": "This paper presents a support vector machine (SVM) approach for estimating the state of charge (SOC) of lithium iron manganese phosphate batteries, claiming improved accuracy over traditional methods such as current integration and Kalman filters.",
+      "baselines": [
+        "ANNs",
+        "Kalman Filter"
+      ],
+      "key_result": "The SVM SOC estimator maintains a high level of accuracy, better than 6% over all ranges of operation."
+    },
+    "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells": {
+      "techniques": [
+        "Sparse Autoencoder",
+        "LSTM"
+      ],
+      "novelty": "The paper introduces the Uncorrelated Sparse Autoencoder with Long Short-Term Memory (USAL), which combines sparse autoencoders and LSTM networks to improve long-term state-of-charge estimations in lithium-ion batteries by penalizing high correlations between encodings.",
+      "baselines": [
+        "Kalman Filter"
+      ],
+      "key_result": "USAL outperforms benchmarked models when trained on five initial charge-discharge cycles across multiple battery cells using three publicly available accelerated aging datasets."
+    }
+  },
+  "technique_nodes": [
+    "ANNs",
+    "BP",
+    "BPNN",
+    "Barnacle Mating Optimizer",
+    "CNN",
+    "Coulomb Counting",
+    "Differential Search Algorithm",
+    "EKF",
+    "Extreme Learning Machine",
+    "Gated Recurrent Unit (GRU)",
+    "Gaussian Process Regression",
+    "Gravitational Search Algorithm",
+    "LS-SVM",
+    "LSTM",
+    "Multiple Linear Regression",
+    "NARX",
+    "OCV",
+    "Particle Filter",
+    "RBFNN",
+    "Random Forest",
+    "Sparse Autoencoder",
+    "Support Vector Machine",
+    "Temporal Convolutional Network",
+    "Transfer Learning",
+    "U-Net",
+    "UKF"
+  ],
+  "edges": [
+    {
+      "from": "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "to": "Extreme Learning Machine",
+      "type": "uses"
+    },
+    {
+      "from": "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "to": "Gravitational Search Algorithm",
+      "type": "uses"
+    },
+    {
+      "from": "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "to": "BPNN",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "to": "RBFNN",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "to": "LSTM",
+      "type": "uses"
+    },
+    {
+      "from": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "to": "Multiple Linear Regression",
+      "type": "uses"
+    },
+    {
+      "from": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "to": "BP",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "to": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "to": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Random Forest",
+      "type": "uses"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Differential Search Algorithm",
+      "type": "uses"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Particle Filter",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "RBFNN",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Gaussian Process Regression",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "to": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "CNN",
+      "type": "uses"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "U-Net",
+      "type": "uses"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "to": "BPNN",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "Barnacle Mating Optimizer",
+      "type": "uses"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "Support Vector Machine",
+      "type": "uses"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "Gaussian Process Regression",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+      "to": "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Temporal Convolutional Network",
+      "type": "uses"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Transfer Learning",
+      "type": "uses"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Particle Filter",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Gated Recurrent Unit (GRU)",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "to": "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "LSTM",
+      "type": "uses"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "UKF",
+      "type": "uses"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "Coulomb Counting",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "OCV",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "EKF",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "to": "Particle Filter",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "LSTM",
+      "type": "uses"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "NARX",
+      "type": "uses"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "BP",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "LS-SVM",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks",
+      "to": "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "to": "Support Vector Machine",
+      "type": "uses"
+    },
+    {
+      "from": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "to": "ANNs",
+      "type": "compares_against_technique"
+    },
+    {
+      "from": "Support Vector Machines Used to Estimate the Battery State of Charge",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    },
+    {
+      "from": "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells",
+      "to": "Sparse Autoencoder",
+      "type": "uses"
+    },
+    {
+      "from": "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells",
+      "to": "LSTM",
+      "type": "uses"
+    },
+    {
+      "from": "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells",
+      "to": "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+      "type": "compares_against_paper"
+    }
+  ]
+}

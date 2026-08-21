@@ -1,0 +1,158 @@
+[
+  {
+    "technique": "Particle Filter",
+    "in_degree": 3,
+    "depended_on_by": [
+      "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning",
+      "State-of-charge estimation of lithium-ion batteries using LSTM and UKF"
+    ],
+    "candidate_papers": [
+      {
+        "title": "Estimation Strategies for the Condition Monitoring of a Battery Systemin a Hybrid Electric Vehicle",
+        "arxiv_id": "2311.11107v1",
+        "url": "http://arxiv.org/abs/2311.11107v1",
+        "published": "2023-11-18",
+        "summary": "This paper discusses the application of condition monitoring to a battery system used in a hybrid electric vehicle (HEV). Battery condition management systems (BCMSs) are employed to ensure the safe, efficient, and reliable operation of a battery, ultimately to guarantee the availability of electric"
+      },
+      {
+        "title": "Knowledge-Aware Modeling with Frequency Adaptive Learning for Battery Health Prognostics",
+        "arxiv_id": "2510.02839v1",
+        "url": "http://arxiv.org/abs/2510.02839v1",
+        "published": "2025-10-03",
+        "summary": "Battery health prognostics are critical for ensuring safety, efficiency, and sustainability in modern energy systems. However, it has been challenging to achieve accurate and robust prognostics due to complex battery degradation behaviors with nonlinearity, noise, capacity regeneration, etc. Existin"
+      },
+      {
+        "title": "Accelerating Bayesian Optimization for Nonlinear State-Space System Identification with Application to Lithium-Ion Batteries",
+        "arxiv_id": "2603.25840v1",
+        "url": "http://arxiv.org/abs/2603.25840v1",
+        "published": "2026-03-26",
+        "summary": "This paper studies system identification for nonlinear state-space models, a problem that arises across many fields yet remains challenging in practice. Focusing on maximum likelihood estimation, we employ Bayesian optimization (BayesOpt) to address this problem by leveraging its derivative-free glo"
+      }
+    ]
+  },
+  {
+    "technique": "BPNN",
+    "in_degree": 2,
+    "depended_on_by": [
+      "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture"
+    ],
+    "candidate_papers": [
+      {
+        "title": "Music Style Classification with Compared Methods in XGB and BPNN",
+        "arxiv_id": "1912.01203v1",
+        "url": "http://arxiv.org/abs/1912.01203v1",
+        "published": "2019-12-03",
+        "summary": "Scientists have used many different classification methods to solve the problem of music classification. But the efficiency of each classification is different. In this paper, we propose two compared methods on the task of music style classification. More specifically, feature extraction for represe"
+      },
+      {
+        "title": "Blaschke Product Neural Networks (BPNN): A Physics-Infused Neural Network for Phase Retrieval of Meromorphic Functions",
+        "arxiv_id": "2111.13311v1",
+        "url": "http://arxiv.org/abs/2111.13311v1",
+        "published": "2021-11-26",
+        "summary": "Numerous physical systems are described by ordinary or partial differential equations whose solutions are given by holomorphic or meromorphic functions in the complex domain. In many cases, only the magnitude of these functions are observed on various points on the purely imaginary jw-axis since coh"
+      },
+      {
+        "title": "Application of backpropagation neural networks to both stages of fingerprinting based WIPS",
+        "arxiv_id": "1703.06912v1",
+        "url": "http://arxiv.org/abs/1703.06912v1",
+        "published": "2017-03-14",
+        "summary": "We propose a scheme to employ backpropagation neural networks (BPNNs) for both stages of fingerprinting-based indoor positioning using WLAN/WiFi signal strengths (FWIPS): radio map construction during the offline stage, and localization during the online stage. Given a training radio map (TRM), i.e."
+      }
+    ]
+  },
+  {
+    "technique": "RBFNN",
+    "in_degree": 2,
+    "depended_on_by": [
+      "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+      "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm"
+    ],
+    "candidate_papers": [
+      {
+        "title": "Modeling the field of laser welding melt pool by RBFNN",
+        "arxiv_id": "0704.0611v1",
+        "url": "http://arxiv.org/abs/0704.0611v1",
+        "published": "2007-04-04",
+        "summary": "  Efficient control of a laser welding process requires the reliable prediction of process behavior. A statistical method of field modeling, based on normalized RBFNN, can be successfully used to predict the spatiotemporal dynamics of surface optical activity in the laser welding process. In this ar"
+      },
+      {
+        "title": "Time Series Imputation with Multivariate Radial Basis Function Neural Network",
+        "arxiv_id": "2407.17040v2",
+        "url": "http://arxiv.org/abs/2407.17040v2",
+        "published": "2024-07-24",
+        "summary": "Researchers have been persistently working to address the issue of missing values in time series data. Numerous models have been proposed, striving to estimate the distribution of the data. The Radial Basis Functions Neural Network (RBFNN) has recently exhibited exceptional performance in estimating"
+      },
+      {
+        "title": "Empirical Comparison of Lightweight Forecasting Models for Seasonal and Non-Seasonal Time Series",
+        "arxiv_id": "2505.01163v1",
+        "url": "http://arxiv.org/abs/2505.01163v1",
+        "published": "2025-05-02",
+        "summary": "Accurate time series forecasting is essential in many real-time applications that demand both high predictive accuracy and computational efficiency. This study provides an empirical comparison between a Polynomial Classifier and a Radial Basis Function Neural Network (RBFNN) across four real-world t"
+      }
+    ]
+  },
+  {
+    "technique": "BP",
+    "in_degree": 2,
+    "depended_on_by": [
+      "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles",
+      "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks"
+    ],
+    "candidate_papers": [
+      {
+        "title": "Dancing along Battery: Enabling Transformer with Run-time Reconfigurability on Mobile Devices",
+        "arxiv_id": "2102.06336v1",
+        "url": "http://arxiv.org/abs/2102.06336v1",
+        "published": "2021-02-12",
+        "summary": "A pruning-based AutoML framework for run-time reconfigurability, namely RT3, is proposed in this work. This enables Transformer-based large Natural Language Processing (NLP) models to be efficiently executed on resource-constrained mobile devices and reconfigured (i.e., switching models for dynamic "
+      },
+      {
+        "title": "Exfoliation of Few-Layer Black Phosphorus in Low-Boiling-Point Solvents and Its Application in Li-Ion Batteries",
+        "arxiv_id": "1805.02486v1",
+        "url": "http://arxiv.org/abs/1805.02486v1",
+        "published": "2018-05-07",
+        "summary": "The liquid-phase exfoliation (LPE) of black phosphorus (BP) is a strategic route for the large-scale production of phosphorene and few-layer BP (FL-BP) flakes. The exploitation of this exfoliated material in cutting-edge technologies, e.g., in flexible electronics and energy storage, is however limi"
+      },
+      {
+        "title": "Shear-Exfoliated Phosphorene for Rechargeable Nanoscale Battery",
+        "arxiv_id": "1508.07481v1",
+        "url": "http://arxiv.org/abs/1508.07481v1",
+        "published": "2015-08-29",
+        "summary": "Discovery of atomically thin black phosphorus (called phosphorene) holds promise to be used as an alternative two-dimensional material to graphene and transition metal dichalcogenides especially as an anode material for lithium-ion batteries (LIBs). However, at present bulk black phosphorus (BP) sti"
+      }
+    ]
+  },
+  {
+    "technique": "Gaussian Process Regression",
+    "in_degree": 2,
+    "depended_on_by": [
+      "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+      "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine"
+    ],
+    "candidate_papers": [
+      {
+        "title": "Modified Gaussian Process Regression Models for Cyclic Capacity Prediction of Lithium-ion Batteries",
+        "arxiv_id": "2101.00035v1",
+        "url": "http://arxiv.org/abs/2101.00035v1",
+        "published": "2020-12-31",
+        "summary": "This paper presents the development of machine learning-enabled data-driven models for effective capacity predictions for lithium-ion batteries under different cyclic conditions. To achieve this, a model structure is first proposed with the considerations of battery ageing tendency and the correspon"
+      },
+      {
+        "title": "Learning battery model parameter dynamics from data with recursive Gaussian process regression",
+        "arxiv_id": "2304.13666v1",
+        "url": "http://arxiv.org/abs/2304.13666v1",
+        "published": "2023-04-26",
+        "summary": "Estimating state of health is a critical function of a battery management system but remains challenging due to the variability of operating conditions and usage requirements of real applications. As a result, techniques based on fitting equivalent circuit models may exhibit inaccuracy at extremes o"
+      },
+      {
+        "title": "Gaussian Process Regression for In-situ Capacity Estimation of Lithium-ion Batteries",
+        "arxiv_id": "1712.02595v2",
+        "url": "http://arxiv.org/abs/1712.02595v2",
+        "published": "2017-12-07",
+        "summary": "Accurate on-board capacity estimation is of critical importance in lithium-ion battery applications. Battery charging/discharging often occurs under a constant current load, and hence voltage vs. time measurements under this condition may be accessible in practice. This paper presents a data-driven "
+      }
+    ]
+  }
+]

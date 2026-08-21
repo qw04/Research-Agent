@@ -1,0 +1,1051 @@
+{
+  "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.": [
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "BJDST",
+      "metric_name": "RMSE",
+      "metric_value": "0.76%"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "RMSE",
+      "metric_value": "0.95%"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "RMSE",
+      "metric_value": "1.12%"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "BJDST",
+      "metric_name": "RMSE",
+      "metric_value": "0.68% at 45\u00b0C"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "BJDST",
+      "metric_name": "MSE",
+      "metric_value": "0.0059%"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "MSE",
+      "metric_value": "0.0087"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "MSE",
+      "metric_value": "0.011"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "BJDST",
+      "metric_name": "MAE",
+      "metric_value": "0.55%"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "MAE",
+      "metric_value": "0.72"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "BJDST",
+      "metric_name": "MAE",
+      "metric_value": "0.85"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "RMSE",
+      "metric_value": "1.68%"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "RMSE",
+      "metric_value": "2.2%"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "RMSE",
+      "metric_value": "1.56%"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MSE",
+      "metric_value": "0.032"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MSE",
+      "metric_value": "0.089"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "MSE",
+      "metric_value": "0.024"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MAE",
+      "metric_value": "1.87"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MAE",
+      "metric_value": "2.23"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "MAE",
+      "metric_value": "1.67"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MAPE",
+      "metric_value": "16.71"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "MAPE",
+      "metric_value": "18.8"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "MAPE",
+      "metric_value": "14.32%"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-6.2~8.7"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-8.7~9.2"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-5.6~6.5"
+    },
+    {
+      "model_name": "BPNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-5.1~5.7"
+    },
+    {
+      "model_name": "RBFNN-GSA",
+      "is_proposed": false,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-6.3~6.8"
+    },
+    {
+      "model_name": "ELM-GSA",
+      "is_proposed": true,
+      "dataset": "US06",
+      "metric_name": "SOC Error",
+      "metric_value": "-4.8~5.3"
+    }
+  ],
+  "Online jointprediction of multi-forward-step battery SOC using LSTM neural networks and multiple linear regression for real-world electric vehicles": [
+    {
+      "model_name": "LSTM",
+      "is_proposed": true,
+      "dataset": "four seasons",
+      "metric_name": "MRE",
+      "metric_value": "0.31%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": true,
+      "dataset": "four seasons",
+      "metric_name": "MRE",
+      "metric_value": "0.26%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": true,
+      "dataset": "four seasons",
+      "metric_name": "MRE",
+      "metric_value": "0.25%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": true,
+      "dataset": "four seasons",
+      "metric_name": "MRE",
+      "metric_value": "0.32%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": true,
+      "dataset": "one-forward-step prediction",
+      "metric_name": "MRE",
+      "metric_value": "0.0025"
+    },
+    {
+      "model_name": "LSTM-RNN battery model",
+      "is_proposed": false,
+      "dataset": "Lithium battery",
+      "metric_name": "RMSE",
+      "metric_value": "<2%"
+    },
+    {
+      "model_name": "LSTM-RNN battery model",
+      "is_proposed": false,
+      "dataset": "Lithium battery",
+      "metric_name": "MRE",
+      "metric_value": "<2%"
+    }
+  ],
+  "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm": [
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "HPPC test",
+      "metric_name": "RMSE",
+      "metric_value": "0.382%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "DST cycle",
+      "metric_name": "MAE",
+      "metric_value": "0.193%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "FUDS cycle",
+      "metric_name": "MAE",
+      "metric_value": "0.346%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "LiNCA battery",
+      "metric_name": "RMSE",
+      "metric_value": "0.508%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "LiNMC battery",
+      "metric_name": "MAE",
+      "metric_value": "0.086%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "DST drive cycles",
+      "metric_name": "RMSE",
+      "metric_value": "0.685%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "DST drive cycles",
+      "metric_name": "RMSE",
+      "metric_value": "0.425%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "DST drive cycles",
+      "metric_name": "RMSE",
+      "metric_value": "0.312%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "FUDS drive cycle",
+      "metric_name": "MAE",
+      "metric_value": "0.424%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "FUDS drive cycle",
+      "metric_name": "MAE",
+      "metric_value": "0.346%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "FUDS drive cycle",
+      "metric_name": "MAE",
+      "metric_value": "0.307%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "LiNCA battery",
+      "metric_name": "RMSE",
+      "metric_value": "0.508%"
+    },
+    {
+      "model_name": "DSA optimized RFR",
+      "is_proposed": true,
+      "dataset": "LiNMC battery",
+      "metric_name": "RMSE",
+      "metric_value": "0.382%"
+    }
+  ],
+  "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture": [
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Constant Temperature (25 \u00b0C)",
+      "metric_name": "MAE",
+      "metric_value": "1.1%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Constant Temperature (25 \u00b0C)",
+      "metric_name": "RMSE",
+      "metric_value": "1.4%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Constant Temperature (0 \u00b0C)",
+      "metric_name": "MAE",
+      "metric_value": "0.9%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Constant Temperature (0 \u00b0C)",
+      "metric_name": "RMSE",
+      "metric_value": "1.1%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Variable Temperature (10 \u00b0C to 25 \u00b0C)",
+      "metric_name": "MAE",
+      "metric_value": "1.0%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Variable Temperature (10 \u00b0C to 25 \u00b0C)",
+      "metric_name": "RMSE",
+      "metric_value": "1.3%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Variable Temperature (\u221220 \u00b0C to 10 \u00b0C)",
+      "metric_name": "MAE",
+      "metric_value": "1.2%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Variable Temperature (\u221220 \u00b0C to 10 \u00b0C)",
+      "metric_name": "RMSE",
+      "metric_value": "1.5%"
+    },
+    {
+      "model_name": "Proposed Method",
+      "is_proposed": true,
+      "dataset": "Variable Temperature",
+      "metric_name": "RMSE",
+      "metric_value": "1.8%"
+    }
+  ],
+  "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine": [
+    {
+      "model_name": "IBMO-SVM",
+      "is_proposed": true,
+      "dataset": "Not specified",
+      "metric_name": "RMSE",
+      "metric_value": "0.0042"
+    },
+    {
+      "model_name": "IBMO-SVM",
+      "is_proposed": true,
+      "dataset": "Not specified",
+      "metric_name": "MAPE",
+      "metric_value": "0.61 %"
+    },
+    {
+      "model_name": "IBMO-SVM",
+      "is_proposed": true,
+      "dataset": "Not specified",
+      "metric_name": "R2",
+      "metric_value": "0.9994"
+    },
+    {
+      "model_name": "IBMO-SVM",
+      "is_proposed": true,
+      "dataset": "Not specified",
+      "metric_name": "CE",
+      "metric_value": "50.7099"
+    },
+    {
+      "model_name": "He et al. (2022)",
+      "is_proposed": false,
+      "dataset": "Not specified",
+      "metric_name": "PE",
+      "metric_value": "1.5 %"
+    },
+    {
+      "model_name": "Ling and Wei (2022)",
+      "is_proposed": false,
+      "dataset": "Not specified",
+      "metric_name": "RMSE",
+      "metric_value": "0.0063"
+    },
+    {
+      "model_name": "Li et al. (2022)",
+      "is_proposed": false,
+      "dataset": "Not specified",
+      "metric_name": "RMSE",
+      "metric_value": "0.009"
+    },
+    {
+      "model_name": "Ali et al. (2022)",
+      "is_proposed": false,
+      "dataset": "Not specified",
+      "metric_name": "MAPE",
+      "metric_value": "2 %"
+    }
+  ],
+  "State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning": [
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "various ambient temperature conditions",
+      "metric_name": "MAE",
+      "metric_value": "0.67%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "25\u25e6C",
+      "metric_name": "MAE",
+      "metric_value": "0.54%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "10\u25e6C",
+      "metric_name": "MAE",
+      "metric_value": "0.64%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "0\u25e6C",
+      "metric_name": "MAE",
+      "metric_value": "1.29%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "25\u25e6C",
+      "metric_name": "RMSE",
+      "metric_value": "0.78%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "10\u25e6C",
+      "metric_name": "RMSE",
+      "metric_value": "0.81%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "0\u25e6C",
+      "metric_name": "RMSE",
+      "metric_value": "1.73%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "varying ambient temperatures",
+      "metric_name": "MAE",
+      "metric_value": "3.64%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "varying ambient temperatures",
+      "metric_name": "RMSE",
+      "metric_value": "4.14%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "Turnigy Graphene battery",
+      "metric_name": "MAE",
+      "metric_value": "0.39%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "Turnigy Graphene battery",
+      "metric_name": "RMSE",
+      "metric_value": "0.61%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "Turnigy Graphene battery",
+      "metric_name": "maximum error",
+      "metric_value": "4.64%"
+    },
+    {
+      "model_name": "proposed method",
+      "is_proposed": true,
+      "dataset": "25\u25e6C",
+      "metric_name": "maximum error",
+      "metric_value": "4.22%"
+    }
+  ],
+  "State-of-charge estimation of lithium-ion batteries using LSTM and UKF": [
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "dynamic stress test",
+      "metric_name": "RMSE",
+      "metric_value": "1.1%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "dynamic stress test",
+      "metric_name": "MAE",
+      "metric_value": "< 1%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "RMSE",
+      "metric_value": "1.93%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "MAE",
+      "metric_value": "1.58%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "10\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.06%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "10\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.88%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "RMSE",
+      "metric_value": "1.06%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "MAE",
+      "metric_value": "0.93%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "0\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.46%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "0\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "1.31%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "10\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.06%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "10\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.88%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "20\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "2.04%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "20\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "1.60%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "30\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.68%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "30\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "1.40%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "40\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.68%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "40\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "1.38%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "50\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.86%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "50\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "1.51%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "RT",
+      "metric_name": "RMSE",
+      "metric_value": "1.93%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "RT",
+      "metric_name": "MAE",
+      "metric_value": "1.58%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "0\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "0.73%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "0\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.63%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "10\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "0.29%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "10\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.21%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "20\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.11%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "20\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.97%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "30\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "0.93%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "30\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.82%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "40\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "0.92%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "40\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.81%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "50\u00b0C",
+      "metric_name": "RMSE",
+      "metric_value": "1.03%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "50\u00b0C",
+      "metric_name": "MAE",
+      "metric_value": "0.89%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "RMSE",
+      "metric_value": "1.06%"
+    },
+    {
+      "model_name": "LSTM&UKF",
+      "is_proposed": true,
+      "dataset": "RT",
+      "metric_name": "MAE",
+      "metric_value": "0.93%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "FUDS",
+      "metric_name": "RMSE",
+      "metric_value": "0.93%"
+    },
+    {
+      "model_name": "LSTM-RNN",
+      "is_proposed": true,
+      "dataset": "FUDS",
+      "metric_name": "MAE",
+      "metric_value": "0.82%"
+    }
+  ],
+  "State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks": [
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "UDDS",
+      "metric_name": "RMSE",
+      "metric_value": "0.64%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "DST",
+      "metric_name": "RMSE",
+      "metric_value": "0.27%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "UDDS",
+      "metric_name": "RMSE",
+      "metric_value": "1.87%"
+    },
+    {
+      "model_name": "LSTM",
+      "is_proposed": false,
+      "dataset": "DST",
+      "metric_name": "RMSE",
+      "metric_value": "1.95%"
+    },
+    {
+      "model_name": "BPNN-PSO",
+      "is_proposed": false,
+      "dataset": "UDDS",
+      "metric_name": "RMSE",
+      "metric_value": "3.19%"
+    },
+    {
+      "model_name": "BPNN-PSO",
+      "is_proposed": false,
+      "dataset": "DST",
+      "metric_name": "RMSE",
+      "metric_value": "1.45%"
+    },
+    {
+      "model_name": "LS-SVM",
+      "is_proposed": false,
+      "dataset": "UDDS",
+      "metric_name": "RMSE",
+      "metric_value": "1.71%"
+    },
+    {
+      "model_name": "LS-SVM",
+      "is_proposed": false,
+      "dataset": "DST",
+      "metric_name": "RMSE",
+      "metric_value": "1.17%"
+    },
+    {
+      "model_name": "hybrid NARX and LSTM",
+      "is_proposed": true,
+      "dataset": "UDDS",
+      "metric_name": "RMSE",
+      "metric_value": "0.76%"
+    },
+    {
+      "model_name": "hybrid NARX and LSTM",
+      "is_proposed": true,
+      "dataset": "DST",
+      "metric_name": "RMSE",
+      "metric_value": "0.78%"
+    }
+  ],
+  "Support Vector Machines Used to Estimate the Battery State of Charge": [
+    {
+      "model_name": "SVM SOC estimator",
+      "is_proposed": true,
+      "dataset": "dynamic stress test",
+      "metric_name": "coefficient of determination",
+      "metric_value": "0.98"
+    },
+    {
+      "model_name": "SVM SOC estimator",
+      "is_proposed": true,
+      "dataset": "static and dynamic tests",
+      "metric_name": "prediction error",
+      "metric_value": "below 6%"
+    },
+    {
+      "model_name": "SVM SOC estimator",
+      "is_proposed": true,
+      "dataset": "whole test",
+      "metric_name": "RMSE",
+      "metric_value": "0.71%"
+    },
+    {
+      "model_name": "SVM method",
+      "is_proposed": false,
+      "dataset": "dynamic conditions",
+      "metric_name": "coefficient of determination",
+      "metric_value": "0.97"
+    },
+    {
+      "model_name": "SVM method",
+      "is_proposed": false,
+      "dataset": "dynamic conditions",
+      "metric_name": "relative maximum error",
+      "metric_value": "below 4%"
+    },
+    {
+      "model_name": "SVM method",
+      "is_proposed": false,
+      "dataset": "dynamic conditions",
+      "metric_name": "RMSE",
+      "metric_value": "0.4%"
+    }
+  ],
+  "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells": [
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-77",
+      "metric_name": "MAE",
+      "metric_value": "2.1%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-77",
+      "metric_name": "MAE",
+      "metric_value": "0.88%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-145",
+      "metric_name": "Maximum Absolute Error",
+      "metric_value": "5.78%"
+    },
+    {
+      "model_name": "standard LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "1.05%"
+    },
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "0.79%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "0.65%"
+    },
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "6.1%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "2.5%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-14",
+      "metric_name": "MAE",
+      "metric_value": "3.88%"
+    },
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-14",
+      "metric_name": "MAE",
+      "metric_value": "5.4%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "3.87%"
+    },
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-137",
+      "metric_name": "MAE",
+      "metric_value": "4.37%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "Cell-145",
+      "metric_name": "MAE",
+      "metric_value": "2.55%"
+    },
+    {
+      "model_name": "Autoencod-LSTM",
+      "is_proposed": false,
+      "dataset": "Cell-145",
+      "metric_name": "MAE",
+      "metric_value": "2.75%"
+    },
+    {
+      "model_name": "USAL",
+      "is_proposed": true,
+      "dataset": "dynamic loading pro\ufb01les",
+      "metric_name": "Performance",
+      "metric_value": "state-of-the-art"
+    }
+  ]
+}

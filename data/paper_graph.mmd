@@ -1,0 +1,95 @@
+flowchart LR
+  P1["Extreme learning machine model for..."]
+  P2["Online jointprediction of multi-forward-step battery..."]
+  P3["Real-time state of charge estimation..."]
+  P4["SOC estimation of Li-ion battery..."]
+  P5["State of charge estimation for..."]
+  P6["State of charge estimation of..."]
+  P7["State-of-charge estimation of lithium-ion batteries..."]
+  P8["State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks"]
+  P9["Support Vector Machines Used to..."]
+  P10["Uncorrelated sparse autoencoder with long..."]
+  T1("ANNs")
+  T2("BP")
+  T3("BPNN")
+  T4("Barnacle Mating Optimizer")
+  T5("CNN")
+  T6("Coulomb Counting")
+  T7("Differential Search Algorithm")
+  T8("EKF")
+  T9("Extreme Learning Machine")
+  T10("Gated Recurrent Unit (GRU)")
+  T11("Gaussian Process Regression")
+  T12("Gravitational Search Algorithm")
+  T13("LS-SVM")
+  T14("LSTM")
+  T15("Multiple Linear Regression")
+  T16("NARX")
+  T17("OCV")
+  T18("Particle Filter")
+  T19("RBFNN")
+  T20("Random Forest")
+  T21("Sparse Autoencoder")
+  T22("Support Vector Machine")
+  T23("Temporal Convolutional Network")
+  T24("Transfer Learning")
+  T25("U-Net")
+  T26("UKF")
+  P1 -->|uses| T9
+  P1 -->|uses| T12
+  P1 -.->|baseline| T3
+  P1 -.->|baseline| T19
+  P2 -->|uses| T14
+  P2 -->|uses| T15
+  P2 -.->|baseline| T2
+  P2 ==>|compares vs| P5
+  P2 ==>|compares vs| P9
+  P3 -->|uses| T20
+  P3 -->|uses| T7
+  P3 ==>|compares vs| P7
+  P3 -.->|baseline| T18
+  P3 -.->|baseline| T19
+  P3 ==>|compares vs| P1
+  P3 -.->|baseline| T11
+  P3 ==>|compares vs| P5
+  P3 ==>|compares vs| P9
+  P4 -->|uses| T5
+  P4 -->|uses| T25
+  P4 ==>|compares vs| P3
+  P4 ==>|compares vs| P5
+  P4 ==>|compares vs| P9
+  P4 -.->|baseline| T3
+  P5 -->|uses| T4
+  P5 -->|uses| T22
+  P5 ==>|compares vs| P7
+  P5 ==>|compares vs| P9
+  P5 -.->|baseline| T11
+  P5 ==>|compares vs| P4
+  P6 -->|uses| T23
+  P6 -->|uses| T24
+  P6 ==>|compares vs| P7
+  P6 -.->|baseline| T18
+  P6 -.->|baseline| T10
+  P6 ==>|compares vs| P2
+  P6 ==>|compares vs| P7
+  P6 ==>|compares vs| P8
+  P6 ==>|compares vs| P10
+  P7 -->|uses| T14
+  P7 -->|uses| T26
+  P7 -.->|baseline| T6
+  P7 -.->|baseline| T17
+  P7 -.->|baseline| T8
+  P7 -.->|baseline| T18
+  P8 -->|uses| T14
+  P8 -->|uses| T16
+  P8 -.->|baseline| T2
+  P8 -.->|baseline| T13
+  P8 ==>|compares vs| P2
+  P8 ==>|compares vs| P7
+  P8 ==>|compares vs| P10
+  P9 -->|uses| T22
+  P9 -.->|baseline| T1
+  P9 ==>|compares vs| P7
+  P10 -->|uses| T21
+  P10 -->|uses| T14
+  P10 ==>|compares vs| P7
