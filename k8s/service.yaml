@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: research-agent-api
+  namespace: research-agent
+spec:
+  type: NodePort
+  selector:
+    app: research-agent-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30080

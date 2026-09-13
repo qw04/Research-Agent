@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: research-agent-api
+  namespace: research-agent
+  labels:
+    app: research-agent-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: research-agent-api
+  template:
+    metadata:
+      labels:
+        app: research-agent-api
+    spec:
+      containers:
+        - name: research-agent-api
+          image: docker.io/REPLACE_DOCKERHUB_USER/research-agent:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: OPENAI_API_KEY
+            - name: HF_HUB_OFFLINE
+              value: "1"
+            - name: TRANSFORMERS_OFFLINE
+              value: "1"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "600Mi"
+            limits:
+              cpu: "900m"
+              memory: "1400Mi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 15
+            failureThreshold: 3

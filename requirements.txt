@@ -1,8 +1,8 @@
 pypdf==5.1.0
 sentence-transformers==3.3.1
 faiss-cpu==1.10.0
-openai==1.58.1
-python-dotenv==1.0.1
+openai==2.53.0
+python-dotenv==1.2.2
 numpy>=2.0
 tiktoken==0.8.0
 langchain-text-splitters
@@ -10,7 +10,7 @@ unstructured[pdf]
 langchain-openai
 langgraph
 arxiv
-crewai
+crewai==1.15.13
 mlflow
 networkx
 matplotlib
