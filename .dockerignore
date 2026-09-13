@@ -1,0 +1,10 @@
+venv/
+.git/
+.gitignore
+.env
+papers/
+mlflow.db
+mlruns/
+**/__pycache__/
+*.pyc
+data/eval_runs/
