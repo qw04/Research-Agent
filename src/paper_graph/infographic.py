@@ -9,9 +9,9 @@ Deliberately self-contained and domain-agnostic (no battery/SOC-specific
 wording baked into the prompts) and CLI-configurable, so it can be pointed
 at a different corpus of papers later without editing code — just:
 
-    python src/infographic.py --chunks path/to/chunks.json --output-dir path/to/out
+    python src/paper_graph/infographic.py --chunks path/to/chunks.json --output-dir path/to/out
 
-Expects the same chunks.json shape produced by src/ingest.py: a JSON list
+Expects the same chunks.json shape produced by src/core/ingest.py: a JSON list
 of {"source": <paper title>, "text": <chunk text>, ...}.
 """
 

@@ -10,11 +10,12 @@ Iterates over a small set of configurations (top_k, critic on/off) so MLflow
 tracks comparable runs rather than a single one-off result — the point of
 the MLOps line item is comparison across configurations, not just logging
 one run. Chunk size is not varied here since that requires re-ingesting and
-re-embedding the corpus (src/ingest.py, src/embed_store.py), which is out of
+re-embedding the corpus (src/core/ingest.py, src/core/embed_store.py), which is out of
 scope for this pass; top_k and critic on/off are the two knobs exercised.
 """
 
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "core"))
 from graph import ask
 
 load_dotenv()

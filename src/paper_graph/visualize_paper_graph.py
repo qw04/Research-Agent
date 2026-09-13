@@ -1,5 +1,5 @@
 """
-Renders data/paper_graph.json (built by src/build_paper_graph.py) as:
+Renders data/paper_graph.json (built by src/paper_graph/build_paper_graph.py) as:
   - data/paper_graph.png   — static image via networkx + matplotlib
   - data/paper_graph.mmd   — Mermaid flowchart source, for embedding in a
                               GitHub README (Mermaid renders natively there;

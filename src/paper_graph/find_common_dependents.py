@@ -5,8 +5,8 @@ data/paper_graph.json) but that aren't backed by a dedicated paper in the
 corpus, then searches arXiv for candidate papers that could fill that gap.
 
 This is a discovery/reporting tool, not an auto-ingestion pipeline —
-actually expanding the corpus (re-running src/ingest.py and
-src/embed_store.py on any paper found here) is a separate, deliberate
+actually expanding the corpus (re-running src/core/ingest.py and
+src/core/embed_store.py on any paper found here) is a separate, deliberate
 decision this script does not make on its own.
 
 Reuses the same arxiv.Client()/arxiv.Search() pattern as graph.py's

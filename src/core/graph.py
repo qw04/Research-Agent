@@ -7,7 +7,7 @@ Graph shape:
                        -> [insufficient, attempts < MAX] -> reformulate -> retrieve (loop)
                        -> [insufficient, attempts >= MAX] -> arxiv_search -> generate -> critic -> END
 
-The critic node (src/critic.py) is a separate, role-based multi-agent
+The critic node (src/core/critic.py) is a separate, role-based multi-agent
 framework (CrewAI) rather than another LangGraph node's worth of logic —
 it reviews the generated answer against the retrieved sources and, if it
 finds an unsupported claim, replaces the answer with one revision pass.
@@ -367,7 +367,7 @@ def compare_papers(paper_a: str, paper_b: str, question: str) -> dict:
 # Paper-relationship tool (standalone, not part of the main graph loop)
 # ---------------------------------------------------------------------------
 # Reads the precomputed dependency/technique graph built offline by
-# src/build_paper_graph.py (data/paper_graph.json) — no live LLM extraction
+# src/paper_graph/build_paper_graph.py (data/paper_graph.json) — no live LLM extraction
 # happens here, so this tool is cheap and deterministic to call at query time.
 
 PAPER_GRAPH_FILE = Path("data/paper_graph.json")
@@ -376,7 +376,7 @@ PAPER_GRAPH_FILE = Path("data/paper_graph.json")
 def _load_paper_graph() -> dict:
     if not PAPER_GRAPH_FILE.exists():
         raise FileNotFoundError(
-            f"{PAPER_GRAPH_FILE} not found — run `python src/build_paper_graph.py` first."
+            f"{PAPER_GRAPH_FILE} not found — run `python src/paper_graph/build_paper_graph.py` first."
         )
     return json.loads(PAPER_GRAPH_FILE.read_text(encoding="utf-8"))
 
