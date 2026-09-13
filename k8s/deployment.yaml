@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: research-agent-api
-          image: docker.io/REPLACE_DOCKERHUB_USER/research-agent:v1
+          image: docker.io/ytrewq2309/research-agent:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
