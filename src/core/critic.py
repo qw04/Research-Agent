@@ -32,38 +32,49 @@ class Critique(BaseModel):
     )
 
 
-critic_agent = Agent(
-    role="Fact-Checking Critic",
-    goal=(
-        "Verify that a draft answer is fully supported by the retrieved source "
-        "excerpts, and flag any unsupported, fabricated, or miscited claims."
-    ),
-    backstory=(
-        "You are a meticulous research reviewer for a battery state-of-charge "
-        "(SOC) estimation research assistant. You check draft answers claim by "
-        "claim against the source excerpts they cite, and you never let an "
-        "unsupported claim pass."
-    ),
-    llm=CRITIC_MODEL,
-    verbose=False,
-)
-
-reviser_agent = Agent(
-    role="Answer Reviser",
-    goal=(
-        "Revise a draft answer to address specific critic feedback while staying "
-        "strictly grounded in the provided source excerpts."
-    ),
-    backstory=(
-        "You rewrite research-assistant answers to fix issues a critic identified, "
-        "without introducing new claims that aren't backed by the source excerpts."
-    ),
-    llm=CRITIC_MODEL,
-    verbose=False,
-)
+# Used when no topic is supplied, so the critic still works as a generic
+# grounding checker rather than assuming any particular domain.
+DEFAULT_TOPIC = "academic research"
 
 
-def _critique_task(question: str, answer: str, context: str) -> Task:
+def _make_critic_agent(topic: str) -> Agent:
+    # Built per call (not at module level) because the backstory embeds the
+    # user-provided research topic, which varies between runs.
+    return Agent(
+        role="Fact-Checking Critic",
+        goal=(
+            "Verify that a draft answer is fully supported by the retrieved source "
+            "excerpts, and flag any unsupported, fabricated, or miscited claims."
+        ),
+        backstory=(
+            f"You are a meticulous research reviewer for a research assistant "
+            f"focused on {topic}. You check draft answers claim by claim against "
+            "the source excerpts they cite, and you never let an unsupported "
+            "claim pass."
+        ),
+        llm=CRITIC_MODEL,
+        verbose=False,
+    )
+
+
+def _make_reviser_agent(topic: str) -> Agent:
+    return Agent(
+        role="Answer Reviser",
+        goal=(
+            "Revise a draft answer to address specific critic feedback while staying "
+            "strictly grounded in the provided source excerpts."
+        ),
+        backstory=(
+            f"You rewrite answers from a research assistant focused on {topic} "
+            "to fix issues a critic identified, without introducing new claims "
+            "that aren't backed by the source excerpts."
+        ),
+        llm=CRITIC_MODEL,
+        verbose=False,
+    )
+
+
+def _critique_task(agent: Agent, question: str, answer: str, context: str) -> Task:
     return Task(
         description=(
             f"Question: {question}\n\nDraft answer:\n{answer}\n\n"
@@ -72,12 +83,12 @@ def _critique_task(question: str, answer: str, context: str) -> Task:
             "Approve only if every claim is supported and citations are accurate."
         ),
         expected_output="A structured critique with an approval decision and feedback.",
-        agent=critic_agent,
+        agent=agent,
         output_pydantic=Critique,
     )
 
 
-def _revision_task(question: str, answer: str, context: str, feedback: str) -> Task:
+def _revision_task(agent: Agent, question: str, answer: str, context: str, feedback: str) -> Task:
     return Task(
         description=(
             f"Question: {question}\n\nOriginal draft answer:\n{answer}\n\n"
@@ -88,18 +99,30 @@ def _revision_task(question: str, answer: str, context: str, feedback: str) -> T
             "format used in the original answer."
         ),
         expected_output="A revised, fully grounded answer with citations.",
-        agent=reviser_agent,
+        agent=agent,
     )
 
 
-def review_answer(question: str, answer: str, context: str, verbose: bool = False) -> dict:
+def review_answer(
+    question: str,
+    answer: str,
+    context: str,
+    topic: str | None = None,
+    verbose: bool = False,
+) -> dict:
     """Run the critic agent against a draft answer. If approved, return it
     unchanged. If not, run exactly one revision pass with the reviser agent
     and return the revised answer — no further critique loop, per the v2
-    plan's "one critic role, one revision loop" scope."""
+    plan's "one critic role, one revision loop" scope.
+
+    `topic` is the research topic the user supplied up front; it frames both
+    agents' personas. Falls back to DEFAULT_TOPIC when not given."""
+    topic = topic or DEFAULT_TOPIC
+    critic_agent = _make_critic_agent(topic)
+
     critique_crew = Crew(
         agents=[critic_agent],
-        tasks=[_critique_task(question, answer, context)],
+        tasks=[_critique_task(critic_agent, question, answer, context)],
         process=Process.sequential,
         verbose=verbose,
     )
@@ -111,9 +134,10 @@ def review_answer(question: str, answer: str, context: str, verbose: bool = Fals
     if critique.approved:
         return {"answer": answer, "approved": True, "feedback": critique.feedback, "revised": False}
 
+    reviser_agent = _make_reviser_agent(topic)
     revision_crew = Crew(
         agents=[reviser_agent],
-        tasks=[_revision_task(question, answer, context, critique.feedback)],
+        tasks=[_revision_task(reviser_agent, question, answer, context, critique.feedback)],
         process=Process.sequential,
         verbose=verbose,
     )
@@ -135,6 +159,7 @@ if __name__ == "__main__":
         question="How accurate is SVM regression for SOC estimation?",
         answer=demo_answer,
         context=demo_context,
+        topic="battery state-of-charge estimation",
         verbose=True,
     )
     print(result)
