@@ -22,11 +22,10 @@ from langgraph.graph import StateGraph, END
 
 from langchain_openai import ChatOpenAI
 from langchain_openai import ChatOpenAI
-from generate import retrieve, format_context, llm
-from critic import review_answer
-from config import DEFAULT_TOPIC
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "discovery"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/, so core.* / discovery.* / paper_graph.* resolve
+from core.generate import retrieve, format_context, llm
+from core.critic import review_answer
+from core.config import DEFAULT_TOPIC
 from discovery.arxiv_search import search_arxiv
 
 MAX_LOCAL_ATTEMPTS = 2  # how many times to reformulate + re-search locally before falling back to arXiv

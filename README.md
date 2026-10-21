@@ -66,6 +66,8 @@ OPENAI_API_KEY=sk-...
 
 Run everything **from the repo root**: data paths such as `data/` and `papers/` are relative to it.
 
+Imports are package-style, rooted at `src/` (e.g. `from core.graph import ask`, `from discovery.arxiv_search import search_arxiv`). Each script you run directly adds `src/` to `sys.path` itself, so no `PYTHONPATH` setup is needed.
+
 Build the corpus and index (re-run whenever `papers/` changes):
 
 ```bash

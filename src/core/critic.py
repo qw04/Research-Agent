@@ -7,11 +7,15 @@ is the point of adding it as a second framework rather than just another
 LangGraph node.
 """
 
+import sys
+from pathlib import Path
+
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from pydantic import BaseModel, Field
 
-from config import DEFAULT_TOPIC
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/, so core.* / discovery.* / paper_graph.* resolve
+from core.config import DEFAULT_TOPIC
 
 load_dotenv()
 

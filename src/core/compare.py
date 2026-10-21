@@ -7,8 +7,8 @@ two specific papers.
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-from config import DEFAULT_TOPIC
-from generate import llm, chunks
+from core.config import DEFAULT_TOPIC
+from core.generate import llm, chunks
 
 compare_prompt = ChatPromptTemplate.from_messages([
     ("system",
