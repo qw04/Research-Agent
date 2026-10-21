@@ -13,6 +13,7 @@ plain technique usage.
 
 import json
 import re
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -33,7 +34,7 @@ def short_label(title: str, max_words: int = 5) -> str:
     return label + ("..." if len(words) > max_words else "")
 
 
-def render_png(data: dict) -> None:
+def render_png(data: dict, topic: str | None = None) -> None:
     G = nx.DiGraph()
 
     papers = list(data["papers"].keys())
@@ -78,7 +79,10 @@ def render_png(data: dict) -> None:
         plt.Line2D([0], [0], color="#C44E52", linestyle="dashed", linewidth=2, label="compares against (paper)"),
     ]
     ax.legend(handles=legend_handles, loc="upper left", fontsize=9)
-    ax.set_title("Paper dependency / technique graph — battery SOC estimation corpus", fontsize=13)
+    title = "Paper dependency / technique graph"
+    if topic:
+        title += f" — {topic} corpus"
+    ax.set_title(title, fontsize=13)
     ax.axis("off")
 
     fig.tight_layout()
@@ -127,6 +131,9 @@ def render_mermaid(data: dict) -> None:
 
 
 if __name__ == "__main__":
+    # Optional topic for the PNG title, e.g. `python src/paper_graph/visualize_paper_graph.py "battery SOC estimation"`
+    topic = " ".join(sys.argv[1:]) or None
+
     graph = load_graph()
-    render_png(graph)
+    render_png(graph, topic)
     render_mermaid(graph)

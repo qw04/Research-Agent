@@ -16,6 +16,7 @@ semantic).
 """
 
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -26,10 +27,10 @@ OUTPUT_FILE = Path("data/common_dependents.json")
 MIN_IN_DEGREE = 2  # "common" = a baseline for at least this many corpus papers
 MAX_CANDIDATES = 3
 # arXiv's AND matching is literal keyword matching, not semantic — a long
-# quoted phrase like "battery state of charge estimation" almost never
-# appears verbatim in an abstract, so it returns nothing. A single broad
-# term actually narrows to on-domain results.
-DOMAIN_CONTEXT = "battery"
+# quoted topic phrase almost never appears verbatim in an abstract, so it
+# returns nothing. A single broad domain term (e.g. "battery" for a battery
+# SOC corpus) actually narrows to on-domain results. Passed on the command
+# line; if omitted, searches use the technique alone.
 
 # arxiv.Client() rate-limits itself (default delay_seconds=3.0 between
 # requests, per arXiv's API terms), so no manual sleep is needed here.
@@ -70,13 +71,15 @@ def _format_results(results) -> list[dict]:
     ]
 
 
-def search_arxiv(technique: str) -> list[dict]:
-    query = f'all:"{technique}" AND all:"{DOMAIN_CONTEXT}"'
-    search = arxiv.Search(query=query, max_results=MAX_CANDIDATES, sort_by=arxiv.SortCriterion.Relevance)
-    results = list(client.results(search))
+def search_arxiv(technique: str, domain: str | None = None) -> list[dict]:
+    results = []
+    if domain:
+        query = f'all:"{technique}" AND all:"{domain}"'
+        search = arxiv.Search(query=query, max_results=MAX_CANDIDATES, sort_by=arxiv.SortCriterion.Relevance)
+        results = list(client.results(search))
 
     if not results:
-        # domain-scoped query came up empty — fall back to the technique alone
+        # no domain given, or the domain-scoped query came up empty — use the technique alone
         search = arxiv.Search(query=f'all:"{technique}"', max_results=MAX_CANDIDATES,
                                sort_by=arxiv.SortCriterion.Relevance)
         results = list(client.results(search))
@@ -85,6 +88,9 @@ def search_arxiv(technique: str) -> list[dict]:
 
 
 if __name__ == "__main__":
+    # Optional single broad domain term, e.g. `python src/paper_graph/find_common_dependents.py battery`
+    domain = sys.argv[1] if len(sys.argv) > 1 else None
+
     graph = load_graph()
     gaps = find_gaps(graph)
 
@@ -94,7 +100,7 @@ if __name__ == "__main__":
     report = []
     for gap in gaps:
         print(f"- {gap['technique']} (baseline for {gap['in_degree']} papers)")
-        candidates = search_arxiv(gap["technique"])
+        candidates = search_arxiv(gap["technique"], domain)
         for c in candidates:
             print(f"    candidate: {c['title']} ({c['arxiv_id']}, {c['published']})")
         if not candidates:

@@ -24,6 +24,7 @@ from langchain_openai import ChatOpenAI
 from langchain_openai import ChatOpenAI
 from generate import retrieve, format_context, llm
 from critic import review_answer
+from config import DEFAULT_TOPIC
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "discovery"))
 from discovery.arxiv_search import search_arxiv
@@ -50,6 +51,7 @@ control_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 # ---------------------------------------------------------------------------
 
 class GraphState(TypedDict):
+    topic: str                # research topic the corpus/question is about
     original_question: str
     question: str            # current (possibly reformulated) query
     retrieved: list[dict]     # chunks from local FAISS or arXiv, same shape
@@ -93,8 +95,8 @@ grader = grade_prompt | utility_llm.with_structured_output(RelevanceGrade)
 
 reformulate_prompt = ChatPromptTemplate.from_messages([
     ("system",
-     "You rewrite search queries to improve retrieval from a corpus of battery "
-     "state-of-charge (SOC) estimation research papers. The previous query did not "
+     "You rewrite search queries to improve retrieval from a corpus of research "
+     "papers on {topic}. The previous query did not "
      "retrieve sufficient results. Rewrite it to use different terminology, be more "
      "specific, or approach the topic from a different angle — while preserving the "
      "original intent."),
@@ -106,8 +108,8 @@ reformulator = reformulate_prompt | utility_llm.with_structured_output(Reformula
 
 answer_prompt = ChatPromptTemplate.from_messages([
     ("system",
-     "You are a research assistant answering questions about battery state-of-charge "
-     "(SOC) estimation. Answer ONLY using the provided context — if the context doesn't "
+     "You are a research assistant answering questions about {topic}. "
+     "Answer ONLY using the provided context — if the context doesn't "
      "contain the answer, say so explicitly rather than guessing.\n\n"
      "Every claim must be followed by a citation in the form [Source: <paper title>] for "
      "local papers, or [Source: arXiv - <paper title>] for arXiv results. Do not fabricate "
@@ -152,6 +154,7 @@ def route_after_grade(state: GraphState) -> Literal["generate", "reformulate", "
 
 def reformulate_node(state: GraphState) -> GraphState:
     result: ReformulatedQuery = reformulator.invoke({
+        "topic": state["topic"],
         "original_question": state["original_question"],
         "question": state["question"],
     })
@@ -164,13 +167,14 @@ def arxiv_search_node(state: GraphState) -> GraphState:
     """Local retrieval failed after MAX_LOCAL_ATTEMPTS reformulations —
     fall back to live arXiv search (src/discovery/arxiv_search.py) for
     papers the local corpus doesn't cover."""
-    arxiv_results = search_arxiv(state["original_question"], verbose=state["verbose"])
+    arxiv_results = search_arxiv(state["original_question"], topic=state["topic"], verbose=state["verbose"])
     return {**state, "retrieved": arxiv_results, "used_arxiv": True}
 
 
 def generate_node(state: GraphState) -> GraphState:
     context = format_context(state["retrieved"])
     answer = answer_chain.invoke({
+        "topic": state["topic"],
         "context": context,
         "question": state["original_question"],
     })
@@ -187,6 +191,7 @@ def critic_node(state: GraphState) -> GraphState:
         question=state["original_question"],
         answer=state["answer"],
         context=context,
+        topic=state["topic"],
         verbose=state["verbose"],
     )
     return {
@@ -229,8 +234,18 @@ def build_graph():
 app = build_graph()
 
 
-def ask(question: str, verbose: bool = False, top_k: int = TOP_K, use_critic: bool = True) -> dict:
+def ask(
+    question: str,
+    topic: str | None = None,
+    verbose: bool = False,
+    top_k: int = TOP_K,
+    use_critic: bool = True,
+) -> dict:
+    """Run the agent on `question`. `topic` is the research topic the corpus
+    is about; it frames the reformulation, arXiv-keyword, answer and critic
+    prompts. Falls back to DEFAULT_TOPIC when not given."""
     result = app.invoke({
+        "topic": topic or DEFAULT_TOPIC,
         "original_question": question,
         "question": question,
         "retrieved": [],
@@ -249,7 +264,14 @@ def ask(question: str, verbose: bool = False, top_k: int = TOP_K, use_critic: bo
 
 
 if __name__ == "__main__":
-    result = ask("What is State of Health for a Battery?", verbose=True)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Ask the research agent a question.")
+    parser.add_argument("question")
+    parser.add_argument("--topic", default=None, help="Research topic the corpus is about.")
+    args = parser.parse_args()
+
+    result = ask(args.question, topic=args.topic, verbose=True)
     print(f"Q: {result['original_question']}")
     print(f"Attempts: {result['attempts']} | Used arXiv: {result['used_arxiv']}")
     print(f"Critic approved: {result['approved']}" + (f" | feedback: {result['critic_feedback']}" if not result["approved"] else ""))

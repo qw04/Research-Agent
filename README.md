@@ -2,7 +2,7 @@
 
 A RAG + multi-agent research assistant over a corpus of academic papers. It answers questions with citations to the papers it retrieved from. A critic agent checks each answer against the sources, and the agent falls back to live arXiv search when the local corpus doesn't cover a question.
 
-> **Status: in transition.** The project started as a fixed-corpus assistant for **battery state-of-charge (SOC) estimation** papers (10 PDFs in `papers/`). The goal now is a **generic, topic-driven research agent**: give it a topic, it finds the most influential papers on that topic, and you can then ask questions about them to learn the key techniques. Parts of the code are still SOC-specific; see [Roadmap](#roadmap).
+> **Status: in transition.** The project started as a fixed-corpus assistant for **battery state-of-charge (SOC) estimation** papers (10 PDFs in `papers/`). The goal now is a **generic, topic-driven research agent**: give it a topic, it finds the most influential papers on that topic, and you can then ask questions about them to learn the key techniques. Every prompt now takes a `topic` (defaulting to a generic "academic research"). The corpus and eval set are still the battery SOC ones; see [Roadmap](#roadmap).
 
 ---
 
@@ -76,10 +76,10 @@ python src/core/ingest.py
 python src/core/embed_store.py
 ```
 
-Ask a question from the CLI:
+Ask a question from the CLI (`--topic` is optional):
 
 ```bash
-python src/core/graph.py
+python src/core/graph.py "Which methods give the lowest error?" --topic "battery state-of-charge estimation"
 ```
 
 Run the API:
@@ -106,14 +106,18 @@ python src/discovery/topic_discovery.py "your topic here"
 
 Moving from the battery SOC corpus to a generic, topic-driven agent:
 
-1. **Core: remove the hardcoded domain**
+1. **Core: remove the hardcoded domain** ✅
    - [x] `critic.py`: the critic and reviser agents take a `topic` parameter, with a generic fallback.
-   - [ ] `graph.py`: add `topic` to `GraphState` and `ask()`, pass it to the critic, and make the reformulate and answer prompts generic.
-   - [ ] `compare.py`: make the compare prompt generic.
-   - [ ] `arxiv_search.py`: remove the battery example from the `ArxivQuery` field description.
+   - [x] `graph.py`: `topic` is part of `GraphState` and `ask()`, and drives the reformulate, answer, arXiv and critic prompts. The default lives in `src/core/config.py`.
+   - [x] `compare.py`: `compare_papers(..., topic=)`.
+   - [x] `arxiv_search.py`: `search_arxiv(question, topic=)`. The topic keeps the arXiv keywords on-domain.
    - [x] `generate.py`: removed the unused SOC-specific prompt, chain and `answer()`. It's now a retrieval-only module.
 2. **Topic discovery:** build stage 2 (pick the *influential* papers for a topic using arXiv plus Semantic Scholar citation counts and an LLM shortlist) and stage 3 (ingest the papers you approve).
-3. **Downstream cleanup:** update the SOC wording in `src/api/main.py`, `src/eval/evaluate.py` (judge prompt + eval set), and `src/paper_graph/` (`DOMAIN_CONTEXT`, plot titles).
+3. **Downstream cleanup**
+   - [x] API: `/ask` and `/compare` accept an optional `topic`.
+   - [x] `evaluate.py`: the judge prompt takes the topic, and the eval runs with `EVAL_TOPIC` (battery SOC, to match the current eval set).
+   - [x] `paper_graph/`: the arXiv domain term and the plot title are command-line arguments.
+   - [ ] Write an eval set that isn't tied to the battery SOC corpus, or generate one per topic.
 4. **Ingest: richer PDF extraction (later)**
    - [ ] **References:** `ingest.py` currently stops reading at the References section and throws it away. Parse it into structured citations (title, authors, year) and store them per paper. This could feed a citation graph within the corpus and help with ranking influential papers in topic discovery stage 2.
    - [ ] **Tables:** `ingest.py` currently drops `Table` elements (they're in `SKIP_CATEGORIES`), because bare table fragments ranked well in search without adding useful content. Extract them properly instead (e.g. `unstructured` with `strategy="hi_res"` and `infer_table_structure=True`), store them as their own chunks with the table's caption, and possibly reuse them for the results infographic.

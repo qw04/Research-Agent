@@ -1,6 +1,6 @@
 """
 Topic-driven literature discovery — stage 1 of a new "research any topic"
-mode, separate from the fixed-corpus SOC pipeline in graph.py.
+mode, separate from the fixed-corpus Q&A pipeline in graph.py.
 
 Full intended pipeline (this module builds stage 1 only):
 
@@ -40,7 +40,7 @@ Papers With Code was considered as a 4th source but its public REST API
 instead of JSON for all endpoints — it appears to have been retired —
 so it was dropped in favor of Semantic Scholar.
 
-Run: python src/discovery/topic_discovery.py "battery SOC modelling"
+Run: python src/discovery/topic_discovery.py "<your topic>"
 """
 
 import sys
@@ -294,7 +294,9 @@ def discover(topic: str, verbose: bool = True) -> dict:
 
 
 if __name__ == "__main__":
-    topic = " ".join(sys.argv[1:]) or "battery state of charge modelling"
+    topic = " ".join(sys.argv[1:])
+    if not topic:
+        sys.exit('Usage: python src/discovery/topic_discovery.py "<your topic>"')
     result = discover(topic)
     print(f"\nProposed introductory sources for {topic!r}:\n")
     for i, s in enumerate(result["shortlist"], 1):

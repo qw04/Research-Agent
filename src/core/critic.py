@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from pydantic import BaseModel, Field
 
+from config import DEFAULT_TOPIC
+
 load_dotenv()
 
 # Cheap model: reviewing/revising a single already-generated answer is a
@@ -30,9 +32,6 @@ class Critique(BaseModel):
     )
 
 
-# Used when no topic is supplied, so the critic still works as a generic
-# grounding checker rather than assuming any particular domain.
-DEFAULT_TOPIC = "academic research"
 
 
 def _make_critic_agent(topic: str) -> Agent:

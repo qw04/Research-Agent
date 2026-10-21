@@ -26,7 +26,7 @@ from paper_graph.paper_relationships import paper_relationships
 
 app = FastAPI(
     title="Research Paper Agent API",
-    description="RAG + multi-agent Q&A over a corpus of battery state-of-charge (SOC) estimation papers.",
+    description="RAG + multi-agent Q&A over a corpus of research papers on a given topic.",
     version="1.0.0",
 )
 
@@ -37,6 +37,7 @@ app = FastAPI(
 
 class AskRequest(BaseModel):
     question: str
+    topic: str | None = None  # research topic the corpus is about; generic default if omitted
     top_k: int = Field(default=5, ge=1, le=20)
     use_critic: bool = True
 
@@ -55,6 +56,7 @@ class CompareRequest(BaseModel):
     paper_a: str
     paper_b: str
     question: str
+    topic: str | None = None
 
 
 class CompareResponse(BaseModel):
@@ -89,7 +91,7 @@ def list_papers() -> list[str]:
 
 @app.post("/ask", response_model=AskResponse)
 def ask_route(req: AskRequest) -> AskResponse:
-    result = ask(req.question, top_k=req.top_k, use_critic=req.use_critic)
+    result = ask(req.question, topic=req.topic, top_k=req.top_k, use_critic=req.use_critic)
     return AskResponse(
         question=result["original_question"],
         answer=result["answer"],
@@ -104,7 +106,7 @@ def ask_route(req: AskRequest) -> AskResponse:
 @app.post("/compare", response_model=CompareResponse)
 def compare_route(req: CompareRequest) -> CompareResponse:
     try:
-        result = compare_papers(req.paper_a, req.paper_b, req.question)
+        result = compare_papers(req.paper_a, req.paper_b, req.question, topic=req.topic)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     return CompareResponse(paper_a=result["paper_a"], paper_b=result["paper_b"], answer=result["answer"])

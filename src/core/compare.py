@@ -7,11 +7,12 @@ two specific papers.
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
+from config import DEFAULT_TOPIC
 from generate import llm, chunks
 
 compare_prompt = ChatPromptTemplate.from_messages([
     ("system",
-     "You compare two research papers on battery state-of-charge estimation. "
+     "You compare two research papers on {topic}. "
      "Answer the user's question by contrasting the two papers directly — their "
      "methods, assumptions, and results. Cite claims as [Source: <paper title>]. "
      "If one paper doesn't address something the other does, say so explicitly."),
@@ -28,7 +29,7 @@ def _chunks_for_source(source: str, max_chunks: int = 6) -> str:
     return "\n\n---\n\n".join(c["text"] for c in matches)
 
 
-def compare_papers(paper_a: str, paper_b: str, question: str) -> dict:
+def compare_papers(paper_a: str, paper_b: str, question: str, topic: str | None = None) -> dict:
     """Compare two papers by source title (must match the 'source' field in
     metadata.json exactly). Pulls all available chunks for each paper up to
     a cap, rather than doing a similarity search, since we want full coverage
@@ -41,6 +42,7 @@ def compare_papers(paper_a: str, paper_b: str, question: str) -> dict:
         raise ValueError(f"No chunks found for source: {missing!r}. Check the exact title.")
 
     answer = compare_chain.invoke({
+        "topic": topic or DEFAULT_TOPIC,
         "paper_a": paper_a,
         "context_a": context_a,
         "paper_b": paper_b,

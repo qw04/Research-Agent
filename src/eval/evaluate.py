@@ -49,10 +49,15 @@ class JudgeScore(BaseModel):
     reasoning: str = Field(description="One sentence justifying both scores.")
 
 
+# The hand-built eval set (data/eval_set.json) was written against the
+# battery SOC corpus, so the eval runs with that topic. Change this together
+# with the eval set when evaluating a different corpus.
+EVAL_TOPIC = "battery state-of-charge (SOC) estimation"
+
 judge_prompt = ChatPromptTemplate.from_messages([
     ("system",
-     "You are grading a RAG system's answer to a question about battery "
-     "state-of-charge (SOC) estimation research papers. Score faithfulness "
+     "You are grading a RAG system's answer to a question about research "
+     "papers on {topic}. Score faithfulness "
      "(is every claim backed by the cited sources, with nothing fabricated) "
      "and relevance (does the answer cover the reference facts) on a 1-5 "
      "scale each. Be strict — a plausible-sounding but unsupported number "
@@ -78,6 +83,7 @@ def run_eval(top_k: int, use_critic: bool, run_name: str) -> dict:
         mlflow.log_params({
             "top_k": top_k,
             "use_critic": use_critic,
+            "topic": EVAL_TOPIC,
             "n_questions": len(eval_set),
             "judge_model": JUDGE_MODEL,
         })
@@ -87,8 +93,9 @@ def run_eval(top_k: int, use_critic: bool, run_name: str) -> dict:
         start = time.time()
 
         for item in eval_set:
-            result = ask(item["question"], top_k=top_k, use_critic=use_critic)
+            result = ask(item["question"], topic=EVAL_TOPIC, top_k=top_k, use_critic=use_critic)
             score: JudgeScore = judge_chain.invoke({
+                "topic": EVAL_TOPIC,
                 "question": item["question"],
                 "expected_answer": item["expected_answer"],
                 "sources": ", ".join(result["sources"]) or "(none retrieved)",

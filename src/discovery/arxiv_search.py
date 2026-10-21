@@ -30,7 +30,7 @@ query_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 class ArxivQuery(BaseModel):
     terms: list[str] = Field(
         description="2-4 specific keywords/phrases (not a full sentence) that capture "
-                     "the core topic, e.g. ['battery', 'state of charge', 'machine learning']. "
+                     "the core topic, e.g. ['graph neural network', 'molecular property prediction']. "
                      "Prefer specific technical terms over generic ones — arXiv's search "
                      "does literal keyword matching, so a broad term like 'machine learning' "
                      "alone will dominate and drown out the more specific terms."
@@ -41,8 +41,9 @@ arxiv_query_prompt = ChatPromptTemplate.from_messages([
     ("system",
      "Convert the question into a small set of specific search terms suitable for arXiv's "
      "keyword-based search API (not semantic search — literal term matching). Favor precise, "
-     "narrow technical terms over broad category words."),
-    ("human", "Question: {question}"),
+     "narrow technical terms over broad category words. Use the research topic to keep "
+     "the terms on-domain when the question alone is ambiguous."),
+    ("human", "Research topic: {topic}\nQuestion: {question}"),
 ])
 arxiv_query_builder = arxiv_query_prompt | query_llm.with_structured_output(ArxivQuery)
 
@@ -63,10 +64,15 @@ def _run_search(client: arxiv.Client, query: str, max_results: int) -> list[dict
     ]
 
 
-def search_arxiv(question: str, max_results: int = ARXIV_MAX_RESULTS, verbose: bool = False) -> list[dict]:
-    """Search arXiv for papers relevant to `question`, returning abstracts in
-    the same shape as generate.retrieve()."""
-    query_terms: ArxivQuery = arxiv_query_builder.invoke({"question": question})
+def search_arxiv(
+    question: str,
+    topic: str = "academic research",
+    max_results: int = ARXIV_MAX_RESULTS,
+    verbose: bool = False,
+) -> list[dict]:
+    """Search arXiv for papers relevant to `question` within `topic`,
+    returning abstracts in the same shape as generate.retrieve()."""
+    query_terms: ArxivQuery = arxiv_query_builder.invoke({"topic": topic, "question": question})
     and_query = " AND ".join(f'all:"{term}"' for term in query_terms.terms)
     if verbose:
         print(f"[arxiv_search] terms={query_terms.terms} query={and_query!r}")
