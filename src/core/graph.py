@@ -9,10 +9,6 @@ The critic node (src/core/critic.py) is a separate, role-based multi-agent
 framework (CrewAI) rather than another LangGraph node's worth of logic —
 it reviews the generated answer against the retrieved sources and, if it
 finds an unsupported claim, replaces the answer with one revision pass.
-
-The standalone tools that used to live here are in their own modules:
-compare_papers() in src/core/compare.py and paper_relationships() in
-src/paper_graph/paper_relationships.py.
 """
 
 import sys

@@ -1,6 +1,4 @@
 """
-Day 4 — Evaluation + MLOps.
-
 Runs the hand-built eval set (data/eval_set.json) through the full agent
 (graph.ask), scores each answer for faithfulness (grounded in the retrieved
 sources, no fabricated claims) and relevance (covers the expected facts)
@@ -26,7 +24,7 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "core"))
-from graph import ask
+from core.graph import ask
 
 load_dotenv()
 

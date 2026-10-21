@@ -114,7 +114,10 @@ Moving from the battery SOC corpus to a generic, topic-driven agent:
    - [x] `generate.py`: removed the unused SOC-specific prompt, chain and `answer()`. It's now a retrieval-only module.
 2. **Topic discovery:** build stage 2 (pick the *influential* papers for a topic using arXiv plus Semantic Scholar citation counts and an LLM shortlist) and stage 3 (ingest the papers you approve).
 3. **Downstream cleanup:** update the SOC wording in `src/api/main.py`, `src/eval/evaluate.py` (judge prompt + eval set), and `src/paper_graph/` (`DOMAIN_CONTEXT`, plot titles).
-4. **Embed store (last)**
+4. **Ingest: richer PDF extraction (later)**
+   - [ ] **References:** `ingest.py` currently stops reading at the References section and throws it away. Parse it into structured citations (title, authors, year) and store them per paper. This could feed a citation graph within the corpus and help with ranking influential papers in topic discovery stage 2.
+   - [ ] **Tables:** `ingest.py` currently drops `Table` elements (they're in `SKIP_CATEGORIES`), because bare table fragments ranked well in search without adding useful content. Extract them properly instead (e.g. `unstructured` with `strategy="hi_res"` and `infer_table_structure=True`), store them as their own chunks with the table's caption, and possibly reuse them for the results infographic.
+5. **Embed store (last)**
    - [ ] Keep a separate index per topic (e.g. `data/indexes/<topic_slug>/`) instead of one static index built from `papers/`.
    - [ ] Define the embedding model name in one place. Right now it's set separately in `embed_store.py` and `generate.py`, so they can drift apart without any error.
    - [ ] Consider an embedding model trained on scientific text (e.g. SPECTER2) or a stronger general one (bge / e5). Measure the effect with the eval harness before switching.
