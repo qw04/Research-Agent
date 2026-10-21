@@ -1,3 +1,13 @@
+"""
+Shared retrieval module for the agent in graph.py: loads the embedding
+model, FAISS index and chunk metadata once, and exposes retrieve() and
+format_context(). Also owns the final-answer `llm` that graph.py imports.
+
+Answer generation itself (prompt + chain) lives in graph.py's answer_prompt
+/ generate_node; the original single-shot answer() pipeline that used to
+live here was removed since nothing called it.
+"""
+
 import json
 from pathlib import Path
 
@@ -6,8 +16,6 @@ import numpy as np
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
@@ -31,22 +39,6 @@ assert index.ntotal == len(chunks), (
 )
 
 llm = ChatOpenAI(model=LLM_MODEL, temperature=0)
-
-PROMPT = ChatPromptTemplate.from_messages([
-    ("system",
-     "You are a research assistant answering questions about a corpus of "
-     "battery state-of-charge (SOC) estimation papers. Answer ONLY using "
-     "the provided context — if the context doesn't contain the answer, "
-     "say so explicitly rather than guessing.\n\n"
-     "Every claim you make must be followed by a citation in the form "
-     "[Source: <paper title>]. If a sentence draws on multiple sources, "
-     "cite all of them. Do not fabricate citations for anything not in "
-     "the context."),
-    ("human",
-     "Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"),
-])
-
-chain = PROMPT | llm | StrOutputParser()
 
 
 def retrieve(query: str, k: int = TOP_K) -> list[dict]:
@@ -72,28 +64,3 @@ def format_context(retrieved: list[dict]) -> str:
     for r in retrieved:
         blocks.append(f"[Source: {r['source']}]\n{r['text']}")
     return "\n\n---\n\n".join(blocks)
-
-
-def answer(query: str, k: int = TOP_K) -> dict:
-    retrieved = retrieve(query, k=k)
-    context = format_context(retrieved)
-
-    response = chain.invoke({"context": context, "question": query})
-
-    return {
-        "query": query,
-        "answer": response,
-        "sources": sorted(set(r["source"] for r in retrieved)),
-        "retrieved_chunks": retrieved,
-    }
-
-
-if __name__ == "__main__":
-    query = "How does Machine Learning estimate battery state of charge?"
-    result = answer(query)
-
-    print(f"Q: {result['query']}\n")
-    print(f"A: {result['answer']}\n")
-    print("Sources used in retrieval:")
-    for s in result["sources"]:
-        print(f"  - {s}")

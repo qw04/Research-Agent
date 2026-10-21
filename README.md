@@ -25,8 +25,8 @@ retrieve → grade ─[sufficient]───────────────�
 
 - **Ingest** ([src/core/ingest.py](src/core/ingest.py)): parses PDFs with `unstructured`, drops headers, footers, page numbers and tables, and stops at the References section, which it detects by the heading or by a run of citation-shaped lines.
 - **Embed** ([src/core/embed_store.py](src/core/embed_store.py)): encodes chunks with `sentence-transformers/all-MiniLM-L6-v2` (384-dim) into an exact FAISS L2 index.
-- **Retrieve + generate** ([src/core/generate.py](src/core/generate.py)): retrieves the top-k chunks, then GPT-4o answers using only that context, with `[Source: <title>]` citations.
-- **Agent graph** ([src/core/graph.py](src/core/graph.py)): a LangGraph state machine. GPT-4o-mini grades whether the retrieved chunks are sufficient. If they aren't, the query is reformulated and retrieval runs again. After repeated failures it falls back to a keyword search on arXiv (AND-joined terms, retried with OR).
+- **Retrieval** ([src/core/generate.py](src/core/generate.py)): the shared retrieval module. It loads the embedding model, FAISS index and chunk metadata once, and provides `retrieve()` (top-k chunks) and `format_context()` (chunks labelled with their source). It also defines the GPT-4o `llm` used for final answers.
+- **Agent graph** ([src/core/graph.py](src/core/graph.py)): a LangGraph state machine. Its `generate` node has GPT-4o answer using only the retrieved context, with `[Source: <title>]` citations. GPT-4o-mini grades whether the retrieved chunks are sufficient. If they aren't, the query is reformulated and retrieval runs again. After repeated failures it falls back to a keyword search on arXiv (AND-joined terms, retried with OR).
 - **Critic** ([src/core/critic.py](src/core/critic.py)): a CrewAI fact-checking critic reviews the draft claim by claim against the sources. If it rejects the draft, a reviser agent does exactly one rewrite. The critic is told the research topic up front instead of having it hardcoded.
 - **Extra tools in `graph.py`:** `compare_papers()` contrasts two named papers. `paper_relationships()` looks a paper up in the offline paper graph.
 
@@ -108,7 +108,7 @@ Moving from the battery SOC corpus to a generic, topic-driven agent:
 1. **Core: remove the hardcoded domain**
    - [x] `critic.py`: the critic and reviser agents take a `topic` parameter, with a generic fallback.
    - [ ] `graph.py`: add `topic` to `GraphState` and `ask()`, pass it to the critic, and make the reformulate, answer, arXiv-keyword and compare prompts generic.
-   - [ ] `generate.py`: make the system prompt use the topic.
+   - [x] `generate.py`: removed the unused SOC-specific prompt, chain and `answer()`. It's now a retrieval-only module.
 2. **Topic discovery:** build stage 2 (pick the *influential* papers for a topic using arXiv plus Semantic Scholar citation counts and an LLM shortlist) and stage 3 (ingest the papers you approve).
 3. **Downstream cleanup:** update the SOC wording in `src/api/main.py`, `src/eval/evaluate.py` (judge prompt + eval set), and `src/paper_graph/` (`DOMAIN_CONTEXT`, plot titles).
 4. **Embed store (last)**
