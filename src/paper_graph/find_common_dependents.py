@@ -9,8 +9,8 @@ actually expanding the corpus (re-running src/core/ingest.py and
 src/core/embed_store.py on any paper found here) is a separate, deliberate
 decision this script does not make on its own.
 
-Reuses the same arxiv.Client()/arxiv.Search() pattern as graph.py's
-arxiv_search_node, including its own AND-then-OR fallback when a strict
+Reuses the same arxiv.Client()/arxiv.Search() pattern as
+src/discovery/arxiv_search.py, including its own AND-then-OR fallback when a strict
 query returns nothing (arXiv search is literal keyword matching, not
 semantic).
 """

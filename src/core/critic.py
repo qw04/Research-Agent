@@ -1,6 +1,4 @@
 """
-Day 3.5 — Second agentic framework: a CrewAI critic layer.
-
 Deliberately scoped to one critic role + one revision pass, downstream of
 the LangGraph agent in graph.py — not a full multi-agent overhaul. This is
 architecturally distinct from LangGraph's graph-based control flow: it's

@@ -55,7 +55,7 @@ from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "core"))
-from graph import utility_llm
+from core.graph import utility_llm
 
 WIKI_API = "https://en.wikipedia.org/w/api.php"
 USER_AGENT = "research-agent-topic-discovery/0.1 (educational portfolio project; contact: shahsaumya2004@gmail.com)"
@@ -141,8 +141,8 @@ def web_search_node(state: TopicState) -> TopicState:
 def survey_search_node(state: TopicState) -> TopicState:
     # arXiv search is literal keyword matching, not semantic — quoting the
     # whole multi-word topic as one phrase almost never appears verbatim in
-    # an abstract and returns nothing (same failure mode as graph.py's
-    # arxiv_search_node). AND-join individual topic words instead, and fall
+    # an abstract and returns nothing (same failure mode handled in
+    # arxiv_search.py). AND-join individual topic words instead, and fall
     # back to OR-joining if the strict query comes up empty.
     topic = state["topic"]
     terms = topic.split()

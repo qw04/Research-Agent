@@ -1,6 +1,4 @@
 """
-Day 3 — Agentic layer. Day 3.5 adds a CrewAI critic node after generation.
-
 Graph shape:
 
     retrieve -> grade -> [sufficient]   -> generate -> critic -> END
@@ -18,10 +16,10 @@ side-by-side comparison of two specific papers.
 """
 
 import json
+import sys
 from pathlib import Path
 from typing import TypedDict, Literal
 
-import arxiv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field
@@ -32,12 +30,14 @@ from langchain_openai import ChatOpenAI
 from generate import retrieve, format_context, llm, chunks
 from critic import review_answer
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "discovery"))
+from discovery.arxiv_search import search_arxiv
+
 MAX_LOCAL_ATTEMPTS = 2  # how many times to reformulate + re-search locally before falling back to arXiv
 TOP_K = 5
-ARXIV_MAX_RESULTS = 3
 
-# Grading, reformulation, and arXiv query-building are simple classification/
-# rewriting tasks — a cheaper model handles them fine and cuts cost, since
+# Grading and reformulation are simple classification/rewriting tasks —
+# a cheaper model handles them fine and cuts cost, since
 # these nodes can fire multiple times per query in the reformulation loop.
 # `llm` (imported from generate.py, gpt-4o) is reserved for final answer
 # generation, where quality matters most.
@@ -165,76 +165,11 @@ def reformulate_node(state: GraphState) -> GraphState:
     return {**state, "question": result.query, "attempts": state["attempts"] + 1}
 
 
-class ArxivQuery(BaseModel):
-    terms: list[str] = Field(
-        description="2-4 specific keywords/phrases (not a full sentence) that capture "
-                     "the core topic, e.g. ['battery', 'state of charge', 'machine learning']. "
-                     "Prefer specific technical terms over generic ones — arXiv's search "
-                     "does literal keyword matching, so a broad term like 'machine learning' "
-                     "alone will dominate and drown out the more specific terms."
-    )
-
-
-arxiv_query_prompt = ChatPromptTemplate.from_messages([
-    ("system",
-     "Convert the question into a small set of specific search terms suitable for arXiv's "
-     "keyword-based search API (not semantic search — literal term matching). Favor precise, "
-     "narrow technical terms over broad category words."),
-    ("human", "Question: {question}"),
-])
-arxiv_query_builder = arxiv_query_prompt | utility_llm.with_structured_output(ArxivQuery)
-
-
 def arxiv_search_node(state: GraphState) -> GraphState:
     """Local retrieval failed after MAX_LOCAL_ATTEMPTS reformulations —
-    fall back to live arXiv search for papers the local corpus doesn't cover.
-    arXiv's API does literal keyword matching, not semantic search, so we
-    build a proper field-scoped query rather than passing the raw question."""
-    query_terms: ArxivQuery = arxiv_query_builder.invoke({"question": state["original_question"]})
-    arxiv_query_str = " AND ".join(f'all:"{term}"' for term in query_terms.terms)
-    if state["verbose"]:
-        print(f"[arxiv_search] terms={query_terms.terms} query={arxiv_query_str!r}")
-
-    client = arxiv.Client()
-    search = arxiv.Search(
-        query=arxiv_query_str,
-        max_results=ARXIV_MAX_RESULTS,
-        sort_by=arxiv.SortCriterion.Relevance,
-    )
-
-    arxiv_results = [
-        {
-            "score": 0.0,  # not comparable to FAISS distance, kept for shape consistency
-            "source": f"arXiv - {result.title}",
-            "text": result.summary,
-        }
-        for result in client.results(search)
-    ]
-
-    # AND-joining every term can be too strict and return nothing — fall back
-    # to OR-joining if the strict query came up empty
-    if not arxiv_results:
-        or_query_str = " OR ".join(f'all:"{term}"' for term in query_terms.terms)
-        if state["verbose"]:
-            print(f"[arxiv_search] AND query returned nothing, retrying OR: {or_query_str!r}")
-        search = arxiv.Search(
-            query=or_query_str,
-            max_results=ARXIV_MAX_RESULTS,
-            sort_by=arxiv.SortCriterion.Relevance,
-        )
-        arxiv_results = [
-            {
-                "score": 0.0,
-                "source": f"arXiv - {result.title}",
-                "text": result.summary,
-            }
-            for result in client.results(search)
-        ]
-
-    if state["verbose"]:
-        for r in arxiv_results:
-            print(f"    {r['source']}")
-
+    fall back to live arXiv search (src/discovery/arxiv_search.py) for
+    papers the local corpus doesn't cover."""
+    arxiv_results = search_arxiv(state["original_question"], verbose=state["verbose"])
     return {**state, "retrieved": arxiv_results, "used_arxiv": True}
 
 
