@@ -28,7 +28,7 @@ retrieve → grade ─[sufficient]───────────────�
 - **Retrieval** ([src/core/generate.py](src/core/generate.py)): the shared retrieval module. It loads the embedding model, FAISS index and chunk metadata once, and provides `retrieve()` (top-k chunks) and `format_context()` (chunks labelled with their source). It also defines the GPT-4o `llm` used for final answers.
 - **Agent graph** ([src/core/graph.py](src/core/graph.py)): a LangGraph state machine. Its `generate` node has GPT-4o answer using only the retrieved context, with `[Source: <title>]` citations. GPT-4o-mini grades whether the retrieved chunks are sufficient. If they aren't, the query is reformulated and retrieval runs again. After repeated failures it falls back to a keyword search on arXiv ([src/discovery/arxiv_search.py](src/discovery/arxiv_search.py)).
 - **Critic** ([src/core/critic.py](src/core/critic.py)): a CrewAI fact-checking critic reviews the draft claim by claim against the sources. If it rejects the draft, a reviser agent does exactly one rewrite. The critic is told the research topic up front instead of having it hardcoded.
-- **Extra tools in `graph.py`:** `compare_papers()` contrasts two named papers. `paper_relationships()` looks a paper up in the offline paper graph.
+- **Standalone tools** (not part of the graph loop): `compare_papers()` ([src/core/compare.py](src/core/compare.py)) contrasts two named papers using their own chunks. `paper_relationships()` ([src/paper_graph/paper_relationships.py](src/paper_graph/paper_relationships.py)) looks a paper up in the precomputed paper graph.
 
 ### Other modules
 
@@ -108,7 +108,8 @@ Moving from the battery SOC corpus to a generic, topic-driven agent:
 
 1. **Core: remove the hardcoded domain**
    - [x] `critic.py`: the critic and reviser agents take a `topic` parameter, with a generic fallback.
-   - [ ] `graph.py`: add `topic` to `GraphState` and `ask()`, pass it to the critic, and make the reformulate, answer and compare prompts generic.
+   - [ ] `graph.py`: add `topic` to `GraphState` and `ask()`, pass it to the critic, and make the reformulate and answer prompts generic.
+   - [ ] `compare.py`: make the compare prompt generic.
    - [ ] `arxiv_search.py`: remove the battery example from the `ArxivQuery` field description.
    - [x] `generate.py`: removed the unused SOC-specific prompt, chain and `answer()`. It's now a retrieval-only module.
 2. **Topic discovery:** build stage 2 (pick the *influential* papers for a topic using arXiv plus Semantic Scholar citation counts and an LLM shortlist) and stage 3 (ingest the papers you approve).

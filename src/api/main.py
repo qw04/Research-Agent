@@ -14,11 +14,15 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "core"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "paper_graph"))
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from graph import ask, compare_papers, paper_relationships, chunks
+from core.graph import ask
+from core.generate import chunks
+from core.compare import compare_papers
+from paper_graph.paper_relationships import paper_relationships
 
 app = FastAPI(
     title="Research Paper Agent API",

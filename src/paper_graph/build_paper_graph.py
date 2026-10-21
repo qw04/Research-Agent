@@ -11,8 +11,8 @@ scope decision:
                                          that paper's own technique, or a
                                          generic technique node otherwise)
 
-This is a one-time offline pass (not run per-query) — src/core/graph.py's
-paper_relationships() tool reads the resulting data/paper_graph.json rather
+This is a one-time offline pass (not run per-query) — the
+paper_relationships() tool (src/paper_graph/paper_relationships.py) reads the resulting data/paper_graph.json rather
 than re-extracting anything live, so querying it at chat time is cheap and
 deterministic.
 """

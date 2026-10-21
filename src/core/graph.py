@@ -10,12 +10,11 @@ framework (CrewAI) rather than another LangGraph node's worth of logic —
 it reviews the generated answer against the retrieved sources and, if it
 finds an unsupported claim, replaces the answer with one revision pass.
 
-Also exposes compare_papers(paper_a, paper_b, question) as a standalone tool,
-not part of the main graph loop — call it directly when the user wants a
-side-by-side comparison of two specific papers.
+The standalone tools that used to live here are in their own modules:
+compare_papers() in src/core/compare.py and paper_relationships() in
+src/paper_graph/paper_relationships.py.
 """
 
-import json
 import sys
 from pathlib import Path
 from typing import TypedDict, Literal
@@ -27,7 +26,7 @@ from langgraph.graph import StateGraph, END
 
 from langchain_openai import ChatOpenAI
 from langchain_openai import ChatOpenAI
-from generate import retrieve, format_context, llm, chunks
+from generate import retrieve, format_context, llm
 from critic import review_answer
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "discovery"))
@@ -251,105 +250,6 @@ def ask(question: str, verbose: bool = False, top_k: int = TOP_K, use_critic: bo
         "verbose": verbose,
     })
     return result
-
-
-# ---------------------------------------------------------------------------
-# Compare-two-papers tool (standalone, not part of the main graph)
-# ---------------------------------------------------------------------------
-
-compare_prompt = ChatPromptTemplate.from_messages([
-    ("system",
-     "You compare two research papers on battery state-of-charge estimation. "
-     "Answer the user's question by contrasting the two papers directly — their "
-     "methods, assumptions, and results. Cite claims as [Source: <paper title>]. "
-     "If one paper doesn't address something the other does, say so explicitly."),
-    ("human",
-     "Paper A: {paper_a}\nPaper A excerpts:\n{context_a}\n\n"
-     "Paper B: {paper_b}\nPaper B excerpts:\n{context_b}\n\n"
-     "Question: {question}\n\nAnswer:"),
-])
-compare_chain = compare_prompt | llm | StrOutputParser()
-
-
-def _chunks_for_source(source: str, max_chunks: int = 6) -> str:
-    matches = [c for c in chunks if c["source"] == source][:max_chunks]
-    return "\n\n---\n\n".join(c["text"] for c in matches)
-
-
-def compare_papers(paper_a: str, paper_b: str, question: str) -> dict:
-    """Compare two papers by source title (must match the 'source' field in
-    metadata.json exactly). Pulls all available chunks for each paper up to
-    a cap, rather than doing a similarity search, since we want full coverage
-    of both specific papers rather than the top-k most similar to the query."""
-    context_a = _chunks_for_source(paper_a)
-    context_b = _chunks_for_source(paper_b)
-
-    if not context_a or not context_b:
-        missing = paper_a if not context_a else paper_b
-        raise ValueError(f"No chunks found for source: {missing!r}. Check the exact title.")
-
-    answer = compare_chain.invoke({
-        "paper_a": paper_a,
-        "context_a": context_a,
-        "paper_b": paper_b,
-        "context_b": context_b,
-        "question": question,
-    })
-    return {"paper_a": paper_a, "paper_b": paper_b, "question": question, "answer": answer}
-
-
-# ---------------------------------------------------------------------------
-# Paper-relationship tool (standalone, not part of the main graph loop)
-# ---------------------------------------------------------------------------
-# Reads the precomputed dependency/technique graph built offline by
-# src/paper_graph/build_paper_graph.py (data/paper_graph.json) — no live LLM extraction
-# happens here, so this tool is cheap and deterministic to call at query time.
-
-PAPER_GRAPH_FILE = Path("data/paper_graph.json")
-
-
-def _load_paper_graph() -> dict:
-    if not PAPER_GRAPH_FILE.exists():
-        raise FileNotFoundError(
-            f"{PAPER_GRAPH_FILE} not found — run `python src/paper_graph/build_paper_graph.py` first."
-        )
-    return json.loads(PAPER_GRAPH_FILE.read_text(encoding="utf-8"))
-
-
-def paper_relationships(paper: str) -> dict:
-    """Look up what's novel about a paper, what techniques it uses, what
-    baselines it compares itself against, and which other papers in this
-    corpus it relates to — either because it explicitly benchmarks against
-    another corpus paper's method, or because the two papers share a
-    technique. Source must match the 'source' field in metadata.json exactly."""
-    graph = _load_paper_graph()
-    if paper not in graph["papers"]:
-        raise ValueError(f"No profile found for source: {paper!r}. Check the exact title.")
-
-    profile = graph["papers"][paper]
-
-    compares_against_papers = sorted({
-        e["to"] for e in graph["edges"]
-        if e["from"] == paper and e["type"] == "compares_against_paper"
-    } | {
-        e["from"] for e in graph["edges"]
-        if e["to"] == paper and e["type"] == "compares_against_paper"
-    })
-
-    shares_technique_with = sorted({
-        other for other, other_profile in graph["papers"].items()
-        if other != paper and set(other_profile["techniques"]) & set(profile["techniques"])
-    })
-
-    return {
-        "paper": paper,
-        "techniques": profile["techniques"],
-        "novelty": profile["novelty"],
-        "baselines": profile["baselines"],
-        "key_result": profile["key_result"],
-        "compares_against_papers": compares_against_papers,
-        "shares_technique_with": shares_technique_with,
-    }
 
 
 if __name__ == "__main__":
