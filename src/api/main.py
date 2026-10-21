@@ -1,5 +1,5 @@
 """
-Day 5 — FastAPI service wrapping the LangGraph agent (src/core/graph.py) over
+FastAPI service wrapping the LangGraph agent (src/core/graph.py) over
 HTTP. This is a thin transport layer only: no retrieval/generation/critic
 logic lives here, all of it stays in core so the CLI (`python -m
 src.core.graph`) and the API share the exact same behavior.
