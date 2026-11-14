@@ -1,0 +1,90 @@
+{
+  "purpose": "Spot-check of the LLM judge against human grades (ABC checklist, arXiv:2507.02825).",
+  "agent_config": {
+    "top_k": 5,
+    "use_critic": true
+  },
+  "judge_model": "gpt-4o-mini",
+  "grading_rubric": "faithfulness 1-5: every claim backed by the retrieved context, nothing fabricated. relevance 1-5: covers the reference facts and answers the question.",
+  "graded_by": null,
+  "items": [
+    {
+      "id": "q03",
+      "category": "method",
+      "question": "What two methods are combined in the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction?",
+      "expected_answer": "LSTM neural networks and multiple linear regression (LR) are combined, using LR's one-step prediction accuracy as a benchmark to control how many steps ahead the LSTM can reliably predict.",
+      "sources": [
+        "arXiv - JAM: Keypoint-Guided Joint Prediction after Classification-Aware Marginal Proposal for Multi-Agent Interaction",
+        "arXiv - Joint Prediction Regions for time-series models",
+        "arXiv - The Neural Testbed: Evaluating Joint Predictions"
+      ],
+      "retrieved_context": [
+        "Predictive distributions quantify uncertainties ignored by point estimates. This paper introduces The Neural Testbed: an open-source benchmark for controlled and principled evaluation of agents that generate such predictions. Crucially, the testbed assesses agents not only on the quality of their marginal predictions per input, but also on their joint predictions across many inputs. We evaluate a range of agents using a simple neural network data generating process. Our results indicate that some popular Bayesian deep learning agents do not fare well with joint predictions, even when they can produce accurate marginal predictions. We also show that the quality of joint predictions drives performance in downstream decision tasks. We find these results are robust across choice a wide range of generative models, and highlight the practical importance of joint predictions to the community.",
+        "Predicting the future motion of road participants is a critical task in autonomous driving. In this work, we address the challenge of low-quality generation of low-probability modes in multi-agent joint prediction. To tackle this issue, we propose a two-stage multi-agent interactive prediction framework named \\textit{keypoint-guided joint prediction after classification-aware marginal proposal} (JAM). The first stage is modeled as a marginal prediction process, which classifies queries by trajectory type to encourage the model to learn all categories of trajectories, providing comprehensive mode information for the joint prediction module. The second stage is modeled as a joint prediction process, which takes the scene context and the marginal proposals from the first stage as inputs to learn the final joint distribution. We explicitly introduce key waypoints to guide the joint prediction module in better capturing and leveraging the critical information from the initial predicted trajectories. We conduct extensive experiments on the real-world Waymo Open Motion Dataset interactive prediction benchmark. The results show that our approach achieves competitive performance. In particular, in the framework comparison experiments, the proposed JAM outperforms other prediction frameworks and achieves state-of-the-art performance in interactive trajectory prediction. The code is available at https://github.com/LinFunster/JAM to facilitate future research.",
+        "Machine Learning algorithms are notorious for providing point predictions but not prediction intervals. There are many applications where one requires confidence in predictions and prediction intervals. Stringing together, these intervals give rise to joint prediction regions with the desired significance level. It is an easy task to compute Joint Prediction regions (JPR) when the data is IID. However, the task becomes overly difficult when JPR is needed for time series because of the dependence between the observations. This project aims to implement Wolf and Wunderli's method for constructing JPRs and compare it with other methods (e.g. NP heuristic, Joint Marginals). The method under study is based on bootstrapping and is applied to different datasets (Min Temp, Sunspots), using different predictors (e.g. ARIMA and LSTM). One challenge of applying the method under study is to derive prediction standard errors for models, it cannot be obtained analytically. A novel method to estimate prediction standard error for different predictors is also devised. Finally, the method is applied to a synthetic dataset to find empirical averages and empirical widths and the results from the Wolf and Wunderli paper are consolidated. The experimental results show a narrowing of width with strong predictors like neural nets, widening of width with increasing forecast horizon H and decreasing significance level alpha, controlling the width with parameter k in K-FWE, and loss of information using Joint Marginals."
+      ],
+      "agent_answer": "The context provided does not contain information about the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction or the methods it combines. None of the provided source excerpts contain relevant information about this topic. Therefore, I cannot answer the question based on the available sources.",
+      "judge_scores_at_creation": {
+        "faithfulness": 5,
+        "relevance": 1,
+        "reasoning": "The answer accurately states that the sources do not contain relevant information about the LRLSTM joint-prediction strategy, thus it is fully grounded in the context provided; however, it fails to address the key facts about the methods combined in the strategy."
+      },
+      "human_scores": null,
+      "human_notes": ""
+    },
+    {
+      "id": "q06",
+      "category": "result",
+      "question": "What RMSE does the optimized random forest regression model achieve in the HPPC test, and what MAE does it achieve in the DST and FUDS drive cycles at 25°C?",
+      "expected_answer": "RMSE of 0.382% in the HPPC test using a LiNMC battery; MAE of 0.193% in the DST cycle and 0.346% in the FUDS cycle, both at 25°C.",
+      "sources": [
+        "Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.",
+        "Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm",
+        "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+        "State-of-charge estimation of lithium-ion batteries using LSTM and UKF"
+      ],
+      "retrieved_context": [
+        ". In addition, the proposed model is veriﬁed under varying temperature settings under EV drive cycles. The experimental results demonstrate that the DSA optimized RFR algorithm achieves RMSE of 0.382% in theHPPCtestusingLiNMCbattery.Besides,theproposedmethod obtains satisfactory outcomes in EV drive cycles, estimating MAE of 0.193% and 0.346% in DST and FUDS cycles, respectively, at 25°C.",
+        ". The MAE of SOC estimation is 1.0%, the RMSE is 1.3% and max error is 4.2%. Fig. 11 shows another set of data, in which the ambient temperature gradually increases from (cid:3)20 (cid:4)C to 10 (cid:4)C in this experiment. During this process, the MAE is 1.2%, the",
+        ". The proposed model computes RMSE to be 0.68% at 45°C which is reduced by 21.8% and 29.8% the BPNN-GSA and RBFNN-GSA model, respectively. An improvement is also noticed in MSE, MAE, and MAPE in ELM-GSA model under different conditions. The MSE of the proposed model is estimated to be 0.0059% that is dropped by 32.2% and 46.4% from BPNN-GSA and RBFNN-GSA models, respectively at 25°C. Similarly, about 23.6% and 35.3% reduction from BPNN-GSA and RBFNN- GSA model, respectively at 25°C are noted in the proposed model while assessing MAE. In addition, MAPE in BPNN- GSA and RBFNN-GSA models become higher raised by 3.6%, 8.1%, in comparison to EML-GSA model at 25°C.",
+        "Methods\n\nRMSE (%)\n\nMAE (%)\n\nProposed method NN SVM GPR\n\n0.93 8.13 8.80 7.30\n\n0.82 5.72 5.85 4.99\n\nComputation time (s)\n\n1.20 0.039 0.57 2.32\n\ntesting datasets, including the dynamic stress test, US06 test, and federal urban driving schedule. Experimental results showed the proposed estimator provided good SOC estimations under varying temperatures, with RMSEs within 1.1% and MAEs within 1%. Be- sides, the proposed method outperformed the other feed-forward machine learning methods in terms of both RMSEs and MAEs with acceptable computation time.",
+        "Fig. 8. 25°C. (e-f) 45°C.\n\nSOC estimation accuracy under FUDS drive cycle. (a-b) 0°C. (c-d)\n\nV. CONCLUSION\n\nTABLE IV SOC ACCURACY AT VARYING TEMPERATURES IN FUDS DRIVE CYCLE\n\nvalues are located near to reference SOC, as shown in Fig. 8. Nevertheless, SOC estimated by DSA based ELM, DSA based SVM and DSA based LSTM is ﬂuctuating and moving apart from reference SOC. In case of EV drive cycles, the number of trees and leaves are decreasing with the rise of temperature. For instance, in DST drive cycle, the number of trees is determined as 476, 459 and 436 at 0°C, 25°C and 45°C, respectively. This similar kind of results is also found in FUDS drive cycle under different temperatures."
+      ],
+      "agent_answer": "The optimized random forest regression model achieves an RMSE of 0.382% in the HPPC test. In the DST and FUDS drive cycles at 25°C, it achieves an MAE of 0.193% and 0.346%, respectively [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+      "judge_scores_at_creation": {
+        "faithfulness": 5,
+        "relevance": 5,
+        "reasoning": "The answer accurately reflects the RMSE and MAE values stated in the reference facts and correctly cites the source, fully addressing the question."
+      },
+      "human_scores": null,
+      "human_notes": ""
+    },
+    {
+      "id": "q21",
+      "category": "comparison",
+      "question": "Which paper in this corpus explicitly incorporates a Kalman filter into its SOC estimation pipeline, and what type of Kalman filter does it use?",
+      "expected_answer": "The 'State-of-charge estimation of lithium-ion batteries using LSTM and UKF' paper incorporates an unscented Kalman filter (UKF) alongside an LSTM network.",
+      "sources": [
+        "SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture",
+        "State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine",
+        "Support Vector Machines Used to Estimate the Battery State of Charge",
+        "Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells"
+      ],
+      "retrieved_context": [
+        "The estimation models are deﬁned using highly complex and non-linear state equations in model-based methods. SOC estimation methods using Kalman ﬁlter-based approaches are a typical example of these methods [12]. Whereas model- based methods are more robust in their SOC estimations, they are often limited by their ability to capture cell aging and degradation information [13]. Although signiﬁcant research has improved these models’ accuracy, latency remains an unaddressed challenge [14]. Thus, researchers have come up with data-driven methods. These approaches are often referred to as ‘black-box’ methods due to their lack of explainability [4]",
+        "Most of the current SOC estimation methods published in journals by scholars are based on improvements of the above methods. For the Kalman filter method, Bi and Choe [21] proposed a Sigma point-based Kalman filter algorithm by approximating the distribution of the state variables of the actual nonlinear model, assigning corresponding weights to the sampling points, and updating the system state estimates by Kalman filtering after weighting. Kim and Cho [22] used the dual Kalman filter method to estimate the system state and parameters alternately through two independent Kalman filter algorithms, but it\n\nCOSEnoitamitsMdohtes\n\nVoltage Based\n\nImpedanceBased\n\nParticle Filter\n\nFuzzy Control\n\nNeural Networks\n\nSupport Vector Machines\n\nExtreme Learning Machine\n\nKalman Filter",
+        ". For many SOC levels, this estimator carries an average ±15% error. Other methods based on neural networks or Kalman ﬁlter-based estimators exhibit greater performance, but a high implementa- tion cost is required due to their computational complexity. For example, extended Kalman ﬁlter (EKF) approach [3] maintains accuracy about ±5%. Nevertheless, the EKF SOC estimator is a high computational complexity technique that requires a high implementation cost.",
+        "4.3. Compare with EKF and RNN\n\nIn the previous section we have described the advantages of the proposed method without the need for a convergence process, and we performed a practical comparison here to illustrate this differ- ence. In addition to the proposed method, we also used two other SOC estimation methods, extended Kalman ﬁlter (EKF) and RNN, both using the dataset introduced in the previous paper for parameter design and model training, and validated using US06 drive cycle. The focus of this paper is not on the design of EKF and RNN, so the estimation of these two methods does not reach state- of-the-art accuracy. This experiment is conducted mainly to compare the differences between the proposed method and the previous methods.",
+        ". Li et al. [50] used a mixture of algorithms to estimate the SOC, and the RMSE of the estimation results was 0.009. Ali et al. [25] used an adaptive SOC estimation based on Gaussian process regression, and the MAPE of the estimation results was 2 %. In summary, compared with the SOC estimation methods proposed by other researchers in published papers, the method proposed in this study is still competitive enough in terms of the values of each error evaluation index to prove its accuracy and reliability."
+      ],
+      "agent_answer": "The paper titled \"State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine\" discusses the Sigma point-based Kalman filter algorithm and the dual Kalman filter method proposed by other authors, Bi and Choe [21] and Kim and Cho [22], respectively. However, it does not explicitly state that these Kalman filter methods are incorporated into its SOC estimation pipeline [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+      "judge_scores_at_creation": {
+        "faithfulness": 2,
+        "relevance": 2,
+        "reasoning": "The answer incorrectly attributes the incorporation of Kalman filters to a paper that does not explicitly include them in its SOC estimation pipeline, leading to unsupported claims and a lack of relevance to the question."
+      },
+      "human_scores": null,
+      "human_notes": ""
+    }
+  ]
+}

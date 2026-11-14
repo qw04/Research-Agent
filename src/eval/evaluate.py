@@ -94,10 +94,13 @@ def attempt_succeeded(faithfulness: int, relevance: int) -> bool:
     return faithfulness >= PASS_SCORE and relevance >= PASS_SCORE
 
 
-def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = None) -> dict:
+def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = None,
+             run_note: str = "") -> dict:
     eval_set = load_eval_set()[:limit]
 
     with mlflow.start_run(run_name=run_name):
+        if run_note:
+            mlflow.set_tag("mlflow.note.content", run_note)   # shows as the run's description/comment
         mlflow.log_params({
             "top_k": top_k,
             "use_critic": use_critic,
@@ -194,6 +197,114 @@ def print_summary(results: dict[str, dict]) -> None:
     print("  The gap between '>=1 of 3' and 'pass^3' shows how much success depends on luck.")
 
 
+# ---------------------------------------------------------------------------
+# Judge validation against human grades (data/judge_validation.json)
+#
+# The LLM judge above was never checked against a person, so its scores are
+# unverified. This is a small holdout: 3 eval questions, the agent's answer,
+# the retrieved chunks the answer was built from, a human's faithfulness and
+# relevance scores, and the judge's scores. Motivated by Zhu et al., "Establishing
+# Best Practices for Building Rigorous Agentic Benchmarks" (ABC checklist,
+# NeurIPS 2025, arXiv:2507.02825) — outcome-validity flaws in graders — and
+# Mind2Web 2 (Gou et al., NeurIPS 2025), which validated its judge against humans.
+#
+# Every run re-judges the stored answers with the CURRENT judge prompt/model
+# and compares to the stored human scores, so a judge change that breaks
+# agreement shows up immediately. Only 3 items: this is a spot-check, not a
+# calibration study — 6 scores can't establish a judge accuracy percentage.
+# ---------------------------------------------------------------------------
+
+VALIDATION_FILE = Path("data/judge_validation.json")
+VALIDATION_IDS = ["q03", "q06", "q21"]   # one per category: method / result / comparison
+VALIDATION_CONFIG = {"top_k": 5, "use_critic": True}
+
+
+def build_validation_set() -> None:
+    """Generate the agent answers + judge scores for the holdout questions and
+    write data/judge_validation.json with human_scores left null for a person
+    to fill in. Refuses to overwrite a file that already has human grades."""
+    if VALIDATION_FILE.exists():
+        existing = json.loads(VALIDATION_FILE.read_text(encoding="utf-8"))
+        if any(i.get("human_scores") for i in existing["items"]):
+            sys.exit(f"{VALIDATION_FILE} already contains human grades; not overwriting.")
+
+    by_id = {q["id"]: q for q in load_eval_set()}
+    items = []
+    for qid in VALIDATION_IDS:
+        q = by_id[qid]
+        result = ask(q["question"], topic=EVAL_TOPIC, **VALIDATION_CONFIG)
+        score = judge_chain.invoke({
+            "topic": EVAL_TOPIC, "question": q["question"],
+            "expected_answer": q["expected_answer"],
+            "sources": ", ".join(result["sources"]) or "(none retrieved)",
+            "answer": result["answer"],
+        })
+        items.append({
+            "id": qid,
+            "category": q["category"],
+            "question": q["question"],
+            "expected_answer": q["expected_answer"],
+            "sources": result["sources"],
+            "retrieved_context": [r["text"] for r in result["retrieved"]],
+            "agent_answer": result["answer"],
+            "judge_scores_at_creation": {
+                "faithfulness": score.faithfulness, "relevance": score.relevance,
+                "reasoning": score.reasoning,
+            },
+            "human_scores": None,   # {"faithfulness": 1-5, "relevance": 1-5}
+            "human_notes": "",
+        })
+    VALIDATION_FILE.write_text(json.dumps({
+        "purpose": "Spot-check of the LLM judge against human grades (ABC checklist, arXiv:2507.02825).",
+        "agent_config": VALIDATION_CONFIG,
+        "judge_model": JUDGE_MODEL,
+        "grading_rubric": "faithfulness 1-5: every claim backed by the retrieved context, nothing "
+                          "fabricated. relevance 1-5: covers the reference facts and answers the question.",
+        "graded_by": None,
+        "items": items,
+    }, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Wrote {VALIDATION_FILE} with {len(items)} items; fill in human_scores/graded_by.")
+
+
+def judge_validation_report() -> str:
+    """Re-judge the stored holdout answers with the current judge, compare to
+    the stored human scores, print and return a one-line summary."""
+    if not VALIDATION_FILE.exists():
+        msg = f"Judge validation: {VALIDATION_FILE} not found, skipped."
+        print(msg)
+        return msg
+
+    data = json.loads(VALIDATION_FILE.read_text(encoding="utf-8"))
+    graded = [i for i in data["items"] if i.get("human_scores")]
+    if not graded:
+        msg = f"Judge validation: 0/{len(data['items'])} items human-graded yet, nothing to compare."
+        print(msg)
+        return msg
+
+    exact = within1 = total = 0
+    disagreements = []
+    for item in graded:
+        judged = judge_chain.invoke({
+            "topic": EVAL_TOPIC, "question": item["question"],
+            "expected_answer": item["expected_answer"],
+            "sources": ", ".join(item["sources"]) or "(none retrieved)",
+            "answer": item["agent_answer"],
+        })
+        for dim in ("faithfulness", "relevance"):
+            h, j = item["human_scores"][dim], getattr(judged, dim)
+            total += 1
+            exact += h == j
+            within1 += abs(h - j) <= 1
+            if h != j:
+                disagreements.append(f"{item['id']} {dim}: human {h} vs judge {j}")
+
+    msg = (f"Judge validation ({len(graded)} human-graded questions, {total} scores): "
+           f"{exact}/{total} match exactly, {within1}/{total} within +/-1"
+           + (f"; disagreements: {'; '.join(disagreements)}" if disagreements else "; no disagreements"))
+    print(msg)
+    return msg
+
+
 CONFIGS = [
     # (top_k, use_critic, run_name) — the "_x3" suffix keeps these separate from
     # the earlier single-attempt runs (topk3_critic_off etc.) in MLflow and data/eval_runs/.
@@ -209,9 +320,19 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=None,
                         help="Only evaluate the first N questions (quick check). Runs are "
                              "suffixed _limitN so they don't mix with full runs.")
+    parser.add_argument("--build-validation", action="store_true",
+                        help="Generate data/judge_validation.json (agent answers + judge scores, "
+                             "human_scores left blank) and exit.")
     args = parser.parse_args()
 
+    if args.build_validation:
+        build_validation_set()
+        sys.exit(0)
+
     mlflow.set_experiment("research-agent-eval")
+
+    validation_note = judge_validation_report()
+    print()
 
     all_results = {}
     for i, (top_k, use_critic, run_name) in enumerate(CONFIGS, 1):
@@ -219,6 +340,7 @@ if __name__ == "__main__":
             run_name += f"_limit{args.limit}"
         print(f"Run {i}/{len(CONFIGS)}: top_k={top_k}, critic {'on' if use_critic else 'off'}, "
               f"{N_ATTEMPTS} attempts/question")
-        all_results[run_name] = run_eval(top_k=top_k, use_critic=use_critic, run_name=run_name, limit=args.limit)
+        all_results[run_name] = run_eval(top_k=top_k, use_critic=use_critic, run_name=run_name,
+                                         limit=args.limit, run_note=validation_note)
 
     print_summary(all_results)
