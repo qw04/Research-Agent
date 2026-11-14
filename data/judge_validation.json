@@ -6,7 +6,7 @@
   },
   "judge_model": "gpt-4o-mini",
   "grading_rubric": "faithfulness 1-5: every claim backed by the retrieved context, nothing fabricated. relevance 1-5: covers the reference facts and answers the question.",
-  "graded_by": null,
+  "graded_by": "qw04 (repo owner), 2026-11-14",
   "items": [
     {
       "id": "q03",
@@ -29,7 +29,10 @@
         "relevance": 1,
         "reasoning": "The answer accurately states that the sources do not contain relevant information about the LRLSTM joint-prediction strategy, thus it is fully grounded in the context provided; however, it fails to address the key facts about the methods combined in the strategy."
       },
-      "human_scores": null,
+      "human_scores": {
+        "faithfulness": 5,
+        "relevance": 1
+      },
       "human_notes": ""
     },
     {
@@ -56,7 +59,10 @@
         "relevance": 5,
         "reasoning": "The answer accurately reflects the RMSE and MAE values stated in the reference facts and correctly cites the source, fully addressing the question."
       },
-      "human_scores": null,
+      "human_scores": {
+        "faithfulness": 4,
+        "relevance": 5
+      },
       "human_notes": ""
     },
     {
@@ -83,7 +89,10 @@
         "relevance": 2,
         "reasoning": "The answer incorrectly attributes the incorporation of Kalman filters to a paper that does not explicitly include them in its SOC estimation pipeline, leading to unsupported claims and a lack of relevance to the question."
       },
-      "human_scores": null,
+      "human_scores": {
+        "faithfulness": 4,
+        "relevance": 2
+      },
       "human_notes": ""
     }
   ]
