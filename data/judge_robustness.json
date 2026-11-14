@@ -4,7 +4,12 @@
   "seed": 0,
   "question_id": "q13",
   "question": "Why is an unscented Kalman filter (UKF) incorporated alongside the LSTM model in the LSTM+UKF SOC estimation paper?",
-  "sources_given_to_judge": [
+  "judge_version": "v2-context",
+  "context_sources_given_to_judge": [
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF",
     "State-of-charge estimation of lithium-ion batteries using LSTM and UKF"
   ],
   "cases": [
@@ -16,12 +21,12 @@
         "relevance": "<= 2"
       },
       "actual": {
-        "faithfulness": 5,
-        "relevance": 5
+        "faithfulness": 1,
+        "relevance": 1
       },
-      "reasoning": "The answer accurately reflects the information from the source, stating that the UKF is used to filter out noise and reduce estimation errors from the LSTM's SOC predictions, fully addressing the question.",
-      "within_expected": false,
-      "warned": true
+      "reasoning": "Empty answer: scored 1/1 by rule, judge not called.",
+      "within_expected": true,
+      "warned": false
     },
     {
       "case": "one_word_unknown",
@@ -34,7 +39,7 @@
         "faithfulness": 1,
         "relevance": 1
       },
-      "reasoning": "The answer does not provide any information or claims, making it impossible to assess faithfulness or relevance.",
+      "reasoning": "The system's answer is empty and does not provide any claims or information, resulting in a score of 1 for both faithfulness and relevance.",
       "within_expected": true,
       "warned": false
     },
@@ -48,7 +53,7 @@
         "faithfulness": 1,
         "relevance": 1
       },
-      "reasoning": "The answer does not address the question about the incorporation of the UKF with the LSTM model and instead provides unrelated information about XGBoost, making it both irrelevant and unsupported.",
+      "reasoning": "The system's answer does not address the question about the incorporation of the UKF with the LSTM model and instead provides irrelevant information about XGBoost, which is not supported by the retrieved excerpts.",
       "within_expected": true,
       "warned": false
     }

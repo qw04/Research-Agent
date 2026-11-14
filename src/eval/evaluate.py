@@ -37,6 +37,7 @@ from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/, so core.* / discovery.* / paper_graph.* resolve
 from core.graph import ask
+from core.generate import retrieve
 
 load_dotenv()
 
@@ -68,22 +69,67 @@ class JudgeScore(BaseModel):
 # with the eval set when evaluating a different corpus.
 EVAL_TOPIC = "battery state-of-charge (SOC) estimation"
 
+# Judge v2 (2026-11-14). v1 only saw the retrieved sources' TITLES, so it could
+# not check whether a claim was actually backed by the text. Two failures
+# followed from that: the robustness test showed it scoring an empty answer
+# 5/5 (it graded the reference facts instead of the answer), and the human
+# validation holdout showed it marking a wrong-but-supported answer as
+# unfaithful (q21: human 4, judge 2). v2 sees the retrieved excerpts and keeps
+# the two dimensions separate: faithfulness = supported by the excerpts;
+# correctness vs the reference = relevance. Scores from v2 are not directly
+# comparable with the earlier single-attempt runs, which used v1.
+JUDGE_VERSION = "v2-context"
+
 judge_prompt = ChatPromptTemplate.from_messages([
     ("system",
      "You are grading a RAG system's answer to a question about research "
-     "papers on {topic}. Score faithfulness "
-     "(is every claim backed by the cited sources, with nothing fabricated) "
-     "and relevance (does the answer cover the reference facts) on a 1-5 "
-     "scale each. Be strict — a plausible-sounding but unsupported number "
-     "is a faithfulness failure even if it's close to correct."),
+     "papers on {topic}. You are given the excerpts the system retrieved, "
+     "which are the only evidence it had. Score two separate things, 1-5 each:\n"
+     "- faithfulness: is every claim in the answer supported by the retrieved "
+     "excerpts, with nothing fabricated? Judge this ONLY against the excerpts, "
+     "not against the reference facts. An answer that misses the point or picks "
+     "the wrong paper, but whose every claim is backed by the excerpts, is still "
+     "faithful. A plausible-sounding number or detail that does not appear in "
+     "the excerpts is a faithfulness failure even if it is close to correct. "
+     "Honestly saying the excerpts don't contain the answer is faithful.\n"
+     "- relevance: does the answer actually address the question and cover the "
+     "reference facts? Missing or contradicting the reference facts lowers "
+     "relevance.\n"
+     "Grade only the text in the 'System's answer' section. If it is empty or "
+     "says nothing substantive, it covers none of the reference facts."),
     ("human",
      "Question: {question}\n\n"
      "Reference facts a good answer should cover:\n{expected_answer}\n\n"
-     "Sources the system retrieved:\n{sources}\n\n"
-     "System's answer:\n{answer}\n\n"
+     "Retrieved excerpts (the system's only evidence):\n{context}\n\n"
+     "System's answer:\n<<<\n{answer}\n>>>\n\n"
      "Score faithfulness and relevance."),
 ])
 judge_chain = judge_prompt | judge_llm.with_structured_output(JudgeScore)
+
+
+def format_judge_context(chunks: list[dict]) -> str:
+    """chunks: [{"text": ..., "source": optional title}] -> numbered excerpts."""
+    if not chunks:
+        return "(nothing retrieved)"
+    return "\n\n".join(
+        f"[Excerpt {i}]" + (f" (from: {c['source']})" if c.get("source") else "") + f"\n{c['text']}"
+        for i, c in enumerate(chunks, 1)
+    )
+
+
+def score_answer(question: str, expected_answer: str, answer: str, chunks: list[dict]) -> JudgeScore:
+    """Single entry point for judging. Empty / whitespace-only answers are scored
+    1/1 deterministically without calling the judge (the v1 judge gave them 5/5)."""
+    if not answer or not answer.strip():
+        return JudgeScore(faithfulness=1, relevance=1,
+                          reasoning="Empty answer: scored 1/1 by rule, judge not called.")
+    return judge_chain.invoke({
+        "topic": EVAL_TOPIC,
+        "question": question,
+        "expected_answer": expected_answer,
+        "context": format_judge_context(chunks),
+        "answer": answer,
+    })
 
 
 def load_eval_set() -> list[dict]:
@@ -109,6 +155,7 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
             "n_attempts": N_ATTEMPTS,
             "pass_score": PASS_SCORE,
             "judge_model": JUDGE_MODEL,
+            "judge_version": JUDGE_VERSION,
         })
 
         faithfulness_scores, relevance_scores = [], []  # one entry per attempt
@@ -119,13 +166,8 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
             attempts = []
             for attempt_no in range(1, N_ATTEMPTS + 1):
                 result = ask(item["question"], topic=EVAL_TOPIC, top_k=top_k, use_critic=use_critic)
-                score: JudgeScore = judge_chain.invoke({
-                    "topic": EVAL_TOPIC,
-                    "question": item["question"],
-                    "expected_answer": item["expected_answer"],
-                    "sources": ", ".join(result["sources"]) or "(none retrieved)",
-                    "answer": result["answer"],
-                })
+                score = score_answer(item["question"], item["expected_answer"],
+                                     result["answer"], result["retrieved"])
                 faithfulness_scores.append(score.faithfulness)
                 relevance_scores.append(score.relevance)
                 attempts.append({
@@ -233,12 +275,7 @@ def build_validation_set() -> None:
     for qid in VALIDATION_IDS:
         q = by_id[qid]
         result = ask(q["question"], topic=EVAL_TOPIC, **VALIDATION_CONFIG)
-        score = judge_chain.invoke({
-            "topic": EVAL_TOPIC, "question": q["question"],
-            "expected_answer": q["expected_answer"],
-            "sources": ", ".join(result["sources"]) or "(none retrieved)",
-            "answer": result["answer"],
-        })
+        score = score_answer(q["question"], q["expected_answer"], result["answer"], result["retrieved"])
         items.append({
             "id": qid,
             "category": q["category"],
@@ -284,12 +321,8 @@ def judge_validation_report() -> str:
     exact = within1 = total = 0
     disagreements = []
     for item in graded:
-        judged = judge_chain.invoke({
-            "topic": EVAL_TOPIC, "question": item["question"],
-            "expected_answer": item["expected_answer"],
-            "sources": ", ".join(item["sources"]) or "(none retrieved)",
-            "answer": item["agent_answer"],
-        })
+        judged = score_answer(item["question"], item["expected_answer"], item["agent_answer"],
+                              [{"text": t} for t in item["retrieved_context"]])
         for dim in ("faithfulness", "relevance"):
             h, j = item["human_scores"][dim], getattr(judged, dim)
             total += 1
@@ -316,7 +349,10 @@ def judge_validation_report() -> str:
 # benchmarks instead of solving the tasks.
 #
 # Three degenerate answers are judged against one randomly chosen (seeded, so
-# reproducible) eval question and its real source list:
+# reproducible) eval question, with the top-5 excerpts local retrieval returns
+# for it as the judge's context (no LLM call needed to build that context).
+# All cases go through score_answer(), the same path the eval uses, so the
+# empty case is caught by its rule rather than by the judge itself:
 #   empty / one-word "unknown" -> expect faithfulness and relevance both <= 2
 #   confident but made-up      -> expect faithfulness <= 2 (relevance is also
 #                                 recorded; the invented answer matches no
@@ -340,15 +376,11 @@ def judge_robustness_test() -> str:
     data/judge_robustness.json, print them and return a one-line summary."""
     import random
     item = random.Random(ROBUSTNESS_SEED).choice(load_eval_set())
+    context = retrieve(item["question"], k=5)
 
     cases, warnings = [], []
     for name, answer, expected_low in ROBUSTNESS_CASES:
-        score = judge_chain.invoke({
-            "topic": EVAL_TOPIC, "question": item["question"],
-            "expected_answer": item["expected_answer"],
-            "sources": ", ".join(item["source"]) or "(none retrieved)",
-            "answer": answer,
-        })
+        score = score_answer(item["question"], item["expected_answer"], answer, context)
         actual = {"faithfulness": score.faithfulness, "relevance": score.relevance}
         for dim in expected_low:
             if actual[dim] > ROBUSTNESS_WARN_ABOVE:
@@ -371,7 +403,8 @@ def judge_robustness_test() -> str:
         "seed": ROBUSTNESS_SEED,
         "question_id": item["id"],
         "question": item["question"],
-        "sources_given_to_judge": item["source"],
+        "judge_version": JUDGE_VERSION,
+        "context_sources_given_to_judge": [c["source"] for c in context],
         "cases": cases,
     }, indent=2, ensure_ascii=False), encoding="utf-8")
 
