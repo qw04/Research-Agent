@@ -5,6 +5,8 @@ Command-line entry point for the eval. Run from the repo root.
     python src/eval/evaluate.py --limit 2           quick check on the first 2 questions
     python src/eval/evaluate.py --build-validation  regenerate the human-validation holdout
     python src/eval/evaluate.py --judge-audit       per-item judge reliability audit
+    python src/eval/evaluate.py --stats             bootstrap 95% intervals for the *_x3 runs (no API calls)
+    python src/eval/evaluate.py --suffix _ctx       name new runs *_x3_ctx (also selects runs for --stats)
 
 The code lives in the other modules of this package:
     settings.py     paths, eval topic, pass^k parameters, success rule
@@ -13,6 +15,7 @@ The code lives in the other modules of this package:
     validation.py   human-graded holdout and agreement report
     robustness.py   degenerate-answer test (empty / "unknown" / made-up)
     audit.py        reproducibility + order-invariance audit, trustworthy verdict rate
+    stats.py        bootstrap intervals, paired differences, identical-text breakdown
 See documentation.md for why each piece exists.
 """
 
@@ -28,6 +31,7 @@ from eval.audit import AUDIT_REPS, AUDIT_SOURCE_RUN, judge_audit
 from eval.pass_k import CONFIGS, print_summary, run_eval
 from eval.robustness import judge_robustness_test
 from eval.settings import MLFLOW_EXPERIMENT, N_ATTEMPTS
+from eval.stats import run_stats
 from eval.validation import build_validation_set, judge_validation_report
 
 
@@ -43,7 +47,17 @@ def main() -> None:
                         help=f"Re-judge stored answers from {AUDIT_SOURCE_RUN} (attempt 1) {AUDIT_REPS}x normal "
                              f"+ {AUDIT_REPS}x answer-first, report the trustworthy verdict rate, and exit. "
                              "Does not re-run the agent.")
+    parser.add_argument("--suffix", default="",
+                        help="Extra suffix for run names, e.g. _ctx -> topk5_critic_on_x3_ctx. Used by the "
+                             "eval and by --stats, so new runs never overwrite earlier ones.")
+    parser.add_argument("--stats", action="store_true",
+                        help="Bootstrap 95%% intervals (and paired config differences) for the runs "
+                             "data/eval_runs/<config>_x3<suffix>.json, then exit. No API calls.")
     args = parser.parse_args()
+
+    if args.stats:
+        run_stats("_x3" + args.suffix)
+        return
 
     if args.judge_audit:
         judge_audit()
@@ -65,6 +79,7 @@ def main() -> None:
 
     all_results = {}
     for i, (top_k, use_critic, run_name) in enumerate(CONFIGS, 1):
+        run_name += args.suffix
         if args.limit:
             run_name += f"_limit{args.limit}"
         print(f"Run {i}/{len(CONFIGS)}: top_k={top_k}, critic {'on' if use_critic else 'off'}, "

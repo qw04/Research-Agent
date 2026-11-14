@@ -78,6 +78,7 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
                     "attempts": result["attempts"],
                     "used_arxiv": result["used_arxiv"],
                     "success": attempt_succeeded(score.faithfulness, score.relevance),
+                    "judge_version": JUDGE_VERSION,
                     # stored so the judge audit can re-judge this exact answer
                     # against the exact evidence without re-running the agent
                     "retrieved": [{"source": r["source"], "text": r["text"]} for r in result["retrieved"]],
