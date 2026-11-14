@@ -17,7 +17,8 @@ EVAL_SET_FILE = Path("data/eval_set.json")
 RUNS_DIR = Path("data/eval_runs")
 VALIDATION_FILE = Path("data/judge_validation.json")
 ROBUSTNESS_FILE = Path("data/judge_robustness.json")
-AUDIT_FILE = Path("data/judge_audit.json")
+# Judge audits write data/judge_audit_<source run>.json (see audit.py);
+# data/judge_audit.json is the first, two-condition audit, kept as-is.
 
 MLFLOW_EXPERIMENT = "research-agent-eval"
 

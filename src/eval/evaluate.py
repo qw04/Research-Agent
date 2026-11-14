@@ -44,9 +44,9 @@ def main() -> None:
                         help="Generate data/judge_validation.json (agent answers + judge scores, "
                              "human_scores left blank) and exit.")
     parser.add_argument("--judge-audit", action="store_true",
-                        help=f"Re-judge stored answers from {AUDIT_SOURCE_RUN} (attempt 1) {AUDIT_REPS}x normal "
-                             f"+ {AUDIT_REPS}x answer-first, report the trustworthy verdict rate, and exit. "
-                             "Does not re-run the agent.")
+                        help=f"Re-judge stored answers from {AUDIT_SOURCE_RUN}<suffix> (attempt 1) {AUDIT_REPS}x "
+                             "each with the normal, answer-first and paraphrased judge prompts, report the "
+                             "trustworthy verdict rate, and exit. Does not re-run the agent.")
     parser.add_argument("--suffix", default="",
                         help="Extra suffix for run names, e.g. _ctx -> topk5_critic_on_x3_ctx. Used by the "
                              "eval and by --stats, so new runs never overwrite earlier ones.")
@@ -60,7 +60,7 @@ def main() -> None:
         return
 
     if args.judge_audit:
-        judge_audit()
+        judge_audit(AUDIT_SOURCE_RUN + args.suffix)
         return
 
     if args.build_validation:

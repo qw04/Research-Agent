@@ -82,6 +82,41 @@ judge_prompt_answer_first = ChatPromptTemplate.from_messages([
 judge_chain_answer_first = judge_prompt_answer_first | judge_llm.with_structured_output(JudgeScore)
 
 
+# Paraphrase variant (used by the audit's wording-sensitivity check): the same
+# rubric, rules and section order as judge_prompt, reworded. Motivated by
+# Yagubyan, "The Coin Flip Judge?" (arXiv:2606.13685): meaning-preserving
+# paraphrases of the judge prompt changed a quarter of majority outcomes for
+# gpt-4o-mini. The JudgeScore output schema (and its field descriptions) is
+# deliberately unchanged, so only the prompt wording differs.
+judge_prompt_paraphrase = ChatPromptTemplate.from_messages([
+    ("system",
+     "Your task is to evaluate how well a retrieval-augmented system answered a "
+     "question about research papers on {topic}. The excerpts below are everything "
+     "the system retrieved and the only evidence it had access to. Give two "
+     "independent ratings on a 1 to 5 scale:\n"
+     "- faithfulness: are all of the answer's claims backed by the retrieved "
+     "excerpts, with nothing invented? Assess this solely against the excerpts, "
+     "not against the reference facts. If every claim is supported by the "
+     "excerpts, the answer counts as faithful even when it misses the point or "
+     "names the wrong paper. Any number or detail that sounds plausible but is "
+     "absent from the excerpts counts against faithfulness, even if it is nearly "
+     "right. Stating honestly that the excerpts do not contain the answer is "
+     "faithful.\n"
+     "- relevance: does the answer genuinely respond to the question and include "
+     "the reference facts? Omitting or contradicting reference facts reduces "
+     "relevance.\n"
+     "Rate only what appears in the 'Answer under evaluation' section. An empty "
+     "or contentless answer covers none of the reference facts."),
+    ("human",
+     "Question asked: {question}\n\n"
+     "Key facts a good answer would include:\n{expected_answer}\n\n"
+     "Excerpts the system retrieved (its only evidence):\n{context}\n\n"
+     "Answer under evaluation:\n<<<\n{answer}\n>>>\n\n"
+     "Provide the faithfulness and relevance ratings."),
+])
+judge_chain_paraphrase = judge_prompt_paraphrase | judge_llm.with_structured_output(JudgeScore)
+
+
 def format_judge_context(chunks: list[dict]) -> str:
     """chunks: [{"text": ..., "source": optional title}] -> numbered excerpts."""
     if not chunks:

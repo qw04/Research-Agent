@@ -1,0 +1,2888 @@
+{
+  "purpose": "Per-item judge reliability (Kumar, Rathore & Moitra, arXiv:2610.12083; Yagubyan, arXiv:2606.13685 for the paraphrase condition).",
+  "judge_model": "gpt-4o-mini",
+  "judge_version": "v2-context",
+  "reps_per_condition": 5,
+  "conditions": [
+    "normal",
+    "answer_first",
+    "paraphrase"
+  ],
+  "source_run": "topk5_critic_on_x3_ctx",
+  "source_attempt": 1,
+  "verdict_definition": "success = faithfulness >= 5 and relevance >= 5",
+  "summary": {
+    "n_questions": 22,
+    "n_auditable": 22,
+    "n_trustworthy": 17,
+    "trustworthy_verdict_rate": 0.7727272727272727,
+    "trustworthy_verdict_rate_all": 0.7727272727272727,
+    "reproducible_rate": 0.9090909090909091,
+    "order_invariant_rate": 0.8181818181818182,
+    "paraphrase_invariant_rate": 0.9090909090909091,
+    "consistency_by_condition": {
+      "normal": 0.9090909090909091,
+      "answer_first": 1.0,
+      "paraphrase": 1.0
+    },
+    "paraphrase_flip_rate": 0.09090909090909091,
+    "answer_first_flip_rate": 0.18181818181818182,
+    "kumar_T_adapted_holdout": {
+      "mean": 0.8666666666666667,
+      "n": 3
+    },
+    "untrustworthy": [
+      "q03",
+      "q11",
+      "q14",
+      "q16",
+      "q18"
+    ],
+    "unverifiable": [],
+    "score_spread_gt1": [
+      "q03",
+      "q04",
+      "q08",
+      "q12",
+      "q14",
+      "q16",
+      "q18"
+    ],
+    "differs_from_logged_eval_score": [
+      "q03",
+      "q08",
+      "q18"
+    ],
+    "pass_rates_full": {
+      "pass1": 0.5303030303030303,
+      "pass3": 0.45454545454545453,
+      "n": 22
+    },
+    "pass_rates_trustworthy_only": {
+      "pass1": 0.5490196078431373,
+      "pass3": 0.47058823529411764,
+      "n": 17
+    }
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q02",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q03",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 1
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "1": 3,
+            "5": 2
+          }
+        },
+        "consistent": false,
+        "agreement_with_own_majority": 0.6
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "1": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "mixed",
+      "verdict_identical_all": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": true,
+      "reproducible": false,
+      "order_invariant": true,
+      "paraphrase_invariant": false,
+      "paraphrase_majority_differs": true,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": false,
+      "accuracy": {
+        "human": {
+          "faithfulness": 5,
+          "relevance": 1
+        },
+        "judge_on_human_graded_answer": [
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            1
+          ]
+        ],
+        "within_1_every_run": true,
+        "kumar_T_adapted": {
+          "C": 0.6,
+          "flip": 0.0,
+          "A": 1.0,
+          "T": 0.6
+        }
+      },
+      "trustworthy": false
+    },
+    {
+      "id": "q04",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": true,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q05",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 4
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q06",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "accuracy": {
+        "human": {
+          "faithfulness": 4,
+          "relevance": 5
+        },
+        "judge_on_human_graded_answer": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "within_1_every_run": true,
+        "kumar_T_adapted": {
+          "C": 1.0,
+          "flip": 0.0,
+          "A": 1.0,
+          "T": 1.0
+        }
+      },
+      "trustworthy": true
+    },
+    {
+      "id": "q07",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q08",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 4
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 4,
+            "3": 1
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": false,
+      "trustworthy": true
+    },
+    {
+      "id": "q09",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q10",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q11",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": false,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q12",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 2,
+            "5": 3
+          },
+          "relevance": {
+            "3": 2,
+            "4": 3
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q13",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q14",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 2,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": false,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": true,
+      "reproducible": true,
+      "order_invariant": false,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q15",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q16",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 2,
+            "2": 3
+          },
+          "relevance": {
+            "2": 2,
+            "3": 3
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": false,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": true,
+      "reproducible": true,
+      "order_invariant": false,
+      "paraphrase_invariant": false,
+      "paraphrase_majority_differs": true,
+      "answer_first_majority_differs": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q17",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 4,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q18",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        "consistent": false,
+        "agreement_with_own_majority": 0.8
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "3": 1,
+            "4": 4
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "mixed",
+      "verdict_identical_all": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": true,
+      "reproducible": false,
+      "order_invariant": false,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": true,
+      "matches_logged_eval_score": false,
+      "trustworthy": false
+    },
+    {
+      "id": "q19",
+      "category": "method",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q20",
+      "category": "result",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "success",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q21",
+      "category": "comparison",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "accuracy": {
+        "human": {
+          "faithfulness": 4,
+          "relevance": 2
+        },
+        "judge_on_human_graded_answer": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "within_1_every_run": true,
+        "kumar_T_adapted": {
+          "C": 1.0,
+          "flip": 0.0,
+          "A": 1.0,
+          "T": 1.0
+        }
+      },
+      "trustworthy": true
+    },
+    {
+      "id": "q22",
+      "category": "comparison",
+      "context": "stored",
+      "logged_eval_score": {
+        "faithfulness": 1,
+        "relevance": 2
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "answer_first": {
+        "scores": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "paraphrase": {
+        "scores": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        },
+        "consistent": true,
+        "agreement_with_own_majority": 1.0
+      },
+      "verdict": "fail",
+      "verdict_identical_all": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "paraphrase_invariant": true,
+      "paraphrase_majority_differs": false,
+      "answer_first_majority_differs": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    }
+  ]
+}
