@@ -22,7 +22,7 @@ import json
 import sys
 
 from core.graph import ask
-from eval.judge import JUDGE_MODEL, score_answer
+from eval.judge import JUDGE_MODEL, judge_version_for, score_answer, score_answer_aggregated
 from eval.settings import EVAL_TOPIC, VALIDATION_FILE, load_eval_set
 
 VALIDATION_IDS = ["q03", "q06", "q21"]   # one per category: method / result / comparison
@@ -79,9 +79,11 @@ def build_validation_set() -> None:
     print(f"Wrote {VALIDATION_FILE} with {len(items)} items; fill in human_scores/graded_by.")
 
 
-def judge_validation_report() -> str:
+def judge_validation_report(judge_n: int = 1, judge_mode: str = "ensemble") -> str:
     """Re-judge the stored holdout answers with the current judge, compare to
-    the stored human scores, print and return a one-line summary."""
+    the stored human scores, print and return a one-line summary. With
+    judge_n > 1 the aggregated judge is used and its mean score per dimension,
+    rounded to the nearest integer, is compared to the human score."""
     if not VALIDATION_FILE.exists():
         msg = f"Judge validation: {VALIDATION_FILE} not found, skipped."
         print(msg)
@@ -97,17 +99,18 @@ def judge_validation_report() -> str:
     exact = within1 = total = 0
     disagreements = []
     for item in graded:
-        judged = score_answer(item["question"], item["expected_answer"], item["agent_answer"],
-                              [{"text": t} for t in item["retrieved_context"]])
+        judged = score_answer_aggregated(item["question"], item["expected_answer"], item["agent_answer"],
+                                         [{"text": t} for t in item["retrieved_context"]], judge_n, judge_mode)
         for dim in ("faithfulness", "relevance"):
-            h, j = item["human_scores"][dim], getattr(judged, dim)
+            h, j = item["human_scores"][dim], int(judged[dim] + 0.5)   # round half up
             total += 1
             exact += h == j
             within1 += abs(h - j) <= 1
             if h != j:
                 disagreements.append(f"{item['id']} {dim}: human {h} vs judge {j}")
 
-    msg = (f"Judge validation ({len(graded)} human-graded questions, {total} scores): "
+    msg = (f"Judge validation [{judge_version_for(judge_n, judge_mode)}] "
+           f"({len(graded)} human-graded questions, {total} scores): "
            f"{exact}/{total} match exactly, {within1}/{total} within +/-1"
            + (f"; disagreements: {'; '.join(disagreements)}" if disagreements else "; no disagreements"))
     print(msg)

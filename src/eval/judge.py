@@ -154,3 +154,61 @@ def judge_once(chain, question: str, expected: str, answer: str, chunks: list[di
     s = chain.invoke({"topic": EVAL_TOPIC, "question": question, "expected_answer": expected,
                       "context": format_judge_context(chunks), "answer": answer})
     return s.faithfulness, s.relevance
+
+
+# ---------------------------------------------------------------------------
+# Aggregated judge (v3): majority verdict over N judge calls.
+#
+# One call per answer turned out to be unreliable per item: the audit found
+# verdicts that change with the prompt's section order and wording, and some
+# that change on identical reruns. Following the multi-trial aggregation
+# recommended by Yagubyan (arXiv:2606.13685) and Peng et al. (RuVerBench,
+# arXiv:2606.29920; majority voting helps, with diminishing returns), an
+# answer is judged N times and the SUCCESS VERDICT is the majority of the N
+# per-call verdicts; faithfulness and relevance are reported as means (never
+# thresholded: a mean of 5.0 would require every call to agree).
+#
+#   mode "repeat":   N calls of the normal prompt
+#   mode "ensemble": N calls cycling normal / answer-first / paraphrase, i.e.
+#                    position randomisation plus wording variation (N must
+#                    be a multiple of 3)
+# N must be odd so majorities can't tie. N=1 is exactly the v2 judge
+# (score_answer), and keeps JUDGE_VERSION = "v2-context".
+# ---------------------------------------------------------------------------
+
+JUDGE_MODES = ("repeat", "ensemble")
+_ENSEMBLE_CHAINS = (judge_chain, judge_chain_answer_first, judge_chain_paraphrase)
+
+
+def judge_version_for(n: int, mode: str) -> str:
+    return JUDGE_VERSION if n == 1 else f"v3-{mode}{n}"
+
+
+def check_judge_n(n: int, mode: str) -> None:
+    if mode not in JUDGE_MODES:
+        raise ValueError(f"judge mode must be one of {JUDGE_MODES}")
+    if n < 1 or n % 2 == 0:
+        raise ValueError("judge N must be a positive odd number (majorities can't tie)")
+    if n > 1 and mode == "ensemble" and n % 3:
+        raise ValueError("ensemble mode cycles 3 prompt variants, so N must be a multiple of 3 (3, 9, 15...)")
+
+
+def score_answer_aggregated(question: str, expected_answer: str, answer: str, chunks: list[dict],
+                            n: int = 1, mode: str = "ensemble") -> dict:
+    """Returns {"faithfulness", "relevance" (means), "success" (majority verdict),
+    "calls": [[f, r], ...], "judge_version", "reasoning"}."""
+    from eval.settings import attempt_succeeded
+    check_judge_n(n, mode)
+    if n == 1:
+        s = score_answer(question, expected_answer, answer, chunks)
+        return {"faithfulness": s.faithfulness, "relevance": s.relevance,
+                "success": attempt_succeeded(s.faithfulness, s.relevance),
+                "calls": [[s.faithfulness, s.relevance]], "judge_version": JUDGE_VERSION,
+                "reasoning": s.reasoning}
+    chains = [judge_chain] * n if mode == "repeat" else [_ENSEMBLE_CHAINS[i % 3] for i in range(n)]
+    calls = [list(judge_once(c, question, expected_answer, answer, chunks)) for c in chains]
+    verdicts = [attempt_succeeded(f, r) for f, r in calls]
+    return {"faithfulness": sum(f for f, _ in calls) / n, "relevance": sum(r for _, r in calls) / n,
+            "success": sum(verdicts) * 2 > n, "calls": calls,
+            "judge_version": judge_version_for(n, mode),
+            "reasoning": f"{sum(verdicts)}/{n} judge calls gave a success verdict ({mode})."}

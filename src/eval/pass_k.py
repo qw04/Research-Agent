@@ -25,9 +25,8 @@ import time
 import mlflow
 
 from core.graph import ask
-from eval.judge import JUDGE_MODEL, JUDGE_VERSION, score_answer
-from eval.settings import (EVAL_TOPIC, N_ATTEMPTS, PASS_SCORE, RUNS_DIR,
-                           attempt_succeeded, load_eval_set)
+from eval.judge import JUDGE_MODEL, judge_version_for, score_answer_aggregated
+from eval.settings import EVAL_TOPIC, N_ATTEMPTS, PASS_SCORE, RUNS_DIR, load_eval_set
 
 CONFIGS = [
     # (top_k, use_critic, run_name) — the "_x3" suffix keeps these separate from
@@ -39,8 +38,11 @@ CONFIGS = [
 
 
 def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = None,
-             run_note: str = "") -> dict:
+             run_note: str = "", judge_n: int = 1, judge_mode: str = "ensemble") -> dict:
+    """judge_n / judge_mode: see score_answer_aggregated() in judge.py. The
+    default (N=1) is the single-call v2 judge."""
     eval_set = load_eval_set()[:limit]
+    judge_version = judge_version_for(judge_n, judge_mode)
 
     with mlflow.start_run(run_name=run_name):
         if run_note:
@@ -53,7 +55,9 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
             "n_attempts": N_ATTEMPTS,
             "pass_score": PASS_SCORE,
             "judge_model": JUDGE_MODEL,
-            "judge_version": JUDGE_VERSION,
+            "judge_version": judge_version,
+            "judge_n": judge_n,
+            "judge_mode": judge_mode if judge_n > 1 else "single",
         })
 
         faithfulness_scores, relevance_scores = [], []  # one entry per attempt
@@ -64,21 +68,22 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
             attempts = []
             for attempt_no in range(1, N_ATTEMPTS + 1):
                 result = ask(item["question"], topic=EVAL_TOPIC, top_k=top_k, use_critic=use_critic)
-                score = score_answer(item["question"], item["expected_answer"],
-                                     result["answer"], result["retrieved"])
-                faithfulness_scores.append(score.faithfulness)
-                relevance_scores.append(score.relevance)
+                score = score_answer_aggregated(item["question"], item["expected_answer"],
+                                                result["answer"], result["retrieved"], judge_n, judge_mode)
+                faithfulness_scores.append(score["faithfulness"])
+                relevance_scores.append(score["relevance"])
                 attempts.append({
                     "attempt": attempt_no,
                     "answer": result["answer"],
-                    "faithfulness": score.faithfulness,
-                    "relevance": score.relevance,
-                    "judge_reasoning": score.reasoning,
+                    "faithfulness": score["faithfulness"],
+                    "relevance": score["relevance"],
+                    "judge_reasoning": score["reasoning"],
                     "critic_approved": result["approved"],
                     "attempts": result["attempts"],
                     "used_arxiv": result["used_arxiv"],
-                    "success": attempt_succeeded(score.faithfulness, score.relevance),
-                    "judge_version": JUDGE_VERSION,
+                    "success": score["success"],
+                    "judge_calls": score["calls"],
+                    "judge_version": judge_version,
                     # stored so the judge audit can re-judge this exact answer
                     # against the exact evidence without re-running the agent
                     "retrieved": [{"source": r["source"], "text": r["text"]} for r in result["retrieved"]],

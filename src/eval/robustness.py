@@ -24,7 +24,7 @@ import json
 import random
 
 from core.generate import retrieve
-from eval.judge import JUDGE_MODEL, JUDGE_VERSION, score_answer
+from eval.judge import JUDGE_MODEL, judge_version_for, score_answer_aggregated
 from eval.settings import ROBUSTNESS_FILE, load_eval_set
 
 ROBUSTNESS_SEED = 0
@@ -37,16 +37,21 @@ ROBUSTNESS_CASES = [
 ]
 
 
-def judge_robustness_test() -> str:
-    """Run the degenerate-answer cases through the judge, save results to
-    data/judge_robustness.json, print them and return a one-line summary."""
+def judge_robustness_test(judge_n: int = 1, judge_mode: str = "ensemble") -> str:
+    """Run the degenerate-answer cases through the judge, save results, print
+    them and return a one-line summary. The single-call v2 judge writes
+    data/judge_robustness.json; an aggregated judge (judge_n > 1) writes
+    data/judge_robustness_<version>.json and is checked on its mean scores."""
+    version = judge_version_for(judge_n, judge_mode)
+    out_file = ROBUSTNESS_FILE if judge_n == 1 else ROBUSTNESS_FILE.with_name(f"judge_robustness_{version}.json")
     item = random.Random(ROBUSTNESS_SEED).choice(load_eval_set())
     context = retrieve(item["question"], k=5)
 
     cases, warnings = [], []
     for name, answer, expected_low in ROBUSTNESS_CASES:
-        score = score_answer(item["question"], item["expected_answer"], answer, context)
-        actual = {"faithfulness": score.faithfulness, "relevance": score.relevance}
+        score = score_answer_aggregated(item["question"], item["expected_answer"], answer, context,
+                                        judge_n, judge_mode)
+        actual = {"faithfulness": score["faithfulness"], "relevance": score["relevance"]}
         for dim in expected_low:
             if actual[dim] > ROBUSTNESS_WARN_ABOVE:
                 warnings.append(f"Judge robustness: {name} scored {actual[dim]} on {dim}, "
@@ -56,24 +61,25 @@ def judge_robustness_test() -> str:
             "answer": answer,
             "expected": {dim: "<= 2" for dim in expected_low},
             "actual": actual,
-            "reasoning": score.reasoning,
+            "reasoning": score["reasoning"],
+            "judge_calls": score["calls"],
             "within_expected": all(actual[d] <= 2 for d in expected_low),
             "warned": any(actual[d] > ROBUSTNESS_WARN_ABOVE for d in expected_low),
         })
 
-    ROBUSTNESS_FILE.write_text(json.dumps({
+    out_file.write_text(json.dumps({
         "purpose": "Check the LLM judge does not reward trivial or made-up answers "
                    "(Zheng et al., arXiv:2410.07137; Kapoor et al., HAL, ICLR 2026).",
         "judge_model": JUDGE_MODEL,
         "seed": ROBUSTNESS_SEED,
         "question_id": item["id"],
         "question": item["question"],
-        "judge_version": JUDGE_VERSION,
+        "judge_version": version,
         "context_sources_given_to_judge": [c["source"] for c in context],
         "cases": cases,
     }, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"Judge robustness test (question {item['id']}, seed {ROBUSTNESS_SEED}):")
+    print(f"Judge robustness test [{version}] (question {item['id']}, seed {ROBUSTNESS_SEED}):")
     for c in cases:
         exp = ", ".join(c["expected"])
         print(f"  {c['case']:<20} faithfulness={c['actual']['faithfulness']} "

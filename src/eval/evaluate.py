@@ -6,11 +6,12 @@ Command-line entry point for the eval. Run from the repo root.
     python src/eval/evaluate.py --build-validation  regenerate the human-validation holdout
     python src/eval/evaluate.py --judge-audit       per-item judge reliability audit
     python src/eval/evaluate.py --stats             bootstrap 95% intervals for the *_x3 runs (no API calls)
-    python src/eval/evaluate.py --suffix _ctx       name new runs *_x3_ctx (also selects runs for --stats)
+    python src/eval/evaluate.py --suffix _ctx       name new runs *_x3_ctx (also selects runs for --stats/--judge-audit)
 
 The code lives in the other modules of this package:
     settings.py     paths, eval topic, pass^k parameters, success rule
-    judge.py        LLM judge: prompt (v2-context), answer-first variant, score_answer()
+    judge.py        LLM judge: prompt v2, answer-first + paraphrase variants, score_answer(),
+                    aggregated majority-of-N judge (v3)
     pass_k.py       agent runs x3 per question, per-config metrics, MLflow logging
     validation.py   human-graded holdout and agreement report
     robustness.py   degenerate-answer test (empty / "unknown" / made-up)
@@ -28,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/, so core.* 
 import mlflow
 
 from eval.audit import AUDIT_REPS, AUDIT_SOURCE_RUN, judge_audit
+from eval.judge import JUDGE_MODES, check_judge_n
 from eval.pass_k import CONFIGS, print_summary, run_eval
 from eval.robustness import judge_robustness_test
 from eval.settings import MLFLOW_EXPERIMENT, N_ATTEMPTS
@@ -53,7 +55,18 @@ def main() -> None:
     parser.add_argument("--stats", action="store_true",
                         help="Bootstrap 95%% intervals (and paired config differences) for the runs "
                              "data/eval_runs/<config>_x3<suffix>.json, then exit. No API calls.")
+    parser.add_argument("--judge-n", type=int, default=1,
+                        help="Judge each answer N times and take the majority success verdict (odd N; "
+                             "N=1, the default, is the single-call v2 judge). Applies to the eval "
+                             "and the judge checks.")
+    parser.add_argument("--judge-mode", choices=JUDGE_MODES, default="ensemble",
+                        help="With --judge-n > 1: 'ensemble' cycles the normal, answer-first and "
+                             "paraphrased prompts (N a multiple of 3); 'repeat' reuses the normal prompt.")
     args = parser.parse_args()
+    try:
+        check_judge_n(args.judge_n, args.judge_mode)
+    except ValueError as e:
+        parser.error(str(e))
 
     if args.stats:
         run_stats("_x3" + args.suffix)
@@ -71,9 +84,9 @@ def main() -> None:
 
     # Judge sanity checks run first: if the judge is gameable or disagrees
     # with humans, the scores below should be read with that in mind.
-    robustness_note = judge_robustness_test()
+    robustness_note = judge_robustness_test(args.judge_n, args.judge_mode)
     print()
-    validation_note = judge_validation_report()
+    validation_note = judge_validation_report(args.judge_n, args.judge_mode)
     print()
     run_note = f"{robustness_note}\n{validation_note}"
 
@@ -85,7 +98,8 @@ def main() -> None:
         print(f"Run {i}/{len(CONFIGS)}: top_k={top_k}, critic {'on' if use_critic else 'off'}, "
               f"{N_ATTEMPTS} attempts/question")
         all_results[run_name] = run_eval(top_k=top_k, use_critic=use_critic, run_name=run_name,
-                                         limit=args.limit, run_note=run_note)
+                                         limit=args.limit, run_note=run_note,
+                                         judge_n=args.judge_n, judge_mode=args.judge_mode)
 
     print_summary(all_results)
 
