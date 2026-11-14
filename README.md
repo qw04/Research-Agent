@@ -156,7 +156,32 @@ Before the main eval, the script checks whether its own judge is trustworthy:
 - **Robustness test** ([data/judge_robustness.json](data/judge_robustness.json)): the judge scores an empty answer, a one-word "unknown", and a confident made-up answer. All three must score low; any score above 3 triggers a warning. The current result is 3/3 as expected.
 - **Human validation** ([data/judge_validation.json](data/judge_validation.json)): 3 holdout questions (one each of method, result and comparison), graded by a person and re-judged on every run. The current result is 4/6 scores matching exactly and 6/6 within ±1. This is a spot-check, not an accuracy estimate. The judge prompt was revised after seeing these three items, so the agreement is optimistic.
 
-Both summaries are printed and attached to each MLflow run as its note. The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
+Both summaries are printed and attached to each MLflow run as its note.
+
+### Judge audit
+
+`python src/eval/evaluate.py --judge-audit` checks whether each **individual verdict** can be trusted. It re-judges the stored attempt-1 answers from `topk5_critic_on_x3` without re-running the agent:
+
+- 5 times with the normal prompt
+- 5 times with an answer-first variant: identical wording, with the answer placed before the reference facts and excerpts
+
+A question's verdict (success = 5/5) is **trustworthy** only if it is:
+
+- **reproducible:** all 5 normal judgements agree
+- **order-invariant:** the answer-first judgements give the same verdict
+- **accurate:** for the human-graded holdout items, within ±1 of the human score
+
+This follows Kumar, Rathore & Moitra, *All Verdicts are Not Equal* ([arXiv:2610.12083](https://arxiv.org/abs/2610.12083)). Results are in [data/judge_audit.json](data/judge_audit.json).
+
+| | Result |
+|---|---|
+| Trustworthy verdict rate | **14/19 auditable (74%)**; 14/22 (64%) if the unverifiable items count as untrusted |
+| Reproducible | 95% (19/19 in the first audit run, 18/19 in the second) |
+| Order-invariant | 74%: the answer-first order flips the verdict on q11, q14, q16, q18 and q20 |
+| Unverifiable | q03, q04, q17 went through the arXiv fallback, whose context the eval log didn't store at the time. Eval logs now store context. |
+| pass^1 / pass^3, critic on | 59% / 50% on all 22 questions, vs 60% / 57% on the 14 trustworthy ones |
+
+Order effects can be large. With the answer first, q16 went from faithfulness 5 to 1, and q14 from 2 to 5. Three questions (q05, q12, q16) also scored differently from the same judge on the same input during the earlier eval run. So the judge is not perfectly reproducible across sessions, even at temperature 0. The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
 
 ---
 

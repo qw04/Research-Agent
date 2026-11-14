@@ -1,0 +1,1704 @@
+{
+  "purpose": "Per-item judge reliability (Kumar, Rathore & Moitra, arXiv:2610.12083).",
+  "judge_model": "gpt-4o-mini",
+  "judge_version": "v2-context",
+  "reps_per_condition": 5,
+  "source_run": "topk5_critic_on_x3",
+  "source_attempt": 1,
+  "verdict_definition": "success = faithfulness >= 5 and relevance >= 5",
+  "summary": {
+    "n_questions": 22,
+    "n_auditable": 19,
+    "n_trustworthy": 14,
+    "trustworthy_verdict_rate": 0.7368421052631579,
+    "trustworthy_verdict_rate_all": 0.6363636363636364,
+    "reproducible_rate": 0.9473684210526315,
+    "order_invariant_rate": 0.7368421052631579,
+    "untrustworthy": [
+      "q11",
+      "q14",
+      "q16",
+      "q18",
+      "q20"
+    ],
+    "unverifiable": [
+      "q03",
+      "q04",
+      "q17"
+    ],
+    "score_spread_gt1": [
+      "q08",
+      "q12",
+      "q14",
+      "q16"
+    ],
+    "differs_from_logged_eval_score": [
+      "q05",
+      "q12",
+      "q16"
+    ],
+    "pass_rates_full": {
+      "pass1": 0.5909090909090909,
+      "pass3": 0.5,
+      "n": 22
+    },
+    "pass_rates_trustworthy_only": {
+      "pass1": 0.5952380952380952,
+      "pass3": 0.5714285714285714,
+      "n": 14
+    }
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q02",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q03",
+      "category": "method",
+      "context": "unavailable (arXiv fallback context was not logged)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 1
+      },
+      "auditable": false,
+      "trustworthy": false
+    },
+    {
+      "id": "q04",
+      "category": "result",
+      "context": "unavailable (arXiv fallback context was not logged)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": false,
+      "trustworthy": false
+    },
+    {
+      "id": "q05",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": false,
+      "trustworthy": true
+    },
+    {
+      "id": "q06",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "accuracy": {
+        "human": {
+          "faithfulness": 4,
+          "relevance": 5
+        },
+        "judge_on_human_graded_answer": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "within_1_every_run": true
+      },
+      "trustworthy": true
+    },
+    {
+      "id": "q07",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 4,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q08",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 4
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q09",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q10",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q11",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q12",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 3,
+            "3": 2
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": false,
+      "trustworthy": true
+    },
+    {
+      "id": "q13",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q14",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 2,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": false,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": true,
+      "reproducible": true,
+      "order_invariant": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q15",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q16",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 4
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        }
+      },
+      "verdict": "mixed",
+      "verdict_identical_all_10": false,
+      "faithfulness_spread_gt1": true,
+      "relevance_spread_gt1": true,
+      "reproducible": false,
+      "order_invariant": false,
+      "matches_logged_eval_score": false,
+      "trustworthy": false
+    },
+    {
+      "id": "q17",
+      "category": "method",
+      "context": "unavailable (arXiv fallback context was not logged)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 1
+      },
+      "auditable": false,
+      "trustworthy": false
+    },
+    {
+      "id": "q18",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "4": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q19",
+      "category": "method",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "success",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    },
+    {
+      "id": "q20",
+      "category": "result",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 4,
+        "relevance": 5
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "4": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "5": 5
+          },
+          "relevance": {
+            "5": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": false,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": false,
+      "matches_logged_eval_score": true,
+      "trustworthy": false
+    },
+    {
+      "id": "q21",
+      "category": "comparison",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 3,
+        "relevance": 3
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "3": 5
+          },
+          "relevance": {
+            "3": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "accuracy": {
+        "human": {
+          "faithfulness": 4,
+          "relevance": 2
+        },
+        "judge_on_human_graded_answer": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "within_1_every_run": true
+      },
+      "trustworthy": true
+    },
+    {
+      "id": "q22",
+      "category": "comparison",
+      "context": "rebuilt (exact: no reformulation)",
+      "logged_eval_score": {
+        "faithfulness": 1,
+        "relevance": 1
+      },
+      "auditable": true,
+      "normal": {
+        "scores": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "1": 5
+          },
+          "relevance": {
+            "1": 5
+          }
+        }
+      },
+      "answer_first": {
+        "scores": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "distribution": {
+          "faithfulness": {
+            "2": 5
+          },
+          "relevance": {
+            "2": 5
+          }
+        }
+      },
+      "verdict": "fail",
+      "verdict_identical_all_10": true,
+      "faithfulness_spread_gt1": false,
+      "relevance_spread_gt1": false,
+      "reproducible": true,
+      "order_invariant": true,
+      "matches_logged_eval_score": true,
+      "trustworthy": true
+    }
+  ]
+}

@@ -138,9 +138,65 @@ Checks 2 and 3 traced back to the same flaw. Judge v1 was given only the **title
 
 **Comparability:** v1 and v2 scores can't be compared directly. v2 runs log a `judge_version` parameter in MLflow. Runs without it, including the old single-attempt runs with no `_x3` suffix, used v1.
 
+## 6. Judge audit: per-item verdict reliability
+
+**Motivation:** Kumar, Rathore & Moitra, *All Verdicts are Not Equal: Rethinking LLM Judge Reliability* ([arXiv:2610.12083](https://arxiv.org/abs/2610.12083), AACL-IJCNLP 2026) report three things:
+- judge verdicts can change across identical reruns, even at temperature 0;
+- presentation order can flip verdicts;
+- reliability is item-specific, not a property of the judge model.
+
+They propose a **trustworthy verdict rate**: the share of verdicts that are reproducible, order-invariant and accurate. pass^k repeats the agent but judges each answer only once, so it couldn't detect any of this.
+
+**What changed (`--judge-audit`)**
+
+Judge prompt v2 itself was **not** changed. The audit takes attempt 1 of each question from `topk5_critic_on_x3` and doesn't re-run the agent.
+
+**Judgements per answer**
+
+| Condition | What it tests |
+|---|---|
+| 5× normal prompt | reproducibility |
+| 5× answer-first variant | order invariance |
+| 5× on the human-graded answer (holdout items only) | accuracy |
+
+- **Answer-first variant:** built by reordering the live prompt's own sections, so the wording is guaranteed identical; an assertion fails if the prompt layout changes.
+- **Accuracy:** checked on the answer the human actually graded. For q03 and q21 that is a different answer text from the eval's attempt 1.
+
+**Trustworthy** means:
+- all normal verdicts agree,
+- all answer-first verdicts agree with them,
+- and, for holdout items, every judgement is within ±1 of the human score.
+
+**Results**
+
+| Measure | Result |
+|---|---|
+| Trustworthy verdict rate | 14/19 auditable (74%); 14/22 (64%) counting unverifiable as untrusted |
+| Order invariance | 74%. The answer-first order flipped verdicts on q11, q14, q16, q18 and q20. The biggest swings were q16, faithfulness 5 → 1 (relevance 5 → 2), and q14, faithfulness 2 → 5. |
+| Reproducibility | 100% in the first audit run, 95% in the second. In the second, q12 faithfulness split 2/3 and q16 relevance split 4/5 across identical calls. Both MLflow runs are kept. |
+| Cross-session drift | q05, q12 and q16 scored differently from the score the same judge gave the same input during the eval run a few hours earlier. q05 went from success to fail. |
+| Accuracy | q06 and q21 stay within ±1 of the human scores on every run. q03 couldn't be audited (below). |
+| pass^1 / pass^3 (critic on) | 59% / 50% on all 22, vs 60% / 57% on the 14 trustworthy questions |
+
+The audit confirms all three of the paper's claims on this eval:
+- Order is the biggest effect.
+- Temperature 0 does not guarantee identical verdicts, especially across sessions.
+- The untrustworthy verdicts are concentrated on specific questions rather than spread evenly.
+
+Restricting to trustworthy questions slightly narrows the gap between pass^1 and pass^3. Part of the critic's apparent inconsistency may therefore be judge noise rather than agent behaviour. With 14 questions, that difference is not conclusive.
+
+**Limitations**
+- **3 questions couldn't be audited** (q03, q04, q17). They went through the arXiv fallback, and the eval log didn't store the retrieved excerpts, so their context can't be rebuilt. For the other 19 the context is rebuilt exactly, because the agent retrieved once with the original question and FAISS retrieval is deterministic.
+- **Eval logs now store each attempt's retrieved excerpts**, so a future audit after a fresh eval run covers all 22.
+- **5 repetitions per condition is small.** The reproducibility numbers in particular moved between the two audit runs.
+
+**Not done in this change:** fixing the order sensitivity. Possible fixes are judging in both orders and requiring agreement, or averaging across orders. Either would change judge behaviour and needs its own validation.
+
 ## Open items
 
 - Grade 2–3 fresh questions by hand, to test judge v2 on items it wasn't tuned against.
 - Fix the retrieval failures above, then re-run the eval to measure the effect.
+- Reduce the judge's order sensitivity (judge in both orders and require agreement, or average), then re-validate against the human holdout.
+- Re-run the full eval (which now logs context), then re-run `--judge-audit`, so all 22 questions can be audited.
 - Consider a non-zero temperature, or several judge samples, if pass^k should also capture variation in generation and judging, not just in the critic.
 - The eval set is still tied to the battery SOC corpus. A topic-agnostic eval set is on the README roadmap.

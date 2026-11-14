@@ -180,6 +180,9 @@ def run_eval(top_k: int, use_critic: bool, run_name: str, limit: int | None = No
                     "attempts": result["attempts"],
                     "used_arxiv": result["used_arxiv"],
                     "success": attempt_succeeded(score.faithfulness, score.relevance),
+                    # stored so the judge audit can re-judge this exact answer
+                    # against the exact evidence without re-running the agent
+                    "retrieved": [{"source": r["source"], "text": r["text"]} for r in result["retrieved"]],
                 })
 
             n_success = sum(a["success"] for a in attempts)
@@ -424,6 +427,238 @@ def judge_robustness_test() -> str:
     return msg
 
 
+# ---------------------------------------------------------------------------
+# Judge audit: per-item verdict reliability (data/judge_audit.json)
+#
+# pass^k repeats the AGENT but judges each answer once. Kumar, Rathore &
+# Moitra, "All Verdicts are Not Equal: Rethinking LLM Judge Reliability"
+# (arXiv:2610.12083, AACL-IJCNLP 2026) report that judge verdicts can change
+# across identical reruns even at temperature 0, that presentation order can
+# flip verdicts, and that reliability is item-specific rather than a property
+# of the judge model. Their "trustworthy verdict rate" is the share of
+# verdicts that are reproducible, order-invariant and accurate.
+#
+# For each question, attempt 1's stored answer from AUDIT_SOURCE_RUN is judged
+# AUDIT_REPS times with the normal prompt and AUDIT_REPS times with an
+# answer-first variant (identical wording, sections reordered). Verdict =
+# success (5/5 on both). A question is trustworthy iff:
+#   reproducible:     all normal-prompt verdicts agree
+#   order-invariant:  all answer-first verdicts agree with them
+#   accurate:         (only for questions in data/judge_validation.json) every
+#                     normal-prompt judgement of the HUMAN-GRADED answer is
+#                     within +/-1 of the human score on both dimensions
+#
+# Context: the audit needs the excerpts the answer was built from. Eval logs
+# store them from now on ("retrieved" per attempt). For older logs, the
+# context is rebuilt with retrieve(question, k=top_k), which is exact when the
+# agent did not reformulate (attempts == 0, no arXiv); questions that went
+# through the arXiv fallback can't be rebuilt and are reported as
+# "unverifiable" instead of being judged against the wrong evidence.
+# ---------------------------------------------------------------------------
+
+AUDIT_FILE = Path("data/judge_audit.json")
+AUDIT_SOURCE_RUN = "topk5_critic_on_x3"
+AUDIT_SOURCE_TOP_K = 5
+AUDIT_REPS = 5
+
+# Answer-first variant built from the live judge prompt's own text, so the
+# wording is guaranteed identical and only the section order changes.
+_human_sections = judge_prompt.messages[1].prompt.template.split("\n\n")
+assert [s.split("\n")[0][:10] for s in _human_sections] == [
+    "Question: ", "Reference ", "Retrieved ", "System's a", "Score fait",
+], "judge prompt layout changed; update the answer-first variant"
+judge_prompt_answer_first = ChatPromptTemplate.from_messages([
+    ("system", judge_prompt.messages[0].prompt.template),
+    ("human", "\n\n".join(_human_sections[i] for i in (0, 3, 1, 2, 4))),
+])
+judge_chain_answer_first = judge_prompt_answer_first | judge_llm.with_structured_output(JudgeScore)
+
+
+def _judge_once(chain, question: str, expected: str, answer: str, chunks: list[dict]) -> tuple[int, int]:
+    if not answer or not answer.strip():   # same rule as score_answer()
+        return 1, 1
+    s = chain.invoke({"topic": EVAL_TOPIC, "question": question, "expected_answer": expected,
+                      "context": format_judge_context(chunks), "answer": answer})
+    return s.faithfulness, s.relevance
+
+
+def _distribution(scores: list[tuple[int, int]]) -> dict:
+    from collections import Counter
+    return {
+        "faithfulness": dict(sorted(Counter(f for f, _ in scores).items())),
+        "relevance": dict(sorted(Counter(r for _, r in scores).items())),
+    }
+
+
+def _spread(scores: list[tuple[int, int]], dim: int) -> int:
+    vals = [s[dim] for s in scores]
+    return max(vals) - min(vals)
+
+
+def judge_audit() -> dict:
+    from concurrent.futures import ThreadPoolExecutor
+
+    run = json.loads((RUNS_DIR / f"{AUDIT_SOURCE_RUN}.json").read_text(encoding="utf-8"))
+    eval_by_id = {q["id"]: q for q in load_eval_set()}
+    validation = {}
+    if VALIDATION_FILE.exists():
+        validation = {i["id"]: i for i in json.loads(VALIDATION_FILE.read_text(encoding="utf-8"))["items"]
+                      if i.get("human_scores")}
+
+    # Build the work list: (question id, condition, answer, chunks)
+    items, jobs = {}, []
+    for q in run:
+        a = q["attempts"][0]
+        ref = eval_by_id[q["id"]]
+        if "retrieved" in a:
+            chunks, ctx_source = a["retrieved"], "stored"
+        elif a["attempts"] == 0 and not a["used_arxiv"]:
+            chunks, ctx_source = retrieve(ref["question"], k=AUDIT_SOURCE_TOP_K), "rebuilt (exact: no reformulation)"
+        else:
+            chunks, ctx_source = None, "unavailable (arXiv fallback context was not logged)"
+        items[q["id"]] = {"ref": ref, "answer": a["answer"], "chunks": chunks, "ctx_source": ctx_source,
+                          "logged_score": (a["faithfulness"], a["relevance"])}
+        if chunks is None:
+            continue
+        for _ in range(AUDIT_REPS):
+            jobs.append((q["id"], "normal", judge_chain, a["answer"], chunks))
+            jobs.append((q["id"], "answer_first", judge_chain_answer_first, a["answer"], chunks))
+        if q["id"] in validation:   # accuracy: judge the answer the human actually graded
+            v = validation[q["id"]]
+            for _ in range(AUDIT_REPS):
+                jobs.append((q["id"], "human_graded_answer", judge_chain, v["agent_answer"],
+                             [{"text": t} for t in v["retrieved_context"]]))
+
+    print(f"Judge audit: {len(jobs)} judge calls over {sum(i['chunks'] is not None for i in items.values())} "
+          f"auditable questions (source run {AUDIT_SOURCE_RUN}, attempt 1)...")
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        outs = list(pool.map(lambda j: _judge_once(j[2], items[j[0]]["ref"]["question"],
+                                                   items[j[0]]["ref"]["expected_answer"], j[3], j[4]), jobs))
+    scores: dict[str, dict[str, list]] = {}
+    for (qid, cond, *_), out in zip(jobs, outs):
+        scores.setdefault(qid, {}).setdefault(cond, []).append(out)
+
+    per_question = []
+    for qid, it in items.items():
+        row = {"id": qid, "category": it["ref"]["category"], "context": it["ctx_source"],
+               "logged_eval_score": {"faithfulness": it["logged_score"][0], "relevance": it["logged_score"][1]}}
+        if it["chunks"] is None:
+            row.update({"auditable": False, "trustworthy": False})
+            per_question.append(row)
+            continue
+        normal, flipped = scores[qid]["normal"], scores[qid]["answer_first"]
+        v_normal = [attempt_succeeded(f, r) for f, r in normal]
+        v_flipped = [attempt_succeeded(f, r) for f, r in flipped]
+        reproducible = len(set(v_normal)) == 1
+        majority = lambda v: sum(v) * 2 > len(v)
+        # order-invariant: the answer-first verdicts all agree with each other
+        # and with the normal prompt's (majority) verdict
+        order_invariant = len(set(v_flipped)) == 1 and majority(v_flipped) == majority(v_normal)
+        all10 = normal + flipped
+        row.update({
+            "auditable": True,
+            "normal": {"scores": normal, "distribution": _distribution(normal)},
+            "answer_first": {"scores": flipped, "distribution": _distribution(flipped)},
+            "verdict": ("success" if v_normal[0] else "fail") if reproducible else "mixed",
+            "verdict_identical_all_10": len(set(v_normal + v_flipped)) == 1,
+            "faithfulness_spread_gt1": _spread(all10, 0) > 1,
+            "relevance_spread_gt1": _spread(all10, 1) > 1,
+            "reproducible": reproducible,
+            "order_invariant": order_invariant,
+            # cross-session check (informational, not part of "trustworthy"):
+            # does today's judgement match the score logged during the eval run?
+            "matches_logged_eval_score": all(s == tuple(it["logged_score"]) for s in normal),
+        })
+        accurate = None
+        if qid in validation:
+            h = validation[qid]["human_scores"]
+            hg = scores[qid]["human_graded_answer"]
+            accurate = all(abs(f - h["faithfulness"]) <= 1 and abs(r - h["relevance"]) <= 1 for f, r in hg)
+            row["accuracy"] = {"human": h, "judge_on_human_graded_answer": hg, "within_1_every_run": accurate}
+        row["trustworthy"] = reproducible and order_invariant and accurate is not False
+        per_question.append(row)
+
+    audited = [r for r in per_question if r["auditable"]]
+    trusted_ids = {r["id"] for r in per_question if r["trustworthy"]}
+    n_trust = len(trusted_ids)
+
+    def pass_rates(rows):
+        if not rows:
+            return {"pass1": None, "pass3": None, "n": 0}
+        return {"pass1": sum(q["n_success"] for q in rows) / (len(rows) * N_ATTEMPTS),
+                "pass3": sum(q["pass3"] for q in rows) / len(rows), "n": len(rows)}
+
+    summary = {
+        "n_questions": len(per_question),
+        "n_auditable": len(audited),
+        "n_trustworthy": n_trust,
+        "trustworthy_verdict_rate": n_trust / len(audited),
+        "trustworthy_verdict_rate_all": n_trust / len(per_question),
+        "reproducible_rate": sum(r["reproducible"] for r in audited) / len(audited),
+        "order_invariant_rate": sum(r["order_invariant"] for r in audited) / len(audited),
+        "untrustworthy": [r["id"] for r in audited if not r["trustworthy"]],
+        "unverifiable": [r["id"] for r in per_question if not r["auditable"]],
+        "score_spread_gt1": [r["id"] for r in audited if r["faithfulness_spread_gt1"] or r["relevance_spread_gt1"]],
+        "differs_from_logged_eval_score": [r["id"] for r in audited if not r["matches_logged_eval_score"]],
+        "pass_rates_full": pass_rates(run),
+        "pass_rates_trustworthy_only": pass_rates([q for q in run if q["id"] in trusted_ids]),
+    }
+
+    AUDIT_FILE.write_text(json.dumps({
+        "purpose": "Per-item judge reliability (Kumar, Rathore & Moitra, arXiv:2610.12083).",
+        "judge_model": JUDGE_MODEL, "judge_version": JUDGE_VERSION, "reps_per_condition": AUDIT_REPS,
+        "source_run": AUDIT_SOURCE_RUN, "source_attempt": 1,
+        "verdict_definition": f"success = faithfulness >= {PASS_SCORE} and relevance >= {PASS_SCORE}",
+        "summary": summary, "questions": per_question,
+    }, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # ---- report ----
+    s = summary
+    print(f"\nJudge audit ({AUDIT_REPS} normal + {AUDIT_REPS} answer-first judgements per answer):")
+    for r in per_question:
+        if not r["auditable"]:
+            print(f"  {r['id']}  UNVERIFIABLE  ({r['context']})")
+            continue
+        flags = []
+        if not r["reproducible"]:
+            flags.append("not reproducible")
+        elif not r["order_invariant"]:
+            flags.append("order flips verdict")
+        if r.get("accuracy") and not r["accuracy"]["within_1_every_run"]:
+            flags.append("disagrees with human")
+        if r["faithfulness_spread_gt1"] or r["relevance_spread_gt1"]:
+            flags.append("score spread >1")
+        print(f"  {r['id']}  {'trusted  ' if r['trustworthy'] else 'UNTRUSTED'} verdict={r['verdict']:<7} "
+              f"F normal={r['normal']['distribution']['faithfulness']} first={r['answer_first']['distribution']['faithfulness']}  "
+              f"R normal={r['normal']['distribution']['relevance']} first={r['answer_first']['distribution']['relevance']}"
+              + (f"  [{', '.join(flags)}]" if flags else ""))
+    print(f"\n  trustworthy verdict rate: {s['n_trustworthy']}/{s['n_auditable']} auditable = "
+          f"{s['trustworthy_verdict_rate']:.0%}  ({s['n_trustworthy']}/{s['n_questions']} = "
+          f"{s['trustworthy_verdict_rate_all']:.0%} counting unverifiable as untrusted)")
+    print(f"  reproducible: {s['reproducible_rate']:.0%}   order-invariant: {s['order_invariant_rate']:.0%}")
+    print(f"  untrustworthy: {s['untrustworthy'] or 'none'}   unverifiable: {s['unverifiable'] or 'none'}")
+    print(f"  differs from the score logged in the original eval run (cross-session): "
+          f"{s['differs_from_logged_eval_score'] or 'none'}")
+    full, tr = s["pass_rates_full"], s["pass_rates_trustworthy_only"]
+    print(f"  {AUDIT_SOURCE_RUN}: pass^1 {full['pass1']:.0%} / pass^3 {full['pass3']:.0%} on all {full['n']} questions"
+          f"  vs  pass^1 {tr['pass1']:.0%} / pass^3 {tr['pass3']:.0%} on the {tr['n']} trustworthy ones")
+
+    mlflow.set_experiment("research-agent-eval")
+    with mlflow.start_run(run_name=f"judge_audit_{AUDIT_SOURCE_RUN}"):
+        mlflow.log_params({"judge_version": JUDGE_VERSION, "judge_model": JUDGE_MODEL,
+                           "reps_per_condition": AUDIT_REPS, "source_run": AUDIT_SOURCE_RUN})
+        mlflow.log_metrics({
+            "trustworthy_verdict_rate": s["trustworthy_verdict_rate"],
+            "trustworthy_verdict_rate_all": s["trustworthy_verdict_rate_all"],
+            "reproducible_rate": s["reproducible_rate"],
+            "order_invariant_rate": s["order_invariant_rate"],
+            "pass1_rate_trustworthy": tr["pass1"] or 0.0,
+            "pass3_rate_trustworthy": tr["pass3"] or 0.0,
+        })
+        mlflow.log_artifact(str(AUDIT_FILE))
+    return summary
+
+
 CONFIGS = [
     # (top_k, use_critic, run_name) — the "_x3" suffix keeps these separate from
     # the earlier single-attempt runs (topk3_critic_off etc.) in MLflow and data/eval_runs/.
@@ -442,7 +677,15 @@ if __name__ == "__main__":
     parser.add_argument("--build-validation", action="store_true",
                         help="Generate data/judge_validation.json (agent answers + judge scores, "
                              "human_scores left blank) and exit.")
+    parser.add_argument("--judge-audit", action="store_true",
+                        help=f"Re-judge stored answers from {AUDIT_SOURCE_RUN} (attempt 1) {AUDIT_REPS}x normal "
+                             f"+ {AUDIT_REPS}x answer-first, report the trustworthy verdict rate, and exit. "
+                             "Does not re-run the agent.")
     args = parser.parse_args()
+
+    if args.judge_audit:
+        judge_audit()
+        sys.exit(0)
 
     if args.build_validation:
         build_validation_set()
