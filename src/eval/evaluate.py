@@ -6,7 +6,9 @@ Command-line entry point for the eval. Run from the repo root.
     python src/eval/evaluate.py --build-validation  regenerate the human-validation holdout
     python src/eval/evaluate.py --judge-audit       per-item judge reliability audit
     python src/eval/evaluate.py --stats             bootstrap 95% intervals for the *_x3 runs (no API calls)
-    python src/eval/evaluate.py --suffix _ctx       name new runs *_x3_ctx (also selects runs for --stats/--judge-audit)
+    python src/eval/evaluate.py --suffix _ctx       name new runs *_x3_ctx (also selects runs for --stats/--rejudge/--judge-audit)
+    python src/eval/evaluate.py --suffix _ctx --rejudge --judge-n 9
+                                                    re-judge stored *_x3_ctx attempts with a majority-of-9 judge
 
 The code lives in the other modules of this package:
     settings.py     paths, eval topic, pass^k parameters, success rule
@@ -17,6 +19,7 @@ The code lives in the other modules of this package:
     robustness.py   degenerate-answer test (empty / "unknown" / made-up)
     audit.py        reproducibility + order-invariance audit, trustworthy verdict rate
     stats.py        bootstrap intervals, paired differences, identical-text breakdown
+    rejudge.py      re-score stored attempts with the aggregated judge (no agent calls)
 See documentation.md for why each piece exists.
 """
 
@@ -30,6 +33,7 @@ import mlflow
 
 from eval.audit import AUDIT_REPS, AUDIT_SOURCE_RUN, judge_audit
 from eval.judge import JUDGE_MODES, check_judge_n
+from eval.rejudge import rejudge_run, rejudge_tag
 from eval.pass_k import CONFIGS, print_summary, run_eval
 from eval.robustness import judge_robustness_test
 from eval.settings import MLFLOW_EXPERIMENT, N_ATTEMPTS
@@ -57,11 +61,15 @@ def main() -> None:
                              "data/eval_runs/<config>_x3<suffix>.json, then exit. No API calls.")
     parser.add_argument("--judge-n", type=int, default=1,
                         help="Judge each answer N times and take the majority success verdict (odd N; "
-                             "N=1, the default, is the single-call v2 judge). Applies to the eval "
-                             "and the judge checks.")
+                             "N=1, the default, is the single-call v2 judge). Applies to the eval, "
+                             "--rejudge and the judge checks.")
     parser.add_argument("--judge-mode", choices=JUDGE_MODES, default="ensemble",
                         help="With --judge-n > 1: 'ensemble' cycles the normal, answer-first and "
                              "paraphrased prompts (N a multiple of 3); 'repeat' reuses the normal prompt.")
+    parser.add_argument("--rejudge", action="store_true",
+                        help="Re-judge every stored attempt of the three <config>_x3<suffix> runs with "
+                             "the --judge-n/--judge-mode judge (no agent calls), run the judge checks and "
+                             "--stats on the result, then exit.")
     args = parser.parse_args()
     try:
         check_judge_n(args.judge_n, args.judge_mode)
@@ -70,6 +78,19 @@ def main() -> None:
 
     if args.stats:
         run_stats("_x3" + args.suffix)
+        return
+
+    if args.rejudge:
+        if args.judge_n == 1:
+            parser.error("--rejudge needs --judge-n > 1 (N=1 would just repeat the original judging)")
+        judge_robustness_test(args.judge_n, args.judge_mode)
+        print()
+        judge_validation_report(args.judge_n, args.judge_mode)
+        print()
+        for _, _, run_name in CONFIGS:
+            rejudge_run(run_name + args.suffix, args.judge_n, args.judge_mode)
+        print()
+        run_stats("_x3" + args.suffix + "_" + rejudge_tag(args.judge_n, args.judge_mode))
         return
 
     if args.judge_audit:

@@ -1,0 +1,274 @@
+{
+  "n_questions": 22,
+  "resamples": 10000,
+  "seed": 0,
+  "configs": {
+    "topk3_critic_off": {
+      "pass1_rate": {
+        "point": 0.4696969696969697,
+        "ci95": [
+          0.2727272727272727,
+          0.6818181818181818
+        ]
+      },
+      "pass_any3_rate": {
+        "point": 0.5,
+        "ci95": [
+          0.2727272727272727,
+          0.7272727272727273
+        ]
+      },
+      "pass3_rate": {
+        "point": 0.45454545454545453,
+        "ci95": [
+          0.22727272727272727,
+          0.6818181818181818
+        ]
+      },
+      "avg_faithfulness": {
+        "point": 4.296296296296297,
+        "ci95": [
+          3.799621212121212,
+          4.730639730639731
+        ]
+      },
+      "avg_relevance": {
+        "point": 3.7474747474747474,
+        "ci95": [
+          3.3198653198653205,
+          4.168350168350169
+        ]
+      }
+    },
+    "topk5_critic_off": {
+      "pass1_rate": {
+        "point": 0.5454545454545454,
+        "ci95": [
+          0.3181818181818182,
+          0.7272727272727273
+        ]
+      },
+      "pass_any3_rate": {
+        "point": 0.5454545454545454,
+        "ci95": [
+          0.3181818181818182,
+          0.7272727272727273
+        ]
+      },
+      "pass3_rate": {
+        "point": 0.5454545454545454,
+        "ci95": [
+          0.3181818181818182,
+          0.7272727272727273
+        ]
+      },
+      "avg_faithfulness": {
+        "point": 4.496632996632997,
+        "ci95": [
+          4.062289562289563,
+          4.846801346801347
+        ]
+      },
+      "avg_relevance": {
+        "point": 3.9612794612794615,
+        "ci95": [
+          3.478114478114478,
+          4.420875420875421
+        ]
+      }
+    },
+    "topk5_critic_on": {
+      "pass1_rate": {
+        "point": 0.5151515151515151,
+        "ci95": [
+          0.3333333333333333,
+          0.696969696969697
+        ]
+      },
+      "pass_any3_rate": {
+        "point": 0.6363636363636364,
+        "ci95": [
+          0.45454545454545453,
+          0.8181818181818182
+        ]
+      },
+      "pass3_rate": {
+        "point": 0.4090909090909091,
+        "ci95": [
+          0.22727272727272727,
+          0.6363636363636364
+        ]
+      },
+      "avg_faithfulness": {
+        "point": 4.255892255892256,
+        "ci95": [
+          3.826599326599326,
+          4.641456228956229
+        ]
+      },
+      "avg_relevance": {
+        "point": 3.9814814814814814,
+        "ci95": [
+          3.582491582491582,
+          4.372053872053872
+        ]
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "label": "critic on - off (top_k=5)",
+      "a": "topk5_critic_on",
+      "b": "topk5_critic_off",
+      "metrics": {
+        "pass1_rate": {
+          "point": -0.030303030303030307,
+          "ci95": [
+            -0.15151515151515152,
+            0.0606060606060606
+          ],
+          "excludes_zero": false
+        },
+        "pass_any3_rate": {
+          "point": 0.09090909090909091,
+          "ci95": [
+            -0.09090909090909091,
+            0.2727272727272727
+          ],
+          "excludes_zero": false
+        },
+        "pass3_rate": {
+          "point": -0.13636363636363635,
+          "ci95": [
+            -0.2727272727272727,
+            0.0
+          ],
+          "excludes_zero": false
+        },
+        "avg_faithfulness": {
+          "point": -0.24074074074074073,
+          "ci95": [
+            -0.4933080808080808,
+            -0.04208754208754209
+          ],
+          "excludes_zero": true
+        },
+        "avg_relevance": {
+          "point": 0.02020202020202022,
+          "ci95": [
+            -0.21384680134680137,
+            0.27609427609427617
+          ],
+          "excludes_zero": false
+        }
+      }
+    },
+    {
+      "label": "top_k 5 - 3 (critic off)",
+      "a": "topk5_critic_off",
+      "b": "topk3_critic_off",
+      "metrics": {
+        "pass1_rate": {
+          "point": 0.07575757575757576,
+          "ci95": [
+            -0.09090909090909091,
+            0.24242424242424246
+          ],
+          "excludes_zero": false
+        },
+        "pass_any3_rate": {
+          "point": 0.045454545454545456,
+          "ci95": [
+            -0.09090909090909091,
+            0.18181818181818182
+          ],
+          "excludes_zero": false
+        },
+        "pass3_rate": {
+          "point": 0.09090909090909091,
+          "ci95": [
+            -0.09090909090909091,
+            0.2727272727272727
+          ],
+          "excludes_zero": false
+        },
+        "avg_faithfulness": {
+          "point": 0.20033670033670026,
+          "ci95": [
+            -0.12289562289562293,
+            0.6144781144781144
+          ],
+          "excludes_zero": false
+        },
+        "avg_relevance": {
+          "point": 0.21380471380471383,
+          "ci95": [
+            -0.0858585858585859,
+            0.563973063973064
+          ],
+          "excludes_zero": false
+        }
+      }
+    }
+  ],
+  "suffix": "_x3_ctx_v3ens9",
+  "judge_versions": [
+    "v3-ensemble9"
+  ],
+  "variance_breakdown": {
+    "topk3_critic_off": {
+      "identical_text_questions": [
+        "q01",
+        "q02",
+        "q06",
+        "q12",
+        "q14",
+        "q16",
+        "q21"
+      ],
+      "verdict_varied_identical_text": [],
+      "verdict_varied_different_text": [
+        "q10"
+      ]
+    },
+    "topk5_critic_off": {
+      "identical_text_questions": [
+        "q02",
+        "q05",
+        "q06",
+        "q09",
+        "q10",
+        "q11",
+        "q12",
+        "q14",
+        "q16",
+        "q18",
+        "q19",
+        "q20",
+        "q21",
+        "q22"
+      ],
+      "verdict_varied_identical_text": [],
+      "verdict_varied_different_text": []
+    },
+    "topk5_critic_on": {
+      "identical_text_questions": [
+        "q02",
+        "q09",
+        "q10",
+        "q11",
+        "q13",
+        "q14",
+        "q16"
+      ],
+      "verdict_varied_identical_text": [],
+      "verdict_varied_different_text": [
+        "q03",
+        "q04",
+        "q17",
+        "q18",
+        "q20"
+      ]
+    }
+  }
+}
