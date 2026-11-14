@@ -37,7 +37,7 @@ retrieve → grade ─[sufficient]───────────────�
 | [src/paper_graph/](src/paper_graph/) | Offline pass that extracts a profile per paper (techniques used, baselines, novelty, headline result) and builds a paper→technique / paper→baseline graph (`data/paper_graph.json`). Also includes a script that finds baselines several papers compare against but that have no paper of their own in the corpus (`find_common_dependents.py`), a graph visualizer, and a results infographic (`infographic.py`). |
 | [src/discovery/arxiv_search.py](src/discovery/arxiv_search.py) | Live arXiv search behind the agent's fallback, also callable on its own as `search_arxiv(question)`. GPT-4o-mini turns the question into a few keywords, which are searched AND-joined, then OR-joined if that finds nothing. Returns abstracts in the same `{score, source, text}` shape as local retrieval. |
 | [src/discovery/topic_discovery.py](src/discovery/topic_discovery.py) | Stage 1 of the topic-driven mode: given a topic, it searches Wikipedia, DuckDuckGo, arXiv surveys and Semantic Scholar in parallel, then an LLM shortlists intro sources. Stages 2 (finding influential papers) and 3 (ingesting them) are not built yet. |
-| [src/eval/evaluate.py](src/eval/evaluate.py) | Runs a hand-built eval set of 22 questions (`data/eval_set.json`) through the agent 3 times per configuration (top_k 3/5, critic on/off). An LLM judge scores faithfulness and relevance. Reports pass^k consistency, checks the judge against degenerate answers and human grades, and logs everything to MLflow. See [Evaluation](#evaluation). |
+| [src/eval/](src/eval/) | The evaluation harness. It runs a hand-built eval set of 22 questions (`data/eval_set.json`) through the agent 3 times per configuration, has an LLM judge score each answer, checks the judge itself, and logs everything to MLflow. The modules are listed below, and the results are in [Evaluation](#evaluation). |
 | [src/api/main.py](src/api/main.py) | FastAPI wrapper over the core graph: `GET /health`, `GET /papers`, `POST /ask`, `POST /compare`, `GET /papers/{paper}/relationships`. |
 | `Dockerfile`, [k8s/](k8s/) | Container image with the embedding model baked in, so it runs with no network access to Hugging Face. Also a single-replica Kubernetes Deployment + NodePort Service. |
 | `src/scratch/` | Throwaway experiments. |
@@ -108,6 +108,12 @@ Regenerate the judge-validation holdout (refuses to overwrite a file that alread
 python src/eval/evaluate.py --build-validation
 ```
 
+Audit the judge's per-question reliability (re-judges stored answers; doesn't re-run the agent; about 200 cheap judge calls):
+
+```bash
+python src/eval/evaluate.py --judge-audit
+```
+
 Topic discovery, stage 1:
 
 ```bash
@@ -125,6 +131,21 @@ The eval set has 22 hand-written questions (method, result and comparison questi
 
 An attempt counts as a **success** only if it scores 5/5 on both.
 
+### Code layout
+
+`src/eval/evaluate.py` is only the command-line entry point. The logic lives in:
+
+| Module | What it does |
+|---|---|
+| [settings.py](src/eval/settings.py) | File paths, the eval topic, the pass^k settings (3 attempts, success = 5/5) |
+| [judge.py](src/eval/judge.py) | The judge: prompt v2, the answer-first variant, `score_answer()` (including the empty-answer rule) |
+| [pass_k.py](src/eval/pass_k.py) | The agent runs, per-config metrics, MLflow logging, `data/eval_runs/<run>.json` |
+| [validation.py](src/eval/validation.py) | The human-graded holdout and the agreement report |
+| [robustness.py](src/eval/robustness.py) | The degenerate-answer test |
+| [audit.py](src/eval/audit.py) | The reproducibility and order-invariance audit, and the trustworthy verdict rate |
+
+All judging goes through `judge.py`, so the eval and every judge check use the same prompt, model and rules.
+
 ### Results (judge v2, 2026-11-14)
 
 | Config | pass^1 | ≥1 of 3 | pass^3 | Avg faithfulness | Avg relevance | Runtime |
@@ -139,9 +160,18 @@ An attempt counts as a **success** only if it scores 5/5 on both.
 
 What the numbers say:
 
-- **top_k=5 beats top_k=3** on every metric.
-- **The critic improves answers but makes them less consistent.** It gives the best single-attempt (59%) and best-of-3 (68%) success, but a lower pass^3 than running without it (50% vs 55%). The rest of the pipeline runs at temperature 0 and gives nearly the same answer every run, so without the critic pass^1 equals pass^3. The critic is the main source of run-to-run variation.
-- **The critic helps relevance (3.95 → 4.14), not faithfulness (4.39 vs 4.35).** An earlier version of the judge suggested a faithfulness gain, but that judge was flawed (see below), so the earlier result doesn't stand.
+With 22 questions, one question is worth about 4.5 percentage points on pass^3, and no confidence intervals have been computed yet. Read every comparison below as tentative.
+
+- **top_k=5 beats top_k=3** on every metric. On pass^1, the gap is about 2.5 questions' worth (55% vs 44%). That's the clearest difference in the table, but it still has no interval.
+- **The critic does not clearly change consistency.** Its pass^3 is 50% against 55% without it, which is 11 questions vs 12. An earlier version of this README said the critic was "the main source of run-to-run variation". The evidence doesn't support that:
+  - **Answers vary without the critic too.** Even with the critic off, the answer text changes across the 3 attempts on 10 of 22 questions at top_k=5 (18 of 22 at top_k=3). The verdicts just happened to stay the same.
+  - **The critic's pass^1-to-pass^3 gap comes from 4 questions, and none is clearly the agent varying:**
+    - q05: identical answer text all 3 times but different verdicts, so this is pure judge variation.
+    - q16, q20: the [judge audit](#judge-audit) marks both untrusted, because putting the answer first flips their verdict.
+    - q03: went through the arXiv fallback and couldn't be audited.
+
+  Separating agent variation from judge variation properly is planned (see [documentation.md](documentation.md), Open items).
+- **The critic may help relevance (3.95 → 4.14), but not faithfulness (4.39 vs 4.35).** Both differences are small. An earlier version of the judge suggested a faithfulness gain, but that judge was flawed (see below), so that result doesn't stand.
 - **Some questions fail in every configuration:**
   - q03: "LRLSTM" never matches locally, so the agent falls back to arXiv.
   - q21, q22: comparison questions that need information from several papers.
@@ -181,7 +211,17 @@ This follows Kumar, Rathore & Moitra, *All Verdicts are Not Equal* ([arXiv:2610.
 | Unverifiable | q03, q04, q17 went through the arXiv fallback, whose context the eval log didn't store at the time. Eval logs now store context. |
 | pass^1 / pass^3, critic on | 59% / 50% on all 22 questions, vs 60% / 57% on the 14 trustworthy ones |
 
-Order effects can be large. With the answer first, q16 went from faithfulness 5 to 1, and q14 from 2 to 5. Three questions (q05, q12, q16) also scored differently from the same judge on the same input during the earlier eval run. So the judge is not perfectly reproducible across sessions, even at temperature 0. The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
+Order effects can be large. With the answer first, q16 went from faithfulness 5 to 1, and q14 from 2 to 5. Three questions (q05, q12, q16) also scored differently from the same judge on the same input during the earlier eval run. So the judge is not perfectly reproducible across sessions, even at temperature 0.
+
+### Limitations
+
+- **Small eval set.** 22 questions from one corpus (battery SOC), written from excerpts of the papers. One question changes pass^3 by about 4.5 percentage points.
+- **No uncertainty intervals yet**, so no comparison above has been shown to be outside the noise.
+- **The judge is order-sensitive.** About a quarter of its verdicts are not trustworthy (see [Judge audit](#judge-audit)). The judge also isn't fully reproducible across sessions.
+- **Human validation is 3 questions**, and the judge prompt was tuned on them.
+- **Paper figures aren't checked.** Figures quoted from the cited papers in [documentation.md](documentation.md) were taken as given and haven't been independently verified.
+
+The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
 
 ---
 
@@ -198,7 +238,7 @@ Moving from the battery SOC corpus to a generic, topic-driven agent:
 2. **Topic discovery:** build stage 2 (pick the *influential* papers for a topic using arXiv plus Semantic Scholar citation counts and an LLM shortlist) and stage 3 (ingest the papers you approve).
 3. **Downstream cleanup**
    - [x] API: `/ask` and `/compare` accept an optional `topic`.
-   - [x] `evaluate.py`: the judge prompt takes the topic, and the eval runs with `EVAL_TOPIC` (battery SOC, to match the current eval set).
+   - [x] Eval: the judge prompt takes the topic, and the eval runs with `EVAL_TOPIC` (battery SOC, to match the current eval set).
    - [x] `paper_graph/`: the arXiv domain term and the plot title are command-line arguments.
    - [ ] Write an eval set that isn't tied to the battery SOC corpus, or generate one per topic.
    - [ ] Fix the retrieval failures the eval exposes (q03 acronym miss, multi-paper comparison questions q21/q22).

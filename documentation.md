@@ -2,6 +2,25 @@
 
 This document records how the evaluation in [src/eval/evaluate.py](src/eval/evaluate.py) changed in November 2026, what motivated each change, and what the changes turned up. Current numbers are in the README's [Evaluation](README.md#evaluation) section.
 
+## Current state (2026-11-14)
+
+**The eval**
+- 22 questions × 3 attempts × 3 configs, scored by judge v2 (gpt-4o-mini, temperature 0; sees the retrieved excerpts).
+- Metrics: pass^1, ≥1 of 3 and pass^3 (section 1).
+- Code: split into modules under `src/eval/` (section 8).
+
+**Checks on the judge**
+- Robustness test: 3/3 as expected (section 3).
+- Human validation: 4/6 exact, 6/6 within ±1, on 3 tuned items (sections 2, 4).
+- Per-question audit: 14/19 auditable verdicts trustworthy. Order effects are the main problem (section 6).
+
+**What the results support**
+- top_k=5 beats top_k=3.
+- The critic is **not** clearly more or less consistent than running without it (section 7 revises section 5).
+- No result has uncertainty intervals yet.
+
+**Next steps:** a plan to add intervals, a paraphrase audit condition, aggregated judging, fresh human grades and an optional second judge has been drafted and is waiting for approval (Open items).
+
 ## Starting point
 
 The original eval ran each of the 22 questions in [data/eval_set.json](data/eval_set.json) **once** per configuration. A GPT-4o-mini judge scored faithfulness and relevance from 1 to 5. Three configurations were logged to MLflow:
@@ -127,6 +146,7 @@ Checks 2 and 3 traced back to the same flaw. Judge v1 was given only the **title
 **Conclusions that changed**
 - **"The critic improves faithfulness" no longer holds.** Under judge v1 it looked like 3.86 → 4.18. Under v2, faithfulness is flat (4.39 vs 4.35) and the critic's benefit shows up in relevance (3.95 → 4.14). The v1 gain was most likely an artefact of a judge that couldn't see the evidence.
 - **The critic trades consistency for peak quality.** It gives the best pass^1 and best-of-3, but a lower pass^3 than running without it. Everything else runs at temperature 0, and without the critic pass^1 equals pass^3 almost exactly. The critic is the main source of run-to-run variation. Single-run evaluation would never have shown this.
+  - *Revised in section 7: this conclusion did not survive closer inspection.*
 
 **New findings**
 - **Questions that fail in every config:**
@@ -192,11 +212,75 @@ Restricting to trustworthy questions slightly narrows the gap between pass^1 and
 
 **Not done in this change:** fixing the order sensitivity. Possible fixes are judging in both orders and requiring agreement, or averaging across orders. Either would change judge behaviour and needs its own validation.
 
+## 7. Reassessing "the critic is the main source of variation"
+
+**Commit:** documentation only, in the same commit as section 8. No API calls: the numbers come from the stored logs in `data/eval_runs/*_x3.json`.
+
+**Motivation:** the section 5 conclusion rested on an assumption: with the critic off, the temperature-0 pipeline gives nearly the same answer every time, so any pass^1-to-pass^3 gap must come from the critic. The judge audit (section 6) showed the judge isn't fully deterministic either. That made it worth checking the assumption directly, by comparing the 3 stored answer texts per question.
+
+**Result**
+
+| Config | Questions where all 3 attempts had identical text | Questions whose verdict varied across attempts |
+|---|---|---|
+| top_k=3, critic off | 4/22 | q10 (text differed) |
+| top_k=5, critic off | 12/22 | none |
+| top_k=5, critic on | 5/22 | q05 (identical text); q03, q16, q20 (text differed) |
+
+- **The assumption is false.** With the critic off, the answer text still changes across attempts on 10 to 18 of 22 questions. The verdicts happened to stay stable, but the agent is not near-deterministic.
+- **None of the 4 questions behind the critic-on gap is a clean case of the agent varying:**
+  - q05: identical text, varying verdict, so this is pure judge variation.
+  - q16, q20: both untrusted in the audit, because answer-first order flips their verdicts.
+  - q03: arXiv fallback, unauditable.
+- 50% vs 55% pass^3 is a one-question difference (11 vs 12 questions) with no interval.
+
+**Conclusion change:** "the critic trades consistency for peak quality" is withdrawn. The current statement is that the critic is not clearly more or less consistent than running without it. Separating agent from judge variance properly needs aggregated judging on stored answers (see Open items).
+
+**Caveat:** identical text with differing verdicts proves the judge varied. Differing text with differing verdicts doesn't prove the agent varied, because the judge can vary there too.
+
+## 8. Eval code split into modules
+
+**Commit:** see git log, "Split eval code into modules". It's a refactor only, so there's no paper. It prepares for the planned changes, which each touch one part of the eval.
+
+**What changed:** the single 700-line `src/eval/evaluate.py` became:
+
+| File | Contents |
+|---|---|
+| `settings.py` | paths, eval topic, pass^k parameters, success rule; loads `.env` |
+| `judge.py` | `JudgeScore`, prompt v2, answer-first variant, `format_judge_context()`, `score_answer()`, `judge_once()` |
+| `pass_k.py` | `CONFIGS`, `run_eval()`, `print_summary()` |
+| `validation.py` | holdout build and agreement report, `load_graded_items()` |
+| `robustness.py` | degenerate-answer test |
+| `audit.py` | judge audit |
+| `evaluate.py` | CLI only (same commands and flags as before) |
+
+**Validation (no behaviour change)**
+- **Static comparison, no API calls.** I compared the new modules with the pre-refactor file. All of these were identical:
+  - system prompt, user prompt and answer-first prompt text
+  - `JudgeScore` schema
+  - judge model, version and temperature
+  - topic, attempts and success threshold
+  - file paths, `CONFIGS`, validation ids, robustness cases and seed, audit parameters
+  - context formatting, the empty-answer rule, and the success rule for all 25 score pairs
+- **Live end-to-end run.** I ran `evaluate.py --limit 1` against a throwaway MLflow database:
+  - robustness 3/3 and validation 4/6 exact, 6/6 within ±1, the same as before
+  - q01 5/5 on all 3 attempts in all 3 configs
+  - eval logs now include the retrieved excerpts
+
+  The robustness file regenerated with identical scores; only one free-text `reasoning` sentence was worded differently, a reminder that the judge's output text isn't deterministic either. Test outputs were deleted and the committed data files kept.
+
 ## Open items
 
-- Grade 2–3 fresh questions by hand, to test judge v2 on items it wasn't tuned against.
-- Fix the retrieval failures above, then re-run the eval to measure the effect.
-- Reduce the judge's order sensitivity (judge in both orders and require agreement, or average), then re-validate against the human holdout.
-- Re-run the full eval (which now logs context), then re-run `--judge-audit`, so all 22 questions can be audited.
-- Consider a non-zero temperature, or several judge samples, if pass^k should also capture variation in generation and judging, not just in the critic.
-- The eval set is still tied to the battery SOC corpus. A topic-agnostic eval set is on the README roadmap.
+A plan covering most of these has been drafted and is waiting for approval:
+- **Uncertainty:** bootstrap 95% intervals on all metrics, and paired intervals for the critic on/off and top_k comparisons.
+- **Fresh eval run** with context logging, so every question can be audited and re-judged exactly.
+- **Paraphrase condition in the audit:** same rubric, different wording.
+- **Aggregated judge (v3):** majority over several calls, across repeats and/or prompt variants (order, paraphrase). Then re-judge the stored attempts to separate agent variance from judge variance.
+- **Human agreement:** add weighted kappa, and grade 3–5 fresh questions by hand, reported separately from the 3 tuned ones.
+- **Optional second judge** for cross-judge agreement.
+
+Also open:
+- **Stronger robustness cases:** one canned answer for all 22 questions (a true null model), and an answer containing text aimed at the judge.
+- **Agent traces:** inspect the arXiv-fallback answers for shortcuts, such as finding the very paper a question is about (HAL's lesson).
+- **Retrieval failures:** fix q03 and the comparison questions q21/q22, then re-run the eval.
+- **Eval set:** still tied to the battery SOC corpus. A topic-agnostic one is on the README roadmap.
+- **Paper figures:** verify the figures quoted from the cited papers against the papers themselves.
