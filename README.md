@@ -37,7 +37,7 @@ retrieve → grade ─[sufficient]───────────────�
 | [src/paper_graph/](src/paper_graph/) | Offline pass that extracts a profile per paper (techniques used, baselines, novelty, headline result) and builds a paper→technique / paper→baseline graph (`data/paper_graph.json`). Also includes a script that finds baselines several papers compare against but that have no paper of their own in the corpus (`find_common_dependents.py`), a graph visualizer, and a results infographic (`infographic.py`). |
 | [src/discovery/arxiv_search.py](src/discovery/arxiv_search.py) | Live arXiv search behind the agent's fallback, also callable on its own as `search_arxiv(question)`. GPT-4o-mini turns the question into a few keywords, which are searched AND-joined, then OR-joined if that finds nothing. Returns abstracts in the same `{score, source, text}` shape as local retrieval. |
 | [src/discovery/topic_discovery.py](src/discovery/topic_discovery.py) | Stage 1 of the topic-driven mode: given a topic, it searches Wikipedia, DuckDuckGo, arXiv surveys and Semantic Scholar in parallel, then an LLM shortlists intro sources. Stages 2 (finding influential papers) and 3 (ingesting them) are not built yet. |
-| [src/eval/evaluate.py](src/eval/evaluate.py) | Runs a hand-built eval set of 22 questions (`data/eval_set.json`) through the agent and scores faithfulness and relevance with an LLM judge. Results are logged to MLflow across configurations (top_k 3/5, critic on/off). |
+| [src/eval/evaluate.py](src/eval/evaluate.py) | Runs a hand-built eval set of 22 questions (`data/eval_set.json`) through the agent 3 times per configuration (top_k 3/5, critic on/off). An LLM judge scores faithfulness and relevance. Reports pass^k consistency, checks the judge against degenerate answers and human grades, and logs everything to MLflow. See [Evaluation](#evaluation). |
 | [src/api/main.py](src/api/main.py) | FastAPI wrapper over the core graph: `GET /health`, `GET /papers`, `POST /ask`, `POST /compare`, `GET /papers/{paper}/relationships`. |
 | `Dockerfile`, [k8s/](k8s/) | Container image with the embedding model baked in, so it runs with no network access to Hugging Face. Also a single-replica Kubernetes Deployment + NodePort Service. |
 | `src/scratch/` | Throwaway experiments. |
@@ -90,10 +90,22 @@ Run the API:
 uvicorn src.api.main:app --reload --port 8000
 ```
 
-Run the evaluation (logs to MLflow):
+Run the evaluation (logs to MLflow; about 20 minutes and roughly 200 agent runs, all billed OpenAI calls):
 
 ```bash
 python src/eval/evaluate.py
+```
+
+Quick check on the first N questions only (runs are suffixed `_limitN`):
+
+```bash
+python src/eval/evaluate.py --limit 2
+```
+
+Regenerate the judge-validation holdout (refuses to overwrite a file that already has human grades):
+
+```bash
+python src/eval/evaluate.py --build-validation
 ```
 
 Topic discovery, stage 1:
@@ -101,6 +113,50 @@ Topic discovery, stage 1:
 ```bash
 python src/discovery/topic_discovery.py "your topic here"
 ```
+
+---
+
+## Evaluation
+
+The eval set has 22 hand-written questions (method, result and comparison questions) with reference answers, all about the battery SOC corpus. Each question is run **3 times** per configuration. A GPT-4o-mini judge scores each answer 1–5 on:
+
+- **faithfulness:** is every claim backed by the retrieved excerpts?
+- **relevance:** does the answer address the question and cover the reference facts?
+
+An attempt counts as a **success** only if it scores 5/5 on both.
+
+### Results (judge v2, 2026-11-14)
+
+| Config | pass^1 | ≥1 of 3 | pass^3 | Avg faithfulness | Avg relevance | Runtime |
+|---|---|---|---|---|---|---|
+| top_k=3, critic off | 44% | 45% | 41% | 4.18 | 3.74 | 5 min |
+| top_k=5, critic off | 55% | 55% | 55% | 4.39 | 3.95 | 5 min |
+| top_k=5, critic on | 59% | 68% | 50% | 4.35 | 4.14 | 10 min |
+
+- **pass^1:** mean per-attempt success rate.
+- **≥1 of 3:** the question succeeded at least once.
+- **pass^3:** the question succeeded on all 3 attempts. This is the consistency measure from τ-bench ([Yao et al., 2024](https://arxiv.org/abs/2406.12045)).
+
+What the numbers say:
+
+- **top_k=5 beats top_k=3** on every metric.
+- **The critic improves answers but makes them less consistent.** It gives the best single-attempt (59%) and best-of-3 (68%) success, but a lower pass^3 than running without it (50% vs 55%). The rest of the pipeline runs at temperature 0 and gives nearly the same answer every run, so without the critic pass^1 equals pass^3. The critic is the main source of run-to-run variation.
+- **The critic helps relevance (3.95 → 4.14), not faithfulness (4.39 vs 4.35).** An earlier version of the judge suggested a faithfulness gain, but that judge was flawed (see below), so the earlier result doesn't stand.
+- **Some questions fail in every configuration:**
+  - q03: "LRLSTM" never matches locally, so the agent falls back to arXiv.
+  - q21, q22: comparison questions that need information from several papers.
+  - q07, q08, q12, q14: partial answers.
+
+  These point to retrieval problems rather than generation problems.
+
+### Checking the judge
+
+Before the main eval, the script checks whether its own judge is trustworthy:
+
+- **Robustness test** ([data/judge_robustness.json](data/judge_robustness.json)): the judge scores an empty answer, a one-word "unknown", and a confident made-up answer. All three must score low; any score above 3 triggers a warning. The current result is 3/3 as expected.
+- **Human validation** ([data/judge_validation.json](data/judge_validation.json)): 3 holdout questions (one each of method, result and comparison), graded by a person and re-judged on every run. The current result is 4/6 scores matching exactly and 6/6 within ±1. This is a spot-check, not an accuracy estimate. The judge prompt was revised after seeing these three items, so the agreement is optimistic.
+
+Both summaries are printed and attached to each MLflow run as its note. The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
 
 ---
 
@@ -120,6 +176,8 @@ Moving from the battery SOC corpus to a generic, topic-driven agent:
    - [x] `evaluate.py`: the judge prompt takes the topic, and the eval runs with `EVAL_TOPIC` (battery SOC, to match the current eval set).
    - [x] `paper_graph/`: the arXiv domain term and the plot title are command-line arguments.
    - [ ] Write an eval set that isn't tied to the battery SOC corpus, or generate one per topic.
+   - [ ] Fix the retrieval failures the eval exposes (q03 acronym miss, multi-paper comparison questions q21/q22).
+   - [ ] Grade a few fresh questions by hand, to test judge v2 on items it wasn't tuned against.
 4. **Ingest: richer PDF extraction (later)**
    - [ ] **References:** `ingest.py` currently stops reading at the References section and throws it away. Parse it into structured citations (title, authors, year) and store them per paper. This could feed a citation graph within the corpus and help with ranking influential papers in topic discovery stage 2.
    - [ ] **Tables:** `ingest.py` currently drops `Table` elements (they're in `SKIP_CATEGORIES`), because bare table fragments ranked well in search without adding useful content. Extract them properly instead (e.g. `unstructured` with `strategy="hi_res"` and `infer_table_structure=True`), store them as their own chunks with the table's caption, and possibly reuse them for the results infographic.
