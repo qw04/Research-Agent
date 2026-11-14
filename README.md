@@ -108,10 +108,28 @@ Regenerate the judge-validation holdout (refuses to overwrite a file that alread
 python src/eval/evaluate.py --build-validation
 ```
 
-Audit the judge's per-question reliability (re-judges stored answers; doesn't re-run the agent; about 200 cheap judge calls):
+Audit the judge's per-question reliability on a stored run (normal, answer-first and paraphrased prompts, 5 times each; about 350 cheap judge calls; doesn't re-run the agent):
 
 ```bash
-python src/eval/evaluate.py --judge-audit
+python src/eval/evaluate.py --judge-audit --suffix _ctx
+```
+
+Bootstrap 95% intervals for a set of runs (no API calls). The suffix picks the runs, e.g. `_ctx` for `*_x3_ctx`:
+
+```bash
+python src/eval/evaluate.py --stats --suffix _ctx_v3ens9
+```
+
+Re-judge every stored attempt with the aggregated judge (majority of 9 calls; about 1,800 cheap judge calls; no agent calls):
+
+```bash
+python src/eval/evaluate.py --rejudge --suffix _ctx --judge-n 9 --judge-mode ensemble
+```
+
+Run the full eval with the aggregated judge from the start:
+
+```bash
+python src/eval/evaluate.py --judge-n 9 --suffix _v3
 ```
 
 Topic discovery, stage 1:
@@ -131,6 +149,8 @@ The eval set has 22 hand-written questions (method, result and comparison questi
 
 An attempt counts as a **success** only if it scores 5/5 on both.
 
+The current judge is **v3-ensemble9**. Each answer is judged 9 times: 3 times each with the normal prompt, an answer-first version, and a reworded (paraphrased) version. The success verdict is the majority of the 9; faithfulness and relevance are their means. The single-call judge (v2) is still the default; pass `--judge-n 9` to use v3.
+
 ### Code layout
 
 `src/eval/evaluate.py` is only the command-line entry point. The logic lives in:
@@ -138,40 +158,54 @@ An attempt counts as a **success** only if it scores 5/5 on both.
 | Module | What it does |
 |---|---|
 | [settings.py](src/eval/settings.py) | File paths, the eval topic, the pass^k settings (3 attempts, success = 5/5) |
-| [judge.py](src/eval/judge.py) | The judge: prompt v2, the answer-first variant, `score_answer()` (including the empty-answer rule) |
-| [pass_k.py](src/eval/pass_k.py) | The agent runs, per-config metrics, MLflow logging, `data/eval_runs/<run>.json` |
+| [judge.py](src/eval/judge.py) | The judge: prompt v2, answer-first and paraphrase variants, `score_answer()` (including the empty-answer rule), and the majority-of-N judge `score_answer_aggregated()` |
+| [pass_k.py](src/eval/pass_k.py) | The agent runs, per-config metrics, MLflow logging, `data/eval_runs/<run>.json` (each attempt stores its retrieved excerpts) |
 | [validation.py](src/eval/validation.py) | The human-graded holdout and the agreement report |
 | [robustness.py](src/eval/robustness.py) | The degenerate-answer test |
-| [audit.py](src/eval/audit.py) | The reproducibility and order-invariance audit, and the trustworthy verdict rate |
+| [audit.py](src/eval/audit.py) | The per-question audit: reproducibility, order and wording sensitivity, trustworthy verdict rate |
+| [stats.py](src/eval/stats.py) | Bootstrap intervals, paired config differences, identical-text breakdown |
+| [rejudge.py](src/eval/rejudge.py) | Re-scores stored attempts with the aggregated judge, without re-running the agent |
 
-All judging goes through `judge.py`, so the eval and every judge check use the same prompt, model and rules.
+All judging goes through `judge.py`, so the eval and every judge check use the same prompts, model and rules.
 
-### Results (judge v2, 2026-11-14)
+### Results
 
-| Config | pass^1 | ≥1 of 3 | pass^3 | Avg faithfulness | Avg relevance | Runtime |
-|---|---|---|---|---|---|---|
-| top_k=3, critic off | 44% | 45% | 41% | 4.18 | 3.74 | 5 min |
-| top_k=5, critic off | 55% | 55% | 55% | 4.39 | 3.95 | 5 min |
-| top_k=5, critic on | 59% | 68% | 50% | 4.35 | 4.14 | 10 min |
+The table shows run 2 (agent answers with context logged), re-judged with v3-ensemble9. Brackets are bootstrap 95% intervals: 22 questions resampled 10,000 times, seed 0.
+
+| Config | pass^1 | ≥1 of 3 | pass^3 | Avg faithfulness | Avg relevance |
+|---|---|---|---|---|---|
+| top_k=3, critic off | 47% [27, 68] | 50% [27, 73] | 45% [23, 68] | 4.30 [3.80, 4.73] | 3.75 [3.32, 4.17] |
+| top_k=5, critic off | 55% [32, 73] | 55% [32, 73] | 55% [32, 73] | 4.50 [4.06, 4.85] | 3.96 [3.48, 4.42] |
+| top_k=5, critic on | 52% [33, 70] | 64% [45, 82] | 41% [23, 64] | 4.26 [3.83, 4.64] | 3.98 [3.58, 4.37] |
 
 - **pass^1:** mean per-attempt success rate.
 - **≥1 of 3:** the question succeeded at least once.
 - **pass^3:** the question succeeded on all 3 attempts. This is the consistency measure from τ-bench ([Yao et al., 2024](https://arxiv.org/abs/2406.12045)).
 
-What the numbers say:
+**Paired differences.** The same resampled questions are used for both configs. Only one difference is distinguishable from question sampling:
 
-With 22 questions, one question is worth about 4.5 percentage points on pass^3, and no confidence intervals have been computed yet. Read every comparison below as tentative.
+| Comparison | pass^1 | pass^3 | Avg faithfulness | Avg relevance |
+|---|---|---|---|---|
+| Critic on − off (top_k=5) | −3 pp [−15, +6] | −14 pp [−27, 0] | **−0.24 [−0.49, −0.04]** | +0.02 [−0.21, +0.28] |
+| top_k 5 − 3 (critic off) | +8 pp [−9, +24] | +9 pp [−9, +27] | +0.20 [−0.12, +0.61] | +0.21 [−0.09, +0.56] |
 
-- **top_k=5 beats top_k=3** on every metric. On pass^1, the gap is about 2.5 questions' worth (55% vs 44%). That's the clearest difference in the table, but it still has no interval.
-- **The critic does not clearly change consistency.** Its pass^3 is 50% against 55% without it, which is 11 questions vs 12. An earlier version of this README said the critic was "the main source of run-to-run variation". The evidence doesn't support that:
-  - **Answers vary without the critic too.** Even with the critic off, the answer text changes across the 3 attempts on 10 of 22 questions at top_k=5 (18 of 22 at top_k=3). The verdicts just happened to stay the same.
-  - **The critic's pass^1-to-pass^3 gap comes from 4 questions, and none is clearly the agent varying:**
-    - q05: identical answer text all 3 times but different verdicts, so this is pure judge variation.
-    - q16, q20: the [judge audit](#judge-audit) marks both untrusted, because putting the answer first flips their verdict.
-    - q03: went through the arXiv fallback and couldn't be audited.
+**How stable is this across runs?** pass^1 / pass^3 per config:
 
-  Separating agent variation from judge variation properly is planned (see [documentation.md](documentation.md), Open items).
-- **The critic may help relevance (3.95 → 4.14), but not faithfulness (4.39 vs 4.35).** Both differences are small. An earlier version of the judge suggested a faithfulness gain, but that judge was flawed (see below), so that result doesn't stand.
+| Config | Run 1, v2 judge | Run 2, v2 judge | Run 2, v3-ensemble9 |
+|---|---|---|---|
+| top_k=3, critic off | 44% / 41% | 44% / 41% | 47% / 45% |
+| top_k=5, critic off | 55% / 55% | 55% / 55% | 55% / 55% |
+| top_k=5, critic on | 59% / 50% | 53% / 45% | 52% / 41% |
+
+What the numbers say. Read all of it as tentative: one question is worth about 4.5 points on pass^3.
+
+- **top_k=5 vs 3:** the point estimates favour top_k=5 in every run, but no interval excludes zero.
+- **The critic seems to lower faithfulness.** −0.24 [−0.49, −0.04] in run 2 with v3, and −0.14 [−0.32, −0.02] with v2. In run 1 the difference was −0.05 [−0.23, +0.08]. So this replicated in one of two agent runs.
+- **The critic adds run-to-run variation at the question level.** Re-judging the same stored answers with v3 removes most judge noise. Without the critic, the gap between pass^1 and pass^3 disappears (55% / 55%); with it, the gap remains (52% / 41%). It comes from five questions: q03, q04, q17, q18 and q20.
+  - In each, the critic rejected the draft in every attempt, and the reviser's rewrites differed from run to run.
+  - With the critic off, q18 and q20 produced identical text and verdicts all 3 times.
+
+  The pass^3 difference (−14 pp [−27, 0]) still doesn't exclude zero, and several of these attempts are borderline: 3 to 6 of 9 judge votes for success. This reverses the earlier withdrawal of the claim. The history is in [documentation.md](documentation.md).
 - **Some questions fail in every configuration:**
   - q03: "LRLSTM" never matches locally, so the agent falls back to arXiv.
   - q21, q22: comparison questions that need information from several papers.
@@ -181,45 +215,48 @@ With 22 questions, one question is worth about 4.5 percentage points on pass^3, 
 
 ### Checking the judge
 
-Before the main eval, the script checks whether its own judge is trustworthy:
+| Check | v2 (single call) | v3-ensemble9 |
+|---|---|---|
+| **Robustness** ([data/judge_robustness.json](data/judge_robustness.json), [v3](data/judge_robustness_v3-ensemble9.json)): an empty answer, a one-word "unknown" and a confident made-up answer must all score ≤ 2 | 3/3 | 3/3 |
+| **Human validation** ([data/judge_validation.json](data/judge_validation.json)): 3 holdout questions graded by a person and re-judged on every run | 4/6 exact, 6/6 within ±1 | 3/6 exact, 5/6 within ±1 |
+| **Changed verdicts**, re-judging the 198 stored run-2 attempts | — | 9/198 changed vs v2 (top_k=3: 4, top_k=5 off: 0, critic on: 5) |
 
-- **Robustness test** ([data/judge_robustness.json](data/judge_robustness.json)): the judge scores an empty answer, a one-word "unknown", and a confident made-up answer. All three must score low; any score above 3 triggers a warning. The current result is 3/3 as expected.
-- **Human validation** ([data/judge_validation.json](data/judge_validation.json)): 3 holdout questions (one each of method, result and comparison), graded by a person and re-judged on every run. The current result is 4/6 scores matching exactly and 6/6 within ±1. This is a spot-check, not an accuracy estimate. The judge prompt was revised after seeing these three items, so the agreement is optimistic.
-
-Both summaries are printed and attached to each MLflow run as its note.
+Aggregating did **not** improve agreement with the human grades on these 3 items. The biggest gap is q21's faithfulness: the human gave 4, v3 gives 2, because the answer-first and paraphrased prompts score it lower. The 3 items were also used to tune the v2 prompt, and no fresh items have been graded, so this check is a spot-check, not an accuracy estimate. Both summaries are printed and attached to each MLflow run as its note.
 
 ### Judge audit
 
-`python src/eval/evaluate.py --judge-audit` checks whether each **individual verdict** can be trusted. It re-judges the stored attempt-1 answers from `topk5_critic_on_x3` without re-running the agent:
+`--judge-audit` checks whether each **individual verdict** can be trusted. It takes the stored attempt-1 answer of each question and re-judges it 5 times under each of three conditions:
+- **normal:** the v2 prompt
+- **answer-first:** identical wording, with the answer moved before the reference facts and excerpts
+- **paraphrase:** same rubric and order, reworded
 
-- 5 times with the normal prompt
-- 5 times with an answer-first variant: identical wording, with the answer placed before the reference facts and excerpts
+A verdict is **trustworthy** only if it is:
+- **reproducible:** the normal calls agree
+- **order-invariant** and **paraphrase-invariant:** each variant's calls agree with the normal verdict
+- **accurate:** for human-graded items, within ±1 of the human score
 
-A question's verdict (success = 5/5) is **trustworthy** only if it is:
+This follows Kumar, Rathore & Moitra, *All Verdicts are Not Equal* ([arXiv:2610.12083](https://arxiv.org/abs/2610.12083)), and Yagubyan, *The Coin Flip Judge?* ([arXiv:2606.13685](https://arxiv.org/abs/2606.13685)) for the paraphrase condition. Both are adapted here from pairwise to pointwise judging.
 
-- **reproducible:** all 5 normal judgements agree
-- **order-invariant:** the answer-first judgements give the same verdict
-- **accurate:** for the human-graded holdout items, within ±1 of the human score
+| Audit | First audit, run 1, 2 conditions ([file](data/judge_audit.json)) | Current audit, run 2, 3 conditions ([file](data/judge_audit_topk5_critic_on_x3_ctx.json)) |
+|---|---|---|
+| Trustworthy verdict rate | 14/19 auditable (74%); 3 unverifiable | **17/22 (77%)**, all auditable |
+| Reproducible (normal prompt) | 95–100% | 91% |
+| Majority verdict flips vs normal | answer-first 26% | answer-first 18%, paraphrase 9% |
+| Adapted Kumar T, human-graded items | — | 0.87 (3 items) |
+| Untrustworthy | q11, q14, q16, q18, q20 | q03, q11, q14, q16, q18 |
 
-This follows Kumar, Rathore & Moitra, *All Verdicts are Not Equal* ([arXiv:2610.12083](https://arxiv.org/abs/2610.12083)). Results are in [data/judge_audit.json](data/judge_audit.json).
-
-| | Result |
-|---|---|
-| Trustworthy verdict rate | **14/19 auditable (74%)**; 14/22 (64%) if the unverifiable items count as untrusted |
-| Reproducible | 95% (19/19 in the first audit run, 18/19 in the second) |
-| Order-invariant | 74%: the answer-first order flips the verdict on q11, q14, q16, q18 and q20 |
-| Unverifiable | q03, q04, q17 went through the arXiv fallback, whose context the eval log didn't store at the time. Eval logs now store context. |
-| pass^1 / pass^3, critic on | 59% / 50% on all 22 questions, vs 60% / 57% on the 14 trustworthy ones |
-
-Order effects can be large. With the answer first, q16 went from faithfulness 5 to 1, and q14 from 2 to 5. Three questions (q05, q12, q16) also scored differently from the same judge on the same input during the earlier eval run. So the judge is not perfectly reproducible across sessions, even at temperature 0.
+**What the audit says:**
+- Within one prompt, repeated calls almost always agree. Changing the prompt's order or wording is what flips verdicts. That's why v3 varies the prompt rather than just repeating it.
+- Order effects can be large. With the answer first, q16's faithfulness went from 5 to 1, and q14's from 2 to 5.
+- Some questions (q03, q08, q18) also scored differently from what the same judge gave the same input during the eval run.
 
 ### Limitations
 
-- **Small eval set.** 22 questions from one corpus (battery SOC), written from excerpts of the papers. One question changes pass^3 by about 4.5 percentage points.
-- **No uncertainty intervals yet**, so no comparison above has been shown to be outside the noise.
-- **The judge is order-sensitive.** About a quarter of its verdicts are not trustworthy (see [Judge audit](#judge-audit)). The judge also isn't fully reproducible across sessions.
-- **Human validation is 3 questions**, and the judge prompt was tuned on them.
-- **Paper figures aren't checked.** Figures quoted from the cited papers in [documentation.md](documentation.md) were taken as given and haven't been independently verified.
+- **Small eval set.** 22 questions from one corpus (battery SOC), written from excerpts of the papers. One question changes pass^3 by about 4.5 percentage points, and intervals are wide.
+- **What the intervals cover.** They reflect which questions are in the set, not every source of noise. v3 reduces judge noise but doesn't remove it: some attempts sit at 3 to 6 of 9 votes.
+- **Human validation** is only 3 questions, and the v2 prompt was tuned on them. No fresh questions have been graded, and no second judge model has been compared.
+- **The paraphrased prompt** was written for this project and not independently reviewed. Kumar et al.'s T is computed with a pointwise adaptation on only 3 items.
+- **Paper figures** quoted in [documentation.md](documentation.md) were taken as given and haven't been independently verified.
 
 The full history of why the eval changed, including the judge bug these checks caught, is in [documentation.md](documentation.md).
 

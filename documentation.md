@@ -5,21 +5,22 @@ This document records how the evaluation in [src/eval/evaluate.py](src/eval/eval
 ## Current state (2026-11-14)
 
 **The eval**
-- 22 questions × 3 attempts × 3 configs, scored by judge v2 (gpt-4o-mini, temperature 0; sees the retrieved excerpts).
-- Metrics: pass^1, ≥1 of 3 and pass^3 (section 1).
-- Code: split into modules under `src/eval/` (section 8).
+- 22 questions × 3 attempts × 3 configs. Two agent runs exist: run 1 (`*_x3`) and run 2 (`*_x3_ctx`, which logs each answer's context).
+- Headline numbers: run 2 re-judged with **judge v3-ensemble9**, a majority of 9 calls across the normal, answer-first and paraphrased prompts (section 12).
+- Metrics: pass^1, ≥1 of 3 and pass^3 (section 1), each with bootstrap 95% intervals (section 9).
+- Code: modules under `src/eval/` (section 8).
 
 **Checks on the judge**
-- Robustness test: 3/3 as expected (section 3).
-- Human validation: 4/6 exact, 6/6 within ±1, on 3 tuned items (sections 2, 4).
-- Per-question audit: 14/19 auditable verdicts trustworthy. Order effects are the main problem (section 6).
+- Robustness test: 3/3 for both v2 and v3 (sections 3, 13).
+- Human validation on 3 tuned items: v2 4/6 exact, 6/6 within ±1; v3 3/6 exact, 5/6 within ±1 (section 13).
+- Per-question audit on run 2: 17/22 verdicts trustworthy. Order and wording effects are the main problem (section 11).
 
 **What the results support**
-- top_k=5 beats top_k=3.
-- The critic is **not** clearly more or less consistent than running without it (section 7 revises section 5).
-- No result has uncertainty intervals yet.
+- **No config difference in pass rates** is distinguishable from question sampling.
+- **The critic lowers faithfulness** in run 2: −0.24 [−0.49, −0.04] with v3. It didn't in run 1.
+- **The critic adds run-to-run variation on specific questions** (section 13 revises section 7), but its pass^3 difference interval still touches zero.
 
-**Next steps:** a plan to add intervals, a paraphrase audit condition, aggregated judging, fresh human grades and an optional second judge has been drafted and is waiting for approval (Open items).
+**Not done, by decision:** fresh human grades, kappa, and a second judge model.
 
 ## Starting point
 
@@ -234,6 +235,7 @@ Restricting to trustworthy questions slightly narrows the gap between pass^1 and
 - 50% vs 55% pass^3 is a one-question difference (11 vs 12 questions) with no interval.
 
 **Conclusion change:** "the critic trades consistency for peak quality" is withdrawn. The current statement is that the critic is not clearly more or less consistent than running without it. Separating agent from judge variance properly needs aggregated judging on stored answers (see Open items).
+- *Revised again in section 13: with judge noise mostly removed, the critic does add variation on specific questions.*
 
 **Caveat:** identical text with differing verdicts proves the judge varied. Differing text with differing verdicts doesn't prove the agent varied, because the judge can vary there too.
 
@@ -268,17 +270,156 @@ Restricting to trustworthy questions slightly narrows the gap between pass^1 and
 
   The robustness file regenerated with identical scores; only one free-text `reasoning` sentence was worded differently, a reminder that the judge's output text isn't deterministic either. Test outputs were deleted and the committed data files kept.
 
+## 9. Uncertainty: bootstrap intervals
+
+**Commit:** `514ffed`
+
+**Motivation:** with 22 questions, one question moves pass^3 by about 4.5 points, so differences between point estimates can't be read as real on their own. Yagubyan, *The Coin Flip Judge?* ([arXiv:2606.13685](https://arxiv.org/abs/2606.13685), preprint) recommends reporting uncertainty for LLM-judged results.
+
+**What changed**
+- New `src/eval/stats.py` and `--stats`, with no API calls.
+- For each config: a percentile bootstrap over **questions** (10,000 resamples, seed 0) for pass^1, ≥1 of 3, pass^3 and the mean scores.
+- A **paired** bootstrap, reusing the same resampled questions, for critic on − off and top_k 5 − 3.
+- The identical-text breakdown from section 7, now computed by the code.
+- Each attempt now logs its `judge_version`, and `--suffix` names new runs so they don't overwrite old ones.
+- Output goes to `data/eval_stats<suffix>.json` and an MLflow `stats<suffix>` run (point estimates, `ci_low`, `ci_high`).
+
+**Result on run 1 (v2):** no paired difference excludes zero.
+- top_k 5 − 3, pass^1: +0.106 [+0.000, +0.242]. This is the closest to a real difference.
+- Critic on − off, pass^3: −0.045 [−0.182, +0.091].
+
+**Caveat:** the intervals cover only which questions are in the set. They don't include judge noise or the agent's randomness beyond the 3 attempts. Conformal / interval evaluation (Sheng et al., EMNLP 2025) would need a much larger human-labelled calibration set, so it's left as future work.
+
+## 10. Fresh eval run with context logging (run 2)
+
+**Commit:** `cafeeba`
+
+**Motivation:** re-judging stored answers exactly needs the excerpts each answer was built from. Run 1 didn't store them, and the 3 arXiv-fallback questions couldn't be rebuilt.
+
+**What changed:** the same eval (judge v2, same configs) was run again with `--suffix _ctx`. Every attempt stores its retrieved excerpts, and all 22 questions are auditable.
+
+**Result (v2, single call)**
+
+| Config | pass^1 | ≥1 of 3 | pass^3 | Faith | Rel |
+|---|---|---|---|---|---|
+| top_k=3, critic off | 44% | 50% | 41% | 4.14 | 3.76 |
+| top_k=5, critic off | 55% | 55% | 55% | 4.39 | 3.88 |
+| top_k=5, critic on | 53% | 59% | 45% | 4.26 | 4.00 |
+
+- **Critic configs moved between runs:** the critic-on pass^1 fell from 59% (run 1) to 53%, and ≥1 of 3 from 68% to 59%. The critic-off configs replicated almost exactly.
+- **Only one paired difference excludes zero:** critic on − off, average faithfulness −0.136 [−0.318, −0.015].
+- **Robustness and validation** gave the same results as before (3/3; 4/6 exact, 6/6 within ±1).
+
+## 11. Wording sensitivity: a paraphrased-prompt audit condition
+
+**Commit:** `238b7b6`
+
+**Motivation:** Yagubyan ([arXiv:2606.13685](https://arxiv.org/abs/2606.13685)) reports that meaning-preserving paraphrases of the judge prompt changed a quarter of gpt-4o-mini's majority outcomes. The first audit (section 6) only tested section order.
+
+**What changed**
+- `judge.py` gains a paraphrased prompt. It keeps the same rubric, rules, section order and output schema (including the field descriptions), but every sentence is reworded. It was written for this project and hasn't been independently reviewed.
+- The audit now judges each answer 5 times under each of three conditions: normal, answer-first and paraphrase.
+- Trustworthy now also requires **paraphrase invariance**.
+- Reported per condition:
+  - consistency (all 5 verdicts agree);
+  - majority-flip rates against the normal prompt;
+  - on the human-graded items, a pointwise adaptation of Kumar et al.'s **T = C × (A − flip/2)**. Here C is agreement with the normal-prompt majority, flip is the answer-first disagreement rate, and A is the share of judgements within ±1 of the human score. The paper defines T for pairwise judging, and it needs human labels, so it's only computed on those 3 items.
+- New audits write `data/judge_audit_<run>.json`. The first audit's `data/judge_audit.json` is unchanged.
+
+**Result on run 2, critic on (all 22 questions auditable)**
+
+| Measure | Result |
+|---|---|
+| Trustworthy | 17/22 (77%) |
+| Consistency within a condition | normal 91%, answer-first 100%, paraphrase 100% |
+| Majority verdict differs from normal | answer-first 18%, paraphrase 9% |
+| Adapted T | 0.87 on 3 items |
+| Untrustworthy | q03 and q18 (normal prompt not reproducible; q03 also flips under paraphrase), q11 and q14 (order flips), q16 (order and paraphrase flip) |
+
+**Interpretation:** repeating the same prompt almost always gives the same verdict. Changing its order or wording is what moves verdicts. This shaped the choice of aggregation in section 12.
+
+## 12. Aggregated judge (v3): majority of N
+
+**Commit:** `e90c83f`
+
+**Motivation:**
+- Single calls are unreliable per item (sections 6 and 11).
+- Yagubyan recommends multi-trial aggregation and position randomisation.
+- Peng et al., *RuVerBench* ([arXiv:2606.29920](https://arxiv.org/abs/2606.29920), EMNLP 2026), find majority voting helps rubric judging, with diminishing returns.
+
+**What changed**
+- `score_answer_aggregated()` judges each answer N times (N must be odd, so there are no ties).
+- **Success** is the majority of the N per-call verdicts. Faithfulness and relevance are reported as means and never thresholded, because requiring a mean of 5.0 would mean every call had to agree.
+- **Modes:**
+  - `repeat`: the normal prompt N times.
+  - `ensemble`: cycles normal, answer-first and paraphrase, so N must be a multiple of 3.
+- **CLI:** `--judge-n` and `--judge-mode` apply to the eval, the robustness test and the validation report.
+- **Logging:** MLflow gets `judge_n`, `judge_mode` and `judge_version`; per-attempt logs keep every call.
+- **Versioning:** N > 1 is versioned `v3-<mode><N>`. N=1 is exactly the v2 judge; I verified this live, and the validation check reproduced 4/6 and 6/6. v3 robustness results go to `data/judge_robustness_<version>.json`, so the v2 file stays as it was.
+
+**Choice of N = 9, ensemble:** within-condition repeats were 91–100% unanimous, so repeating one prompt would barely change anything. Order and wording flipped 9–18% of verdicts, so varying them is what matters. N=3 would give each prompt one vote. N=9 also guards against the normal prompt's own non-reproducibility (q03, q18). At gpt-4o-mini prices it costs well under $1 per full re-judge.
+
+## 13. Separating agent variance from judge variance
+
+**Commit:** `cbd2d4a`
+
+**Motivation:** the README's critic conclusion depended on how much of the gap between pass^1 and pass^3 came from the judge rather than the agent:
+- Kumar et al. ([arXiv:2610.12083](https://arxiv.org/abs/2610.12083)) show reliability is item-specific.
+- Haldar & Hockenmaier, *Rating Roulette* ([arXiv:2510.27106](https://arxiv.org/abs/2510.27106)), show LLM judges have low intra-rater reliability.
+
+Section 7 had withdrawn the claim on judge-noise grounds without testing it directly.
+
+**What changed:** `src/eval/rejudge.py` and `--rejudge`. Every stored run-2 attempt (198 in total) is re-scored with v3-ensemble9, with no agent calls (1,782 judge calls). The original single-call scores are kept beside the new ones, and intervals are computed on the result (`*_x3_ctx_v3ens9`).
+
+**Result**
+
+| Config | pass^1 | ≥1 of 3 | pass^3 | Faith | Rel | Verdicts changed vs v2 |
+|---|---|---|---|---|---|---|
+| top_k=3, critic off | 47% [27, 68] | 50% | 45% [23, 68] | 4.30 | 3.75 | 4/66 |
+| top_k=5, critic off | 55% [32, 73] | 55% | 55% [32, 73] | 4.50 | 3.96 | 0/66 |
+| top_k=5, critic on | 52% [33, 70] | 64% | 41% [23, 64] | 4.26 | 3.98 | 5/66 |
+
+**Paired differences**
+- **Critic on − off:**
+  - pass^1: −3 pp [−15, +6]
+  - pass^3: −14 pp [−27, 0]
+  - faithfulness: **−0.24 [−0.49, −0.04]**, which excludes zero
+  - relevance: +0.02 [−0.21, +0.28]
+- **top_k 5 − 3:** every interval includes zero.
+
+**Where the critic-on gap comes from**
+- With the critic **off**, there is no gap between pass^1 and pass^3 (55% / 55%).
+- With it **on**, the gap remains after aggregation (52% / 41%). It comes from five questions: q03, q04, q17, q18 and q20.
+- All five had differing answer text across attempts, and in every one of those attempts the critic rejected the draft and the reviser rewrote it.
+- **q18 and q20 are the clearest cases.** With the critic off, they produced identical text and verdicts all three times. With it on, they produced three different rewrites, and one q20 rewrite got 0 of 9 votes.
+- q03, q04 and q17 also go through the arXiv fallback, which varies on its own. Even so, their verdicts were stable with the critic off.
+
+**Judge checks with v3**
+- Robustness: 3/3.
+- Human validation: **3/6 exact, 5/6 within ±1**, worse than v2's 4/6 and 6/6. The answer-first and paraphrased prompts pull q21's faithfulness down to 2, against the human's 4. Aggregating doesn't fix the judge's disagreement with the human on that item.
+
+**Conclusions that held**
+- No pass-rate difference between configs is distinguishable from question sampling.
+- top_k=5 ≥ top_k=3 on point estimates in every run.
+
+**Conclusions that changed**
+- **"The critic is not clearly more or less consistent" (section 7) is revised.** With judge noise mostly removed, the critic does add run-to-run variation, concentrated on questions where it rejects the draft and the rewrites differ. The pass^3 difference interval [−27, 0] still touches zero, and several attempts are borderline (3–6 of 9 votes). So this is a question-level finding, not a demonstrated config-level difference.
+- **The critic lowering faithfulness is new.** It excludes zero in run 2 with both judges (v2 −0.14, v3 −0.24) but didn't in run 1 (−0.05 [−0.23, +0.08]). So it has replicated in one of two agent runs.
+
+**Caveats**
+- v3 reduces judge noise but doesn't remove it.
+- The human-validation set is 3 tuned items.
+- No second judge model has been compared.
+- "Run 2" is one more sample of the agent, not a fixed ground truth.
+
 ## Open items
 
-A plan covering most of these has been drafted and is waiting for approval:
-- **Uncertainty:** bootstrap 95% intervals on all metrics, and paired intervals for the critic on/off and top_k comparisons.
-- **Fresh eval run** with context logging, so every question can be audited and re-judged exactly.
-- **Paraphrase condition in the audit:** same rubric, different wording.
-- **Aggregated judge (v3):** majority over several calls, across repeats and/or prompt variants (order, paraphrase). Then re-judge the stored attempts to separate agent variance from judge variance.
-- **Human agreement:** add weighted kappa, and grade 3–5 fresh questions by hand, reported separately from the 3 tuned ones.
-- **Optional second judge** for cross-judge agreement.
+Not done, by decision:
+- **Human agreement:** weighted kappa, and grading 3–5 fresh questions not used for tuning.
+- **Second judge model** for cross-judge agreement.
 
 Also open:
+- **Re-run the agent several more times** (or more attempts per question) to test whether the critic's faithfulness drop and its question-level variation replicate.
 - **Stronger robustness cases:** one canned answer for all 22 questions (a true null model), and an answer containing text aimed at the judge.
 - **Agent traces:** inspect the arXiv-fallback answers for shortcuts, such as finding the very paper a question is about (HAL's lesson).
 - **Retrieval failures:** fix q03 and the comparison questions q21/q22, then re-run the eval.
