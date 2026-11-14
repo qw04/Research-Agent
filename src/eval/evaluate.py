@@ -305,6 +305,92 @@ def judge_validation_report() -> str:
     return msg
 
 
+# ---------------------------------------------------------------------------
+# Judge robustness test (data/judge_robustness.json)
+#
+# Before trusting any eval scores, check the judge doesn't hand out good marks
+# to trivial or gameable answers. Motivated by Zheng et al., "Cheating
+# Automatic LLM Benchmarks: Null Models Achieve High Win Rates" (ICLR 2025,
+# arXiv:2410.07137) — a constant, content-free response topped AlpacaEval 2.0
+# — and Kapoor et al., HAL (ICLR 2026), which found agents exploiting
+# benchmarks instead of solving the tasks.
+#
+# Three degenerate answers are judged against one randomly chosen (seeded, so
+# reproducible) eval question and its real source list:
+#   empty / one-word "unknown" -> expect faithfulness and relevance both <= 2
+#   confident but made-up      -> expect faithfulness <= 2 (relevance is also
+#                                 recorded; the invented answer matches no
+#                                 reference fact so it should be low too)
+# Any scored dimension above ROBUSTNESS_WARN_ABOVE (3) prints a warning.
+# ---------------------------------------------------------------------------
+
+ROBUSTNESS_FILE = Path("data/judge_robustness.json")
+ROBUSTNESS_SEED = 0
+ROBUSTNESS_WARN_ABOVE = 3
+ROBUSTNESS_CASES = [
+    # (name, answer, dimensions the judge is expected to score <= 2 on)
+    ("empty_response", "", ("faithfulness", "relevance")),
+    ("one_word_unknown", "unknown", ("faithfulness", "relevance")),
+    ("plausible_made_up", "The optimal method is XGBoost with a learning rate of 0.001.", ("faithfulness",)),
+]
+
+
+def judge_robustness_test() -> str:
+    """Run the degenerate-answer cases through the judge, save results to
+    data/judge_robustness.json, print them and return a one-line summary."""
+    import random
+    item = random.Random(ROBUSTNESS_SEED).choice(load_eval_set())
+
+    cases, warnings = [], []
+    for name, answer, expected_low in ROBUSTNESS_CASES:
+        score = judge_chain.invoke({
+            "topic": EVAL_TOPIC, "question": item["question"],
+            "expected_answer": item["expected_answer"],
+            "sources": ", ".join(item["source"]) or "(none retrieved)",
+            "answer": answer,
+        })
+        actual = {"faithfulness": score.faithfulness, "relevance": score.relevance}
+        for dim in expected_low:
+            if actual[dim] > ROBUSTNESS_WARN_ABOVE:
+                warnings.append(f"Judge robustness: {name} scored {actual[dim]} on {dim}, "
+                                f"may not catch gaming")
+        cases.append({
+            "case": name,
+            "answer": answer,
+            "expected": {dim: "<= 2" for dim in expected_low},
+            "actual": actual,
+            "reasoning": score.reasoning,
+            "within_expected": all(actual[d] <= 2 for d in expected_low),
+            "warned": any(actual[d] > ROBUSTNESS_WARN_ABOVE for d in expected_low),
+        })
+
+    ROBUSTNESS_FILE.write_text(json.dumps({
+        "purpose": "Check the LLM judge does not reward trivial or made-up answers "
+                   "(Zheng et al., arXiv:2410.07137; Kapoor et al., HAL, ICLR 2026).",
+        "judge_model": JUDGE_MODEL,
+        "seed": ROBUSTNESS_SEED,
+        "question_id": item["id"],
+        "question": item["question"],
+        "sources_given_to_judge": item["source"],
+        "cases": cases,
+    }, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    print(f"Judge robustness test (question {item['id']}, seed {ROBUSTNESS_SEED}):")
+    for c in cases:
+        exp = ", ".join(c["expected"])
+        print(f"  {c['case']:<20} faithfulness={c['actual']['faithfulness']} "
+              f"relevance={c['actual']['relevance']}  (expected <=2 on: {exp})  "
+              f"{'ok' if c['within_expected'] else 'OUTSIDE EXPECTED'}")
+    for w in warnings:
+        print(f"  WARNING: {w}")
+    n_ok = sum(c["within_expected"] for c in cases)
+    msg = f"Judge robustness: {n_ok}/{len(cases)} degenerate answers scored as expected" + (
+        f"; {len(warnings)} warning(s): " + "; ".join(warnings) if warnings else "")
+    if not warnings:
+        print(f"  all degenerate answers scored <= {ROBUSTNESS_WARN_ABOVE}")
+    return msg
+
+
 CONFIGS = [
     # (top_k, use_critic, run_name) — the "_x3" suffix keeps these separate from
     # the earlier single-attempt runs (topk3_critic_off etc.) in MLflow and data/eval_runs/.
@@ -331,8 +417,13 @@ if __name__ == "__main__":
 
     mlflow.set_experiment("research-agent-eval")
 
+    # Judge sanity checks run first: if the judge is gameable or disagrees
+    # with humans, the scores below should be read with that in mind.
+    robustness_note = judge_robustness_test()
+    print()
     validation_note = judge_validation_report()
     print()
+    run_note = f"{robustness_note}\n{validation_note}"
 
     all_results = {}
     for i, (top_k, use_critic, run_name) in enumerate(CONFIGS, 1):
@@ -341,6 +432,6 @@ if __name__ == "__main__":
         print(f"Run {i}/{len(CONFIGS)}: top_k={top_k}, critic {'on' if use_critic else 'off'}, "
               f"{N_ATTEMPTS} attempts/question")
         all_results[run_name] = run_eval(top_k=top_k, use_critic=use_critic, run_name=run_name,
-                                         limit=args.limit, run_note=validation_note)
+                                         limit=args.limit, run_note=run_note)
 
     print_summary(all_results)

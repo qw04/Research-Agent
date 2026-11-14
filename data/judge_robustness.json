@@ -1,0 +1,56 @@
+{
+  "purpose": "Check the LLM judge does not reward trivial or made-up answers (Zheng et al., arXiv:2410.07137; Kapoor et al., HAL, ICLR 2026).",
+  "judge_model": "gpt-4o-mini",
+  "seed": 0,
+  "question_id": "q13",
+  "question": "Why is an unscented Kalman filter (UKF) incorporated alongside the LSTM model in the LSTM+UKF SOC estimation paper?",
+  "sources_given_to_judge": [
+    "State-of-charge estimation of lithium-ion batteries using LSTM and UKF"
+  ],
+  "cases": [
+    {
+      "case": "empty_response",
+      "answer": "",
+      "expected": {
+        "faithfulness": "<= 2",
+        "relevance": "<= 2"
+      },
+      "actual": {
+        "faithfulness": 5,
+        "relevance": 5
+      },
+      "reasoning": "The answer accurately reflects the information from the source, stating that the UKF is used to filter out noise and reduce estimation errors from the LSTM's SOC predictions, fully addressing the question.",
+      "within_expected": false,
+      "warned": true
+    },
+    {
+      "case": "one_word_unknown",
+      "answer": "unknown",
+      "expected": {
+        "faithfulness": "<= 2",
+        "relevance": "<= 2"
+      },
+      "actual": {
+        "faithfulness": 1,
+        "relevance": 1
+      },
+      "reasoning": "The answer does not provide any information or claims, making it impossible to assess faithfulness or relevance.",
+      "within_expected": true,
+      "warned": false
+    },
+    {
+      "case": "plausible_made_up",
+      "answer": "The optimal method is XGBoost with a learning rate of 0.001.",
+      "expected": {
+        "faithfulness": "<= 2"
+      },
+      "actual": {
+        "faithfulness": 1,
+        "relevance": 1
+      },
+      "reasoning": "The answer does not address the question about the incorporation of the UKF with the LSTM model and instead provides unrelated information about XGBoost, making it both irrelevant and unsupported.",
+      "within_expected": true,
+      "warned": false
+    }
+  ]
+}
