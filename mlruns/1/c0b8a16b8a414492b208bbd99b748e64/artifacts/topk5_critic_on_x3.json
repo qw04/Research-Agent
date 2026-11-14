@@ -1,0 +1,948 @@
+[
+  {
+    "id": "q01",
+    "category": "method",
+    "question": "What optimization algorithm is used to tune the extreme learning machine (ELM) model for SOC estimation, and why?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The optimization algorithm used to tune the extreme learning machine (ELM) model for state-of-charge (SOC) estimation is the gravitational search algorithm (GSA). GSA is employed to find the appropriate number of hidden layer neurons, which is crucial for achieving high accuracy in SOC estimation. Specifically, the lowest fitness function determined by GSA identifies the best value for the hidden layer neurons, enhancing the ELM's performance. The combination of ELM and GSA promotes better data fitting for the training function, which leads to results characterized by less error and variance. Moreover, the model's performance is evaluated through a comprehensive validation process that compares the ELM-GSA model with other popular SOC estimation methods, substantiating its effectiveness [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically mentioning GSA's role in tuning the ELM model and its importance for SOC estimation, without any unsupported claims.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The optimization algorithm used to tune the extreme learning machine (ELM) model for SOC estimation is the Gravitational Search Algorithm (GSA). GSA is utilized specifically to determine the best number of hidden layer neurons, which is critical for achieving high accuracy in SOC estimation. The combination of ELM and GSA enhances the accuracy and efficiency of the SOC estimation process, as it ensures better data fitting for the training function, resulting in lower error and variance in the estimation outcomes [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.]. The GSA identifies the optimal neurons by minimizing the fitness function, thereby improving the overall performance of the ELM in SOC estimation [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, correctly stating that GSA is used to optimize the number of hidden layer neurons in the ELM model for SOC estimation, and it explains the significance of this optimization without introducing any unsupported claims.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The optimization algorithm used to tune the extreme learning machine (ELM) model for SOC estimation is the Gravitational Search Algorithm (GSA). GSA is employed to find the appropriate number of hidden layer neurons, which is crucial for improving the learning performance of ELM. The combination of ELM and GSA enhances the accuracy and efficiency of SOC estimation by achieving better data fitting for the training function, resulting in outputs with less error and variance. This is highlighted by the fact that the lowest fitness function determined by GSA identifies the optimal number of hidden layer neurons, essential for high accuracy in SOC estimation [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically mentioning GSA's role in tuning the ELM model and its importance for SOC estimation, without any unsupported claims.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q02",
+    "category": "result",
+    "question": "What RMSE does the ELM-GSA model achieve at 25\u00b0C in the BJDST cycle, and how does it compare to BPNN-GSA and RBFNN-GSA?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The ELM-GSA model achieves an RMSE of 0.76% at 25\u00b0C in the BJDST cycle. In comparison, the BPNN-GSA model obtains an RMSE of 0.95%, and the RBFNN-GSA model achieves an RMSE of 1.12% [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, with all claims supported by the retrieved sources and directly addressing the question about RMSE values.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The ELM-GSA model achieves an RMSE of 0.76% at 25\u00b0C in the BJDST cycle. In comparison, the BPNN-GSA model obtains an RMSE of 0.95%, and the RBFNN-GSA model achieves an RMSE of 1.12% [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, with all claims supported by the retrieved sources and directly addressing the question about RMSE values.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The ELM-GSA model achieves an RMSE of 0.76% at 25\u00b0C in the BJDST cycle. In comparison, the BPNN-GSA model obtains an RMSE of 0.95%, and the RBFNN-GSA model achieves an RMSE of 1.12% [Source: Extreme learning machine model for state-of-charge estimation of lithium-ion battery using gravitational search algorithm.].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, with all claims supported by the retrieved sources and directly addressing the question about RMSE values.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q03",
+    "category": "method",
+    "question": "What two methods are combined in the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction?",
+    "n_success": 1,
+    "pass_any3": true,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The context provided does not contain information about the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction or the methods it combines. The sources do discuss various prediction methodologies and the importance of joint predictions, but they do not specify any particular methods related to LRLSTM or its application in battery SOC prediction. Thus, the answer lacks specific information to address the question. [Source: The Neural Testbed: Evaluating Joint Predictions], [Source: JAM: Keypoint-Guided Joint Prediction after Classification-Aware Marginal Proposal for Multi-Agent Interaction], [Source: Joint Prediction Regions for time-series models].",
+        "faithfulness": 5,
+        "relevance": 1,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain information about the LRLSTM joint-prediction strategy, making it fully faithful; however, it fails to address the question regarding the specific methods combined in LRLSTM, resulting in low relevance.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The context provided does not contain information about the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction or the specific methods combined in it. Furthermore, the source excerpts do not mention LRLSTM or any related joint-prediction strategies, indicating that relevant information is missing from the provided material. \n\n[Source: arXiv - The Neural Testbed: Evaluating Joint Predictions]\n[Source: arXiv - JAM: Keypoint-Guided Joint Prediction after Classification-Aware Marginal Proposal for Multi-Agent Interaction]\n[Source: arXiv - Joint Prediction Regions for time-series models]",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain information about the LRLSTM joint-prediction strategy, which is a faithful representation of the evidence provided; it also directly addresses the question by confirming the absence of relevant information.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The context provided does not specifically mention the LRLSTM joint-prediction strategy for multi-forward-step battery SOC prediction or the methods it combines. However, it is important to note that the sources examined do not explicitly negate the possibility of such information existing in other contexts. Therefore, while I cannot provide details on the LRLSTM methods based on the excerpts available, I acknowledge that this information may exist beyond the current sources reviewed. \n\n[Source: arXiv - The Neural Testbed: Evaluating Joint Predictions]  \n[Source: arXiv - JAM: Keypoint-Guided Joint Prediction after Classification-Aware Marginal Proposal for Multi-Agent Interaction]  \n[Source: arXiv - Joint Prediction Regions for time-series models]",
+        "faithfulness": 5,
+        "relevance": 1,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain information about the LRLSTM joint-prediction strategy, making it fully faithful; however, it fails to address the question regarding the specific methods combined in that strategy, resulting in low relevance.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q04",
+    "category": "result",
+    "question": "According to the error comparison table in the LRLSTM paper, what MRE and RMSE does the proposed LSTM-based model achieve?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The context provided does not contain specific information regarding an LSTM-based model or an error comparison table from an LRLSTM paper. Instead, the sources detail different methods for state-of-charge (SOC) estimation. For example, one study using an NARXNN method improved SOC estimation accuracy by 91.5% on average with error values below 0.1% [Source: arXiv - A Novel SOC Estimation for Hybrid Energy Pack using Deep Learning]. Another source introduces a simple SOC estimation method which achieves a SOC root mean square error (RMSE) of around 1.5% [Source: arXiv - Relax, Estimate, and Track: a Simple Battery State-of-charge and State-of-health Estimation Method]. However, no specific MRE and RMSE values for an LSTM-based model are provided in the excerpts.",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain specific information about the LSTM-based model or the requested MRE and RMSE values, which is faithful to the retrieved excerpts. Additionally, it addresses the question by explaining the lack of relevant information while summarizing the findings from the excerpts, thus maintaining high relevance.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The context provided does not contain information about an LRLSTM paper or any error comparison table related to it. Therefore, I cannot provide the MRE and RMSE values for the proposed LSTM-based model. Additionally, there are no excerpts discussing MRE or RMSE values or specific LSTM-based model results, which indicates a gap in sourced information regarding this topic.",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain information about the LRLSTM paper or its MRE and RMSE values, which is a faithful representation of the retrieved excerpts and directly addresses the question.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The context provided does not include information about an LSTM-based model or an error comparison table from an LRLSTM paper. Consequently, the MRE and RMSE values for the proposed LSTM-based model cannot be derived from the sources. The excerpts focus on various SOC estimation methods, but none mention MRE or RMSE specifically for an LSTM-based approach. For instance, one study reports a SOC RMSE of around 1.5% but is not related to the LRLSTM paper [{Source: arXiv - Relax, Estimate, and Track: a Simple Battery State-of-charge and State-of-health Estimation Method}].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the excerpts do not provide information about the LSTM-based model or the specific MRE and RMSE values, which is supported by the retrieved excerpts, thus demonstrating full faithfulness; it also directly addresses the question by explaining the lack of relevant information.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q05",
+    "category": "method",
+    "question": "What algorithm is used to optimize the random forest regression (RFR) model for real-time SOC estimation, and what battery type is it validated on?",
+    "n_success": 1,
+    "pass_any3": true,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The algorithm used to optimize the random forest regression (RFR) model for real-time SOC estimation is the differential search algorithm (DSA). It is validated on lithium-ion batteries [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the DSA algorithm is used to optimize the RFR model and correctly identifies that it is validated on lithium-ion batteries, both of which are supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The algorithm used to optimize the random forest regression (RFR) model for real-time SOC estimation is the differential search algorithm (DSA). It is validated on lithium-ion batteries [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 4,
+        "judge_reasoning": "The answer accurately states that the DSA algorithm is used to optimize the RFR model, which is supported by the excerpts, and it correctly identifies the battery type as lithium-ion batteries, but it does not specify that it was validated on a LiNMC battery or under varying temperature settings.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The algorithm used to optimize the random forest regression (RFR) model for real-time SOC estimation is the differential search algorithm (DSA). It is validated on lithium-ion batteries [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 4,
+        "judge_reasoning": "The answer accurately states that the DSA algorithm is used to optimize the RFR model, which is supported by the excerpts, and it correctly identifies the battery type as lithium-ion batteries, but it does not specify that it is validated on a LiNMC battery.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q06",
+    "category": "result",
+    "question": "What RMSE does the optimized random forest regression model achieve in the HPPC test, and what MAE does it achieve in the DST and FUDS drive cycles at 25\u00b0C?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The optimized random forest regression model achieves an RMSE of 0.382% in the HPPC test. In the DST and FUDS drive cycles at 25\u00b0C, it achieves an MAE of 0.193% and 0.346%, respectively [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the retrieved excerpts without any unsupported claims, and it fully addresses the question regarding RMSE and MAE values.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The optimized random forest regression model achieves an RMSE of 0.382% in the HPPC test. In the DST and FUDS drive cycles at 25\u00b0C, it achieves an MAE of 0.193% and 0.346%, respectively [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the retrieved excerpts, with all claims supported and no fabricated details, while also fully addressing the question regarding RMSE and MAE.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The optimized random forest regression model achieves an RMSE of 0.382% in the HPPC test. In the DST and FUDS drive cycles at 25\u00b0C, it achieves an MAE of 0.193% and 0.346%, respectively [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the retrieved excerpts, with all claims supported and no fabricated details, while also fully addressing the question regarding RMSE and MAE.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q07",
+    "category": "method",
+    "question": "What neural network architecture does the CNN-based SOC estimation paper use, and what specific weakness of data-driven methods does it address?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The CNN-based SOC estimation paper uses a U-Net architecture for its neural network model. This model consists of convolutional techniques without recurrent neural network structures or fully connected layers [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. The paper highlights various improvements made to enhance model stability, including the use of symmetric padding convolutional layers [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. While the connection to the boundary effect is discussed in related literature that mentions the use of symmetric convolutional layers, the specific U-Net paper does not explicitly state that this architecture addresses the boundary effect as a weakness of data-driven methods [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 4,
+        "relevance": 3,
+        "judge_reasoning": "The answer accurately states that the U-Net architecture is used and mentions improvements like symmetric padding, but it does not clearly connect these to the specific weakness of data-driven methods regarding initial SOC estimates, which lowers its relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The CNN-based SOC estimation paper uses a U-Net architecture for its neural network model. This model consists of convolutional techniques without recurrent neural network structures or fully connected layers [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. The paper addresses a specific weakness of data-driven methods by highlighting that these methods do not tackle the fundamental problem of model dependence on the training data and the quality of the initial parameters, which can lead to a complex tuning process when applied to SOC estimation [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]. Furthermore, it discusses improvements like symmetric padding convolutional layers, total variation loss function penalty, and Bayesian hyperparameter optimization to enhance the stability of the model [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture].",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer correctly identifies the U-Net architecture but misrepresents the specific weakness it addresses; it should focus on inaccurate estimates near the start of a cycle rather than model dependence on training data. Additionally, while it mentions improvements, it does not fully capture the essence of the reference facts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The CNN-based SOC estimation paper employs a U-Net architecture for its neural network model. This model consists of convolutional techniques, without incorporating recurrent neural network structures or fully connected layers [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. Additionally, the paper highlights improvements in its model that include using symmetric convolutional layers to address the boundary effect, which enhances the accuracy of SOC estimation at the edges [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]. However, while data-driven methods have gained popularity for their efficiency and performance, their inherent limitations regarding model dependence on training data and initial parameters may lead to complex tuning processes [Source: Real-time state of charge estimation of lithium-ion batteries using optimized random forest regression algorithm].",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer correctly identifies the U-Net architecture but fails to mention its specific advantage of handling variable-length input and accurate SOC at the starting point. It also misattributes the improvement related to symmetric convolutional layers to the wrong paper, which affects faithfulness. The discussion on data-driven methods is relevant but does not fully address the specific weakness related to initial SOC estimates.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q08",
+    "category": "result",
+    "question": "What MAE and RMSE does the CNN U-Net model achieve at constant temperatures, and how do those numbers change under varying temperatures?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "At constant temperatures, the CNN U-Net model achieves an MAE of 1.0% and an RMSE of 1.3% [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. Under varying temperatures, the MAE increases to 1.5% and the RMSE to 1.8% [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture].",
+        "faithfulness": 3,
+        "relevance": 4,
+        "judge_reasoning": "The answer contains some accurate claims supported by the excerpts, but it inaccurately states the MAE and RMSE at constant temperatures, which should be 1.1% and 1.4% respectively, leading to a faithfulness score of 3. The answer addresses the question and covers the relevant facts, but the inaccuracies affect its overall relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "At constant temperatures, the CNN U-Net model achieves an MAE of 1.0% and an RMSE of 1.3% [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. The MAE and RMSE under varying temperatures are reported as 1.2% and 1.5%, respectively; however, it is important to clarify that these values are presented without explicit context regarding their direct reliance on the CNN U-Net model or the specific conditions under which they were obtained [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture].",
+        "faithfulness": 3,
+        "relevance": 4,
+        "judge_reasoning": "The answer contains some accurate claims about MAE and RMSE values, but it misrepresents the constant temperature values, which should be 1.1% and 1.4% instead of 1.0% and 1.3%. The relevance is high as it addresses the question and provides some context, but it lacks complete accuracy.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "At constant temperatures, the CNN U-Net model achieves an MAE of 1.0% and an RMSE of 1.3% [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture]. Under varying temperatures, specifically with ambient temperature changes, the MAE increases to 1.2% and the RMSE to 1.5% [Source: SOC estimation of Li-ion battery using convolutional neural network with U-Net architecture].",
+        "faithfulness": 3,
+        "relevance": 4,
+        "judge_reasoning": "The answer contains some accurate claims supported by the excerpts, but it inaccurately states the MAE and RMSE at constant temperatures, which should be 1.1% and 1.4% respectively, leading to a faithfulness score of 3. The answer addresses the question and covers the relevant facts, but the inaccuracies affect its overall relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q09",
+    "category": "method",
+    "question": "What two techniques are combined in the barnacle mating optimizer paper to estimate battery SOC?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The paper combines the improved barnacle mating optimizer (IBMO) and support vector machine (SVM) techniques to estimate battery state-of-charge (SOC) [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the paper combines the improved barnacle mating optimizer and support vector machine techniques for SOC estimation, fully supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The paper combines the improved barnacle mating optimizer (IBMO) and support vector machine (SVM) techniques to estimate battery state of charge (SOC) [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the paper combines the improved barnacle mating optimizer and support vector machine techniques for SOC estimation, which is fully supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The paper combines the improved barnacle mating optimizer (IBMO) and support vector machine (SVM) techniques to estimate battery state of charge (SOC) [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the paper combines the improved barnacle mating optimizer and support vector machine techniques for SOC estimation, fully supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q10",
+    "category": "result",
+    "question": "What RMSE, MAPE, and R\u00b2 does the improved barnacle mating optimizer + SVM model achieve?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The improved barnacle mating optimizer + SVM (IBMO-SVM) model achieves an RMSE of 0.0042, a MAPE of 0.61%, and an R\u00b2 of 0.9994 [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the retrieved excerpts, specifically citing the RMSE, MAPE, and R\u00b2 values, and directly addresses the question asked.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The improved barnacle mating optimizer + SVM (IBMO-SVM) model achieves an RMSE of 0.0042, a MAPE of 0.61%, and an R\u00b2 of 0.9994 [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically citing the RMSE, MAPE, and R\u00b2 values, and directly addresses the question asked.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The improved barnacle mating optimizer + SVM (IBMO-SVM) model achieves an RMSE of 0.0042, a MAPE of 0.61%, and an R\u00b2 of 0.9994 [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically citing the RMSE, MAPE, and R\u00b2 values, and it directly addresses the question asked.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q11",
+    "category": "method",
+    "question": "What two techniques does the TCN-based SOC estimation paper combine, and what practical benefit does transfer learning provide?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The TCN-based SOC estimation paper combines Temporal Convolutional Network (TCN) and transfer learning techniques. The practical benefit of transfer learning in this context is that it reduces training time, improves SOC estimation accuracy, and reduces the amount of training data required [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately states that the TCN-based SOC estimation paper combines TCN and transfer learning, and it correctly describes the practical benefits of transfer learning as supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The TCN-based SOC estimation paper combines Temporal Convolutional Network (TCN) and transfer learning techniques. The practical benefit of transfer learning indicated in the source is that it helps in reducing training time, improving SOC estimation accuracy, and reducing the amount of training data required. However, while the source notes that transfer learning has these advantages, it does not provide specific details regarding the degree of improvement in SOC estimation accuracy [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the claims made in the retrieved excerpts, correctly identifying the combination of TCN and transfer learning, and it discusses the practical benefits of transfer learning as supported by the excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The TCN-based SOC estimation paper combines Temporal Convolutional Network (TCN) and transfer learning techniques. The practical benefit of transfer learning in this context is that it reduces training time, improves SOC estimation accuracy, and reduces the amount of training data required [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the claims made in the retrieved excerpts, stating that the TCN-based SOC estimation paper combines TCN and transfer learning, and correctly identifies the practical benefits of transfer learning as mentioned in the excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q12",
+    "category": "result",
+    "question": "What average MAE does the TCN + transfer learning model achieve across all temperature tests?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The average MAE achieved by the TCN + transfer learning model across all temperature tests is reported as 0.54% at 25\u00b0C, 0.64% at 10\u00b0C, and 1.29% at 0\u00b0C. These values highlight the model's performance under different temperature conditions. [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning]",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer provides specific MAE values from the excerpts, but it fails to mention the overall average MAE of 0.67% across all tests, which is a key reference fact; thus, it is partially faithful but misses the overall context.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The TCN + transfer learning model demonstrates varying average MAE values at different temperatures. According to the source excerpts, the average MAE is 0.54% at 25\u00b0C, 0.64% at 10\u00b0C, and 1.29% at 0\u00b0C. These values indicate the model's performance across the specified temperature conditions. [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning]",
+        "faithfulness": 5,
+        "relevance": 3,
+        "judge_reasoning": "The answer accurately reflects the average MAE values from the excerpts without fabricating any claims, but it does not address the overall average MAE across all temperatures, which is the key fact requested in the question.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The average MAE achieved by the TCN + transfer learning model across the temperature tests at 25\u00b0C, 10\u00b0C, and 0\u00b0C is 0.54%, 0.64%, and 1.29%, respectively. This information indicates the model's performance across different temperatures, as detailed in the source excerpts. [Source: State of charge estimation of lithium-ion batteries based on temporal convolutional network and transfer learning]",
+        "faithfulness": 2,
+        "relevance": 3,
+        "judge_reasoning": "The answer provides specific MAE values from the excerpts, but it misrepresents them as the average MAE across all temperature tests instead of stating the overall average of 0.67% as indicated in the reference facts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q13",
+    "category": "method",
+    "question": "Why is an unscented Kalman filter (UKF) incorporated alongside the LSTM model in the LSTM+UKF SOC estimation paper?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "An unscented Kalman filter (UKF) is incorporated alongside the LSTM model primarily to filter out noise in the observations made by the LSTM-RNN, which serves as the measurement function, and to update the state-of-charge (SOC) estimation. The UKF is preferred over the extended Kalman filter (EKF) because it demonstrates better performance in estimating nonlinear systems with the same complexity class, and it is also easier to implement. Unlike the EKF, the UKF does not require the derivatives of the state and measurement functions, simplifying its integration with the LSTM-based battery model for SOC estimations [Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF]. The use of the LSTM-UKF approach significantly enhances the estimation results, reducing the root mean square error (RMSE) and mean absolute error (MAE) values under various conditions when compared to using the LSTM-RNN alone [Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, stating that the UKF filters noise from the LSTM observations and improves SOC estimation, without any unsupported claims.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "An unscented Kalman filter (UKF) is incorporated alongside the LSTM model to improve the estimation results by filtering out noise from the observations provided by the LSTM-RNN network and updating the state-of-charge (SOC) estimation accordingly. The UKF is preferred over the extended Kalman filter (EKF) because it demonstrates better performance for nonlinear systems with the same complexity class and is easier to implement, as it does not require the derivatives of the state and measurement functions. This makes it easier to integrate the UKF with the LSTM-based battery model, allowing for effective SOC estimations [Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information in the excerpts, stating that the UKF filters noise and improves SOC estimation, and it correctly mentions the advantages of the UKF over the EKF, all of which are supported by the retrieved excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "An unscented Kalman filter (UKF) is incorporated alongside the LSTM model to improve the estimation results by filtering out the noise in the LSTM-RNN observations and updating the SOC estimation. The UKF is preferred over the extended Kalman filter (EKF) because it shows better performance for nonlinear systems, is easier to implement, and does not require the derivatives of the state and measurement functions. This allows the LSTM-based battery model to be easily integrated into the UKF for SOC estimations [Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, stating that the UKF filters noise and improves SOC estimation, and it correctly mentions the advantages of the UKF over the EKF, all of which are supported by the retrieved excerpts.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q14",
+    "category": "result",
+    "question": "What RMSE and MAE does the LSTM+UKF model achieve across the 0\u00b0C to 50\u00b0C temperature range?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The RMSE and MAE achieved by the LSTM+UKF model across the 0\u00b0C to 50\u00b0C temperature range are as follows:\n\n- At 0\u00b0C, the RMSE is 0.73% and the MAE is 0.63%.\n- At 10\u00b0C, the RMSE is 0.29% and the MAE is 0.21%.\n- At 20\u00b0C, the RMSE is 1.11% and the MAE is 0.97%.\n- At 30\u00b0C, the RMSE is 0.93% and the MAE is 0.82%.\n- At 40\u00b0C, the RMSE is 0.92% and the MAE is 0.81%.\n- At 50\u00b0C, the RMSE is 1.03% and the MAE is 0.89%.\n\n[Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF]",
+        "faithfulness": 2,
+        "relevance": 3,
+        "judge_reasoning": "The answer includes some RMSE and MAE values that are not fully accurate according to the excerpts, particularly for 10\u00b0C and 20\u00b0C, which leads to a lower faithfulness score; however, it does attempt to address the question regarding the LSTM+UKF model's performance across the specified temperature range.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The RMSE and MAE achieved by the LSTM+UKF model across the 0\u00b0C to 50\u00b0C temperature range are as follows:\n\n- At 0\u00b0C, the RMSE is 0.73% and the MAE is 0.63%.\n- At 10\u00b0C, the RMSE is 0.29% and the MAE is 0.21%.\n- At 20\u00b0C, the RMSE is 1.11% and the MAE is 0.97%.\n- At 30\u00b0C, the RMSE is 0.93% and the MAE is 0.82%.\n- At 40\u00b0C, the RMSE is 0.92% and the MAE is 0.81%.\n- At 50\u00b0C, the RMSE is 1.03% and the MAE is 0.89%.\n\n[Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF]",
+        "faithfulness": 2,
+        "relevance": 3,
+        "judge_reasoning": "The answer includes some RMSE and MAE values that are not fully accurate according to the excerpts, particularly for 10\u00b0C and 20\u00b0C, which leads to a faithfulness score of 2; however, it does attempt to cover the temperature range and provides some relevant information, resulting in a relevance score of 3.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The RMSE and MAE achieved by the LSTM+UKF model across the 0\u00b0C to 50\u00b0C temperature range are as follows:\n\n- At 0\u00b0C, the RMSE is 0.73% and the MAE is 0.63%.\n- At 10\u00b0C, the RMSE is 0.29% and the MAE is 0.21%.\n- At 20\u00b0C, the RMSE is 1.11% and the MAE is 0.97%.\n- At 30\u00b0C, the RMSE is 0.93% and the MAE is 0.82%.\n- At 40\u00b0C, the RMSE is 0.92% and the MAE is 0.81%.\n- At 50\u00b0C, the RMSE is 1.03% and the MAE is 0.89%.\n\n[Source: State-of-charge estimation of lithium-ion batteries using LSTM and UKF]",
+        "faithfulness": 2,
+        "relevance": 3,
+        "judge_reasoning": "The answer includes some RMSE and MAE values that are not fully supported by the excerpts, particularly for 10\u00b0C and 20\u00b0C, which are inaccurately reported; thus, it is not fully faithful. The answer does address the question about the LSTM+UKF model's performance but does not cover the overall performance across the entire specified temperature range accurately.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q15",
+    "category": "method",
+    "question": "What two neural network types are fused in the LSTM+NARX SOC estimation paper, and what training problem does this fusion address?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The two neural network types fused in the paper are the NARX (Nonlinear AutoRegressive with eXogenous inputs) neural network and the LSTM (Long Short-Term Memory) neural network. This fusion addresses the training problem of gradient explosion and disappearance, which are challenges faced by recurrent neural networks, including NARX. The hybrid model integrates LSTM's memory capabilities, providing jump ahead connections that shorten the path for gradient propagation and reducing long-term dependency issues. This combination not only enhances estimation accuracy but also mitigates overfitting caused by the structure of recurrent neural networks [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately identifies the two neural network types and the training problems they address, fully supported by the retrieved excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The two neural network types fused in the LSTM+NARX SOC estimation paper are the NARX (Nonlinear AutoRegressive with eXogenous inputs) neural network and the LSTM (Long Short-Term Memory) neural network. The primary function of the NARX model in this context is to address nonlinear system identification and latching problems. This fusion addresses the training problems of gradient explosion and disappearance that are intrinsic to the traditional NARX recurrent neural network. The hybrid model combines the advantages of both NARX and LSTM, improving estimation accuracy and preventing overfitting caused by long-term dependence in the recurrent neural network structure [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately identifies the two neural network types and correctly describes the training problems addressed by their fusion, fully supported by the retrieved excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The two neural network types fused in the LSTM+NARX SOC estimation paper are the NARX (Nonlinear AutoRegressive with eXogenous inputs) neural network and the LSTM (Long Short-Term Memory) neural network. This fusion addresses the training problems of both the phenomenon of gradient explosion and disappearance, which are intrinsic to the traditional NARX recurrent neural network, as well as the nonlinear system identification and latching problem. The hybrid model combines the advantages of both NARX and LSTM to improve estimation accuracy and prevent these issues [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately identifies the two neural network types and correctly describes the training problems addressed by their fusion, fully supported by the retrieved excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q16",
+    "category": "result",
+    "question": "By approximately how much is the RMSE of the hybrid NARX-LSTM model improved compared to a standard LSTM model?",
+    "n_success": 2,
+    "pass_any3": true,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The RMSE of the hybrid NARX-LSTM model is increased by approximately 59% under UDDS conditions and 60% under DST conditions compared to a standard LSTM model [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 4,
+        "judge_reasoning": "The answer accurately reflects the information from the excerpts regarding the RMSE improvement of the hybrid NARX-LSTM model compared to the standard LSTM model, but it does not mention the specific RMSE values achieved by the hybrid model, which would enhance its relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The RMSE of the hybrid NARX-LSTM model is increased by approximately 59% under UDDS conditions and 60% under DST conditions compared to a standard LSTM model [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information from the excerpts, stating the RMSE improvement percentages correctly and addressing the question directly.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The RMSE of the hybrid NARX-LSTM model is improved by approximately 59% under UDDS conditions and 60% under DST conditions compared to a standard LSTM model [Source: State_of_Charge_Estimation_of_Lithium-Ion_Batteries_Using_LSTM_and_NARX_Neural_Networks].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information from the excerpts regarding the RMSE improvement of the hybrid NARX-LSTM model compared to the standard LSTM model, and it directly addresses the question asked.",
+        "critic_approved": true,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q17",
+    "category": "method",
+    "question": "What machine learning method does the Ant\u00f3n et al. paper use to estimate battery SOC, and what test cycle is used to build the model?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The context provided does not contain information about the Ant\u00f3n et al. paper, the machine learning method used to estimate battery SOC, or the test cycle used to build the model. The source excerpts do not discuss battery SOC, specific machine learning methods, or any related test cycles. Therefore, the claims regarding these topics cannot be supported based on the available information. \n\n[Source: arXiv - Changing Data Sources in the Age of Machine Learning for Official Statistics]  \n[Source: arXiv - Physics-Inspired Interpretability Of Machine Learning Models]  \n[Source: arXiv - Learning Curves for Decision Making in Supervised Machine Learning: A Survey]",
+        "faithfulness": 5,
+        "relevance": 1,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain relevant information about the Ant\u00f3n et al. paper, thus it is fully faithful; however, it fails to address the question regarding battery SOC estimation, resulting in low relevance.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The context provided does not contain any excerpts from the Ant\u00f3n et al. paper, nor does it discuss the specific machine learning method used for estimating battery SOC or the test cycle utilized to build the model. Therefore, it is accurate to state that this specific information is missing, and no relevant excerpts are available to support claims about the Ant\u00f3n et al. paper or its methods.",
+        "faithfulness": 5,
+        "relevance": 1,
+        "judge_reasoning": "The answer accurately states that the excerpts do not contain relevant information about the Ant\u00f3n et al. paper, making it fully faithful; however, it fails to address the question regarding the specific machine learning method and test cycle, resulting in low relevance.",
+        "critic_approved": false,
+        "attempts": 2,
+        "used_arxiv": true,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The Ant\u00f3n et al. paper uses a support vector machine (SVM) approach to estimate battery SOC. The model parameters are extracted from battery charging/discharging testing cycles, using cell current, cell voltage, and cell temperature as independent variables [Source: Support Vector Machines Used to Estimate the Battery State of Charge].",
+        "faithfulness": 5,
+        "relevance": 4,
+        "judge_reasoning": "The answer accurately states that the Ant\u00f3n et al. paper uses a support vector machine (SVM) approach, which is supported by the excerpts, and it correctly mentions the use of charging/discharging testing cycles; however, it does not specify the dynamic stress test (DST) cycle as mentioned in the reference facts.",
+        "critic_approved": true,
+        "attempts": 1,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q18",
+    "category": "result",
+    "question": "What accuracy does the SVM SOC estimator in the Ant\u00f3n et al. paper maintain across all operating ranges?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The SVM SOC estimator in the Ant\u00f3n et al. paper, specifically the IBMO-SVM model, demonstrates high accuracy across all operating ranges. The model achieves a Root Mean Square Error (RMSE) of 0.0042, a Mean Absolute Percentage Error (MAPE) of 0.61%, and a coefficient of determination (R\u00b2) of 0.9994, indicating its effectiveness and reliability. Additionally, among 16,425 estimation samples, 9,480 results from the IBMO-SVM model exhibit a Prediction Error (PE) of less than 0.5%, showcasing improved stability compared to other models, with only 605 results exceeding a PE of 2%. These metrics collectively affirm the accuracy and stability of the IBMO-SVM model's SOC estimation across the tested operating ranges. [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, including specific metrics like RMSE, MAPE, and PE, and it directly addresses the question about the accuracy of the SVM SOC estimator across all operating ranges.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The SVM SOC estimator in the Ant\u00f3n et al. paper demonstrates high accuracy across all operating ranges, as indicated by specific metrics. The RMSE is 0.0042, the MAPE is 0.61%, and R\u00b2 is 0.9994, which suggests the model's strong validity and reliability. Moreover, among 16,425 estimation samples, there are 9,480 results with a percentage error (PE) of less than 0.5%, which is superior to other comparison models. Additionally, only 605 results have a PE greater than 2%, highlighting the model's accuracy and stability. The estimation errors for the IBMO-SVM are concentrated such that 80% fall below a PE of 1%, further proving its effectiveness in SOC estimation. [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, including specific metrics and comparisons, and directly addresses the question about the accuracy of the SVM SOC estimator.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The SVM SOC estimator in the Ant\u00f3n et al. paper, specifically the IBMO-SVM model, demonstrates high accuracy across all operating ranges. According to the findings, among the 16,425 estimation samples, IBMO-SVM achieved 9,480 estimation results with a prediction error (PE) of less than 0.5%, which outperforms other comparison models. Additionally, only 605 of its estimation results had a PE greater than 2%, indicating a much lower error rate compared to competitor models. Notably, 80% of the PE values from the IBMO-SVM estimation results fell below 1%, highlighting the model's accuracy and stability [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].\n\nThe model's performance metrics further support its accuracy, with a root mean square error (RMSE) of 0.0042, a mean absolute percentage error (MAPE) of 0.61%, and an R\u00b2 value of 0.9994, demonstrating its reliability and effectiveness relative to other SOC estimation models [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]. Overall, the accuracy and stability of IBMO-SVM are significantly improved compared to other algorithms used in the study [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, including specific performance metrics and comparisons with other models, while fully addressing the question about the accuracy of the SVM SOC estimator.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q19",
+    "category": "method",
+    "question": "What key architectural feature distinguishes the Uncorrelated Sparse Autoencoder with LSTM (USAL) model from a standard two-step Autoencoder-LSTM pipeline?",
+    "n_success": 3,
+    "pass_any3": true,
+    "pass3": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The key architectural feature that distinguishes the Uncorrelated Sparse Autoencoder with LSTM (USAL) model from a standard two-step Autoencoder-LSTM pipeline is its multi-task training procedure. This procedure simultaneously penalizes for poor SOC estimations, poor reconstructions, and highly correlated encodings, specifically designed to enhance the accuracy of long-term SOC estimations. This multi-task approach allows USAL to outperform other benchmarked methods; for instance, while the standard Autoencoder-LSTM achieves a mean absolute error (MAE) of 2.1%, USAL accomplishes a significantly lower MAE of 0.88% when tested on \u2018Cell-77\u2019 [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically mentioning the multi-task training procedure and the performance comparison with the standard Autoencoder-LSTM, thus fully addressing the question.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 2,
+        "answer": "The key architectural feature that distinguishes the Uncorrelated Sparse Autoencoder with LSTM (USAL) model from a standard two-step Autoencoder-LSTM pipeline is its multi-task training procedure. This procedure simultaneously penalizes for poor SOC estimations, poor reconstructions, and highly correlated encodings, which is specifically tailored for accurate long-term SOC estimations. Furthermore, while the Autoencoder-LSTM achieves a mean absolute error (MAE) of 2.1%, the USAL achieves a significantly lower MAE of 0.88% for 'Cell-77' [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells]. As a result of this multi-task approach, USAL is shown to outperform the standard Autoencoder-LSTM pipeline [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the content of the excerpts, specifically mentioning the multi-task training procedure and the performance metrics, with no unsupported claims, thus achieving high scores for both faithfulness and relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "The key architectural feature that distinguishes the Uncorrelated Sparse Autoencoder with LSTM (USAL) model from a standard two-step Autoencoder-LSTM pipeline is its multi-task training procedure. This procedure simultaneously penalizes for (i) poor SOC estimations, (ii) poor reconstructions, and (iii) highly correlated encodings. Unlike the standard pipeline, which does not guarantee that encodings will be customized for long-term SOC estimations, the USAL model aims to enhance the accuracy of long-term SOC estimations through this method. As a result, USAL outperforms other benchmarked methods, achieving a significantly lower mean absolute error (MAE) of 0.88% compared to the 2.1% MAE of the Autoencoder-LSTM on 'Cell-77' [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, specifically mentioning the multi-task training procedure and the comparison of MAE values, without introducing any unsupported claims.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q20",
+    "category": "result",
+    "question": "How does USAL's MAE compare to Autoencod-LSTM's MAE for long-term SOC estimation on 'Cell-77', and for short-term estimation on 'Cell-137'?",
+    "n_success": 2,
+    "pass_any3": true,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "For long-term SOC estimation on 'Cell-77', USAL achieves a significantly lower MAE of 0.88% compared to Autoencod-LSTM's MAE of 2.1% [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells]. \n\nFor short-term SOC estimation on 'Cell-137', USAL achieves an MAE of 0.65%, while the Autoencod-LSTM achieves an MAE of 0.79% during normal conditions. However, it is important to note that Autoencod-LSTM exhibits a significantly higher MAE of 6.1% during the last cycle near the end of life (EOL) for 'Cell-137' [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells]. This context highlights USAL's better performance in estimating SOC near EOL as it achieves an MAE of 2.5% for the same cycle [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].",
+        "faithfulness": 4,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately presents the MAE values for long-term and short-term SOC estimations, which are supported by the excerpts. However, the mention of the 6.1% MAE for Autoencod-LSTM near EOL is not directly relevant to the question and could be seen as an unsupported claim since it does not specify that this is for the last cycle, which is not explicitly stated in the excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "For long-term SOC estimation on 'Cell-77', USAL achieves a significantly lower MAE of 0.88% compared to Autoencod-LSTM's MAE of 2.1% [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells]. This performance difference is illustrated in Figure 8(a).\n\nFor short-term SOC estimation specifically during the 6th cycle on 'Cell-137', USAL achieves an MAE of 0.65%, which is better than Autoencod-LSTM's MAE of 0.79% [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells]. This comparison is depicted in Figure 9(a), which demonstrates that USAL significantly outperforms all benchmarked models during this cycle.",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the MAE values for both long-term and short-term SOC estimations as stated in the excerpts, with no unsupported claims, and it directly addresses the question asked.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      },
+      {
+        "attempt": 3,
+        "answer": "For long-term SOC estimation on 'Cell-77', USAL achieves a significantly lower MAE of 0.88% compared to Autoencod-LSTM's MAE of 2.1% [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].\n\nFor short-term SOC estimation on 'Cell-137', USAL improves upon the performance of all benchmarked models, achieving an MAE of 0.65%, whereas the Autoencod-LSTM achieves an MAE of 0.79% [Source: Uncorrelated sparse autoencoder with long short-term memory for state-of-charge estimations in lithium-ion battery cells].",
+        "faithfulness": 5,
+        "relevance": 5,
+        "judge_reasoning": "The answer accurately reflects the information provided in the excerpts, with all claims supported by the retrieved sources and no fabricated details, while also fully addressing the question regarding the MAE comparisons for both long-term and short-term SOC estimations.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": true
+      }
+    ]
+  },
+  {
+    "id": "q21",
+    "category": "comparison",
+    "question": "Which paper in this corpus explicitly incorporates a Kalman filter into its SOC estimation pipeline, and what type of Kalman filter does it use?",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "The paper titled \"State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine\" discusses the incorporation of a Kalman filter into its SOC estimation pipeline. It references methods proposed by different authors, specifically the Sigma point-based Kalman filter algorithm introduced by Bi and Choe [21], and the dual Kalman filter method from Kim and Cho [22]. However, it is important to clarify that these methods are attributed to separate authors and do not imply that both are utilized simultaneously within a single SOC estimation pipeline [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer correctly identifies a paper that discusses Kalman filter methods, but it does not mention the specific type of Kalman filter (UKF) used in the relevant paper, and it misattributes the incorporation of the Kalman filter to a paper that does not explicitly state it uses a Kalman filter in its SOC estimation pipeline.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "The paper titled \"State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine\" discusses two methods related to Kalman filters but does not explicitly state that it incorporates both a Sigma point-based Kalman filter algorithm and a dual Kalman filter method into its SOC estimation pipeline. Bi and Choe proposed the Sigma point-based Kalman filter algorithm, which approximates the distribution of the state variables of the actual nonlinear model and updates state estimates through Kalman filtering. Meanwhile, Kim and Cho used the dual Kalman filter method, which estimates system states and parameters alternately through two independent Kalman filter algorithms [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]. However, the specific application of these methods within the SOC estimation pipeline of this paper is not clearly confirmed.",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer accurately describes the methods related to Kalman filters mentioned in the excerpts, but it does not clearly state that the paper incorporates these methods into its SOC estimation pipeline, which is a key aspect of the question. Therefore, while the claims are supported by the excerpts, the lack of clarity regarding their application lowers both faithfulness and relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "The paper titled \"State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine\" discusses the application of a Sigma point-based Kalman filter algorithm and a dual Kalman filter method for SOC estimation. However, it does not explicitly state that a Kalman filter is incorporated into its SOC estimation pipeline [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine]. Instead, it refers to these methods without confirming a direct implementation or mechanism related to the SOC estimation process.",
+        "faithfulness": 3,
+        "relevance": 3,
+        "judge_reasoning": "The answer correctly identifies the paper discussing Kalman filter methods but fails to accurately state that it incorporates a Kalman filter into its SOC estimation pipeline, leading to some unsupported claims. Additionally, it does not address the specific type of Kalman filter used (UKF) as mentioned in the reference facts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  },
+  {
+    "id": "q22",
+    "category": "comparison",
+    "question": "Name two different metaheuristic optimization algorithms used across this corpus to tune machine-learning-based SOC estimators, and which paper uses each.",
+    "n_success": 0,
+    "pass_any3": false,
+    "pass3": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "answer": "Two different metaheuristic optimization algorithms used across this corpus to tune machine-learning-based SOC estimators are:\n\n1. Salpine Swarm Algorithm (SSA) used in the paper by Annamalai et al. [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].\n\n2. Sunflower Optimization (SFO) Algorithm used in the paper by Maheshwari and Nageswari [Source: State of charge estimation for lithium-ion batteries based on sunflower optimization algorithm and machine learning model].",
+        "faithfulness": 1,
+        "relevance": 1,
+        "judge_reasoning": "The answer contains fabricated claims about the algorithms used, as neither the Salpine Swarm Algorithm nor the Sunflower Optimization Algorithm are mentioned in the excerpts as being used to tune SOC estimators; thus, it fails both faithfulness and relevance.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 2,
+        "answer": "Two different metaheuristic optimization algorithms used across this corpus to tune machine-learning-based SOC estimators are:\n\n1. Salpine Swarm Algorithm (SSA) used in the paper by Annamalai et al. [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].\n2. Sunflower Optimization (SFO) Algorithm, which is mentioned in the paper by Maheshwari and Nageswari; however, the specific application to SOC estimation is not directly connected to the paper referenced [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 2,
+        "relevance": 2,
+        "judge_reasoning": "The answer incorrectly identifies the optimization algorithms and their associated papers, as it mentions SSA and SFO instead of the correct GSA and improved barnacle mating optimizer; thus, it is not fully supported by the excerpts.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      },
+      {
+        "attempt": 3,
+        "answer": "Two different metaheuristic optimization algorithms used across this corpus to tune machine-learning-based SOC estimators are:\n\n1. Salpine Swarm Algorithm (SSA) used in the paper by Annamalai et al. [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].\n\n2. Sunflower Optimization (SFO) Algorithm used by Maheshwari and Nageswari [Source: State of charge estimation for lithium-ion batteries based on improved barnacle mating optimizer and support vector machine].",
+        "faithfulness": 1,
+        "relevance": 2,
+        "judge_reasoning": "The answer incorrectly identifies the optimization algorithms as SSA and SFO, which are not mentioned in the context of tuning SOC estimators in the excerpts; thus, it is mostly fabricated and does not accurately address the question.",
+        "critic_approved": false,
+        "attempts": 0,
+        "used_arxiv": false,
+        "success": false
+      }
+    ]
+  }
+]
